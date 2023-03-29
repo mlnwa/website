@@ -2,29 +2,35 @@
 const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+// 样式文件解析
 const getCSSModuleLocalIdent = require("react-dev-utils/getCSSModuleLocalIdent");
+// 单独打包css
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /**
  * @type {import('webpack').Configuration}
  */
 module.exports = {
   entry: {
-    app: "../src/index.tsx",
+    app: "./src/index.tsx", // 根路径入口
   },
   output: {
     path: path.resolve(__dirname, "../dist"),
     filename: "[name].[hash].js",
   },
   resolve: {
-    extensions: [".ts", "tsx", ".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "blog",
+      title: "site",
       template: path.resolve(__dirname, "../index.html"),
       filename: "index.html",
     }),
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "css/[name].hash.css",
+    }),
   ],
   module: {
     rules: [
@@ -55,17 +61,22 @@ module.exports = {
       },
       // 图片地址解析 webpack5 内置 assets
       {
-        test:/\.(jpe?g|png|gif|svg|woff|woff2|eot|ttf|otf)$/i,
-        type:"asset/resource"
+        test: /\.(jpe?g|png|gif|svg|woff|woff2|eot|ttf|otf)$/i,
+        type: "asset/resource",
+      },
+      // 单独打包css
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, "css-loader"],
       },
     ],
   },
   // 二级缓存 require 缓存失效
-  cache:{
-    type : 'filesystem',
-    buildDependencies:{
-        config:[__filename],
+  cache: {
+    type: "filesystem",
+    buildDependencies: {
+      config: [__filename],
     },
-    name:'developent-cache'
-  }
+    name: "developent-cache",
+  },
 };
