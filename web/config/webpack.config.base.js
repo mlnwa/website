@@ -12,7 +12,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
  */
 module.exports = {
   entry: {
-    app: "./src/index.tsx", // 根路径入口
+    app: "./src/main.tsx", // 根路径入口
   },
   output: {
     path: path.resolve(__dirname, "../dist"),
