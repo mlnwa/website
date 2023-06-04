@@ -28,9 +28,9 @@ module.exports = {
       filename: "index.html",
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin({
-      filename: "css/[name].hash.css",
-    }),
+    // new MiniCssExtractPlugin({
+    //   filename: "[name].[hash].css",
+    // }),
   ],
   module: {
     rules: [
@@ -65,10 +65,10 @@ module.exports = {
         type: "asset/resource",
       },
       // 单独打包css
-      {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
-      },
+      // {
+      //   test: /\.css$/i,
+      //   use: [MiniCssExtractPlugin.loader, "css-loader"],
+      // },
     ],
   },
   // 二级缓存 require 缓存失效
