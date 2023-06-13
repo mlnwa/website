@@ -1,9 +1,10 @@
 import React from "react";
 // import ReactDOM from "react-dom"
-import App from "./App";
+// import App from "./App";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {router} from "./routes/root"
+import 'semantic-ui-css/semantic.min.css'
 // ReactDOM.render(<App/>,document.getElementById("root"))
 // React 18+  replace ReactDOM.render
 const container = document.getElementById("root");
