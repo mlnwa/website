@@ -3,7 +3,7 @@ import React from "react";
 // import App from "./App";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import {router} from "./routes/root"
+import {router} from "./router"
 import 'semantic-ui-css/semantic.min.css'
 // ReactDOM.render(<App/>,document.getElementById("root"))
 // React 18+  replace ReactDOM.render
@@ -16,7 +16,7 @@ const root = createRoot(container);
 //   },
 // ]);
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RouterProvider router={router} />
-  </React.StrictMode>
+  // </React.StrictMode>
 );

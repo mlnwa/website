@@ -1,15 +1,15 @@
 import React ,{useState} from "react";
 import "./App.css"
-import { Outlet } from "react-router-dom";
-import NaveMenu from "./components/NavMenu/NavMenu";
+import { Outlet, useLocation } from "react-router-dom";
+import NavMenu from "./components/NavMenu/NavMenu";
 const App = () => {
+    const location = useLocation()
     return (
         <div className="main">
             <div className="header ">
-                <NaveMenu></NaveMenu>
+                <NavMenu pathname={location.pathname}></NavMenu>
             </div>
-            <div className="container">
-                <div ></div>
+            <div className="body">
                 <Outlet></Outlet>
             </div>
             <div className="footer">footer</div>

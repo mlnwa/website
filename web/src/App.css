@@ -12,8 +12,9 @@
     backdrop-filter: blur(20px);
     
 }
-.container {
+.body {
     flex: 1;
+    background: url(./assets/img/BG.png);
 }
 .footer {
 
