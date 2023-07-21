@@ -1,6 +1,12 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 const Blog = function (){
+    useEffect(()=>{
+        // console.log("blog");
+        return ()=>{
+            // console.log("destory");
+        }
+    })
     return <div>
         blog
     </div>

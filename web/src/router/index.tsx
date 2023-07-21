@@ -1,9 +1,18 @@
-import { createBrowserRouter } from "react-router-dom";
+import { RouteObject, createBrowserRouter } from "react-router-dom";
 import App from "../App"
 import Blog from "../pages/blog/blog"
 import Experiment from "../pages/experiment/experiment"
 import Archives from "../pages/archives/archives"
 import React from "react";
+import { SemanticICONS } from "semantic-ui-react";
+type CustomProps = {
+    icon:SemanticICONS,
+    label:string
+}
+export type CustomRoute = RouteObject & {
+    customProp: CustomProps;
+    children:CustomRoute[]
+};
 export const root = {
     path:"/",
     element:<App></App>,
@@ -11,25 +20,32 @@ export const root = {
         {   
             index:true,
             path:"/",
-            id:"首页",
-            icon:"home",
-            element:<Blog></Blog>
+            id:"blog",
+            element:<Blog></Blog>,
+            customProp:{
+                icon:"home",
+                label:"博客"
+            }
         },
         {
             path:"/archives",
-            id:"归档",
-            icon:"clone",
-            element:<Archives></Archives>
+            element:<Archives></Archives>,
+            customProp:{
+                icon:"clone",
+                label:"归档"
+            }
         },
         {
             path:"/experiment",
-            id:"实验中心",
-            icon:"lab",
-            element:<Experiment></Experiment>
+            element:<Experiment></Experiment>,
+            customProp:{
+                icon:"lab",
+                label:"实验中心"
+            }
         },
     ]
-}
+} as CustomRoute
 const routerList = [
     root
-]
+] as RouteObject[]
 export const router  = createBrowserRouter(routerList)
