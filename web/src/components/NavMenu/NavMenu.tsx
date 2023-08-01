@@ -35,7 +35,7 @@ const NaveMenu = function () {
       <Container textAlign="center">
         <Menu inverted secondary>
           <Menu.Item>
-            <Header as="h1" inverted color="teal">
+            <Header as="h1"  color="teal">
               Brad
             </Header>
           </Menu.Item>
