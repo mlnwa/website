@@ -6,9 +6,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 
 @Module({
-  imports: [
-    
-  ],
+  imports: [],
   controllers: [AppController],
   providers: [
     AppService,
@@ -16,15 +14,13 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
      * http-exception local filter
      */
     {
-      provide:APP_FILTER,
-      useClass:HttpExceptionFilter
-    }
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {
-  configure(consume:MiddlewareConsumer){
-    consume
-      .apply(LoggerMiddleware)
-      .forRoutes('*')
+  configure(consume: MiddlewareConsumer) {
+    consume.apply(LoggerMiddleware).forRoutes('*');
   }
 }

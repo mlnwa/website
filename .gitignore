@@ -1,6 +1,9 @@
+# folder
+NOTE/
 node_modules/
+migrations/
+documentation/
 
-/NOTE
-NOTE.md
-
+#file
 Constants.ts
+NOTE.md
