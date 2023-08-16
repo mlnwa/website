@@ -6,10 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { BlogEntity } from '../blog/blog.entity';
+import { Blog } from '../blog/blog.entity';
 
 @Entity()
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -22,8 +22,8 @@ export class UserEntity {
   @Column()
   status: boolean;
 
-  @OneToMany(() => BlogEntity, (blog) => blog.user)
-  blogs: BlogEntity[];
+  @OneToMany(() => Blog, (blog) => blog.user)
+  blogs: Blog[];
 
   @CreateDateColumn({ 
     type: 'datetime', 

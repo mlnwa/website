@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { UserEntity } from './user.entity';
+import { User } from './user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
 
@@ -7,8 +7,8 @@ export class UserService {
   constructor(
     @InjectDataSource()
     private readonly dataSource: DataSource,
-    @InjectRepository(UserEntity)
-    private readonly userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
   async findAll(): Promise<ResultModel> {
     // try {
@@ -20,13 +20,20 @@ export class UserService {
     //   return ResultModel.builderErrorDesc(error.message)
     // }
     // return await this.dataSource
-    //   .getRepository(UserEntity)
+    //   .getRepository(User)
     //   .createQueryBuilder('user')
     //   .leftJoinAndSelect('user.blog', 'blog')
     //   .getMany();
   }
 
-  async create(user): Promise<UserEntity[]> {
+  async findByUserName(name:string):Promise<ResultModel>{
+    const result = await this.userRepository.findOne({
+      where:{name}
+    })
+    return ResultModel.builderSuccess().setResult(result)
+  }
+
+  async create(user): Promise<User[]> {
     const { name } = user;
     const isFound = this.userRepository.findOne({
         where:{name}
