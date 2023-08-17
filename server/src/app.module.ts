@@ -1,13 +1,15 @@
 import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters';
 import { LoggerMiddleware } from './common/middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService,ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './config';
 import { UserModule } from './modules/user/user.module';
+import { AuthModuel } from './modules/auth/auth.module';
+import { JwtAuthGuard } from './common/guards';
 
 @Module({
   imports: [
@@ -19,18 +21,26 @@ import { UserModule } from './modules/user/user.module';
       useFactory:(config:ConfigService) => config.get('database'),
       inject:[ConfigService]
     }),
-    UserModule
+    UserModule,
+    AuthModuel
   ],
   controllers: [AppController],
   providers: [
     AppService,
     /**
-     * http-exception local filter
+     *  filters
      */
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
+    /**
+     * guards
+     */
+    {
+      provide:APP_GUARD,
+      useClass:JwtAuthGuard
+    }
   ],
 })
 export class AppModule {

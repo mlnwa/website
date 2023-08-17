@@ -17,8 +17,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const exceptionResponse = exception.getResponse() as { message: string | Array<string> }
 
     if (typeof exceptionResponse == "object" && exceptionResponse?.message) {
-      const errorDesc = typeof exceptionResponse.message == 'string' ? exceptionResponse.message : exceptionResponse.message[0]
-      const result = ResultModel.builderErrorDesc(errorDesc)
+      const errorMsg = typeof exceptionResponse.message == 'string' ? exceptionResponse.message : exceptionResponse.message[0]
+      const result = ResultModel.builderErrorMsg(errorMsg)
+      result.setCode(status)
       response.status(status)
         .json(result)
       return

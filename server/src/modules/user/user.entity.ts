@@ -19,8 +19,8 @@ export class User {
   @Column('varchar')
   password: string;
 
-  @Column()
-  status: boolean;
+  @Column({default:1})
+  status: number;
 
   @OneToMany(() => Blog, (blog) => blog.user)
   blogs: Blog[];

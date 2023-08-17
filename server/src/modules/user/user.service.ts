@@ -2,6 +2,7 @@ import { DataSource, Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
+import { Injectable } from '@nestjs/common';
 
 export class UserService {
   constructor(
@@ -11,21 +12,11 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
   async findAll(): Promise<ResultModel> {
-    // try {
       const result = await this.userRepository.find({
-        relations:['blogs']
+        // relations:['blogs']
       })
       return ResultModel.builderSuccess().setResult(result)
-    // } catch (error) {
-    //   return ResultModel.builderErrorDesc(error.message)
-    // }
-    // return await this.dataSource
-    //   .getRepository(User)
-    //   .createQueryBuilder('user')
-    //   .leftJoinAndSelect('user.blog', 'blog')
-    //   .getMany();
   }
-
   async findByUserName(name:string):Promise<ResultModel>{
     const result = await this.userRepository.findOne({
       where:{name}
@@ -33,14 +24,15 @@ export class UserService {
     return ResultModel.builderSuccess().setResult(result)
   }
 
-  async create(user): Promise<User[]> {
+  async create(user): Promise<ResultModel> {
     const { name } = user;
-    const isFound = this.userRepository.findOne({
+    const isFound = await this.userRepository.findOne({
         where:{name}
     })
     if(isFound){
-
+      return ResultModel.builderErrorMsg("用户已存在")
     }
-    return this.userRepository.save(user);
+    await this.userRepository.save(user)
+    return ResultModel.builderSuccess();
   }
 }

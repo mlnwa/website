@@ -5,15 +5,15 @@ export class ResultModel {
     resultModel.setSuccess(true)
     return resultModel
   }
-  static builderErrorDesc(errorDesc:string):ResultModel{
+  static builderErrorMsg(errorMsg:string):ResultModel{
     const resultModel = new ResultModel()
     resultModel.setSuccess(false)
-    resultModel.setErrorDesc(errorDesc)
+    resultModel.setErrorMsg(errorMsg)
     return resultModel
   }
   private success: boolean;
   private result: any;
-  private errorDesc: string;
+  private errorMsg: string;
   private code: number;
   private successDesc: string
 
@@ -53,12 +53,12 @@ export class ResultModel {
     return this;
   }
 
-  public getErrorDesc(): string {
-    return this.errorDesc;
+  public getErrorMsg(): string {
+    return this.errorMsg;
   }
 
-  public setErrorDesc(errorDesc: string): ResultModel {
-    this.errorDesc = errorDesc;
+  public setErrorMsg(errorMsg: string): ResultModel {
+    this.errorMsg = errorMsg;
     return this;
   }
 }
