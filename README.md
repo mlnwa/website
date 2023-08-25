@@ -1,16 +1,9 @@
-# 项目介绍
-个人网站 
+# Project Introduction
+Personal website
 
 
-## 模块
+## Module
 
-- 博客
-- 资源
-- 其他项目
-
-### 博客
-- 类型
-- 标签
-- 评论
-- 归档
-
+- Blog
+- Resource
+- Project links
