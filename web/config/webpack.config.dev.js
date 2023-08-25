@@ -2,6 +2,7 @@
 const webpackMerge = require("webpack-merge");
 const baseConfig = require("./webpack.config.base");
 const path = require("path");
+const { DefinePlugin } = require("webpack");
 
 /**
  * @type {import('webpack').WebpackOptionsNormalized;}
@@ -13,7 +14,7 @@ const devConfig = {
     host: "localhost",
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: "http://localhost:3000",
         secure: false,
         pathRewrite: {
           "^/api": "",
@@ -38,6 +39,13 @@ const devConfig = {
       directory: path.join(__dirname, "../public"),
     },
   },
+  plugins:[
+    new DefinePlugin({
+      'process.env':{
+        NODE_ENV:JSON.stringify('development')
+      }
+    })
+  ]
 };
 
 module.exports = webpackMerge.merge(baseConfig, devConfig);

@@ -8,3 +8,4 @@ documentation/
 Constants.ts
 NOTE.md
 datasource.ts
+.env.production

@@ -8,23 +8,13 @@ export class ResultModel {
   static builderErrorMsg(errorMsg:string):ResultModel{
     const resultModel = new ResultModel()
     resultModel.setSuccess(false)
-    resultModel.setErrorMsg(errorMsg)
+    resultModel.setMsg(errorMsg)
     return resultModel
   }
   private success: boolean;
   private result: any;
-  private errorMsg: string;
+  private msg: string;
   private code: number;
-  private successDesc: string
-
-  public getSuccessDesc(): string {
-    return this.successDesc;
-  }
-
-  public setSuccessDesc(successDesc: string): ResultModel {
-    this.successDesc = successDesc;
-    return this
-  }
 
   public getCode(): number {
     return this.code;
@@ -35,7 +25,7 @@ export class ResultModel {
     return this;
   }
 
-  public isSuccess(): boolean {
+  public getSuccess(): boolean {
     return this.success;
   }
 
@@ -53,12 +43,12 @@ export class ResultModel {
     return this;
   }
 
-  public getErrorMsg(): string {
-    return this.errorMsg;
+  public getMsg(): string {
+    return this.msg;
   }
 
-  public setErrorMsg(errorMsg: string): ResultModel {
-    this.errorMsg = errorMsg;
+  public setMsg(msg: string): ResultModel {
+    this.msg = msg;
     return this;
   }
 }
