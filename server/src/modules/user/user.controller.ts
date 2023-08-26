@@ -1,9 +1,11 @@
-import { BadRequestException, Body, Controller, Get, Post, UseGuards, UsePipes, ValidationPipe } from "@nestjs/common";
+import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards,Headers, UsePipes, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ResultModel } from "src/common/result/ResultModel";
 import { UserCreateDto } from "./dto/create-user.dto";
 import {validate} from "class-validator"
 import { RolesGuard } from "src/common/guards";
+import { Public } from "src/common/decorators/public.decorator";
+import { Request } from "express";
 
 @Controller('users')
 @UsePipes(new ValidationPipe({whitelist:true}))
@@ -21,7 +23,7 @@ export class UserController {
         }
         return res
     }
-
+    @Public()
     @Post()
     async create(@Body() user:UserCreateDto){
         return this.userService.create(user)

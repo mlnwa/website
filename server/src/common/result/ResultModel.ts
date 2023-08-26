@@ -5,10 +5,15 @@ export class ResultModel {
     resultModel.setSuccess(true)
     return resultModel
   }
-  static builderErrorMsg(errorMsg:string):ResultModel{
+  static builderSuccessMsg(msg:string):ResultModel {
+    const resultModel = ResultModel.builderSuccess()
+    resultModel.setMsg(msg)
+    return resultModel
+  }
+  static builderErrorMsg(msg:string):ResultModel{
     const resultModel = new ResultModel()
     resultModel.setSuccess(false)
-    resultModel.setMsg(errorMsg)
+    resultModel.setMsg(msg)
     return resultModel
   }
   private success: boolean;

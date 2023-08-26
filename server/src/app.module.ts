@@ -10,6 +10,7 @@ import { databaseConfig } from './config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModuel } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
+import { BlogModule } from './modules/blog/blog.module';
 
 @Module({
   imports: [
@@ -22,21 +23,16 @@ import { JwtAuthGuard } from './common/guards';
       inject:[ConfigService]
     }),
     UserModule,
-    AuthModuel
+    AuthModuel,
+    BlogModule
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    /**
-     *  filters
-     */
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
     },
-    /**
-     * guards
-     */
     {
       provide:APP_GUARD,
       useClass:JwtAuthGuard

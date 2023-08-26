@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
+import { BlogStatus } from './blog.enum';
 
 @Entity()
 export class Blog {
@@ -17,6 +18,13 @@ export class Blog {
   @Column()
   title: string;
 
+  @Column({
+    type:'enum',
+    enum:BlogStatus,
+    default:BlogStatus.DRAFT
+  })
+  status:BlogStatus
+
   @Column()
   content: string;
 
@@ -25,14 +33,11 @@ export class Blog {
 
   @CreateDateColumn({ 
     type: 'datetime',
-    //  default:  'CURRENT_TIMESTAMP' 
   })
   createAt: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
-    // default: 'CURRENT_TIMESTAMP',
-    // onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 }
