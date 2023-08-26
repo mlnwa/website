@@ -59,6 +59,12 @@ const HttpRequest  = class {
     get<T>(data?:any){
         return this.request<T>(data,'GET')
     }
+    delete<T>(data?:any){
+        return this.request<T>(data,'DELETE')
+    }
+    put<T>(data?:any){
+        return this.request<T>(data,'PUT')
+    }
 }
 
 const http = new HttpRequest()

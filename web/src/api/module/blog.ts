@@ -1,34 +1,31 @@
 import http from "../requrest";
-
+import {Pagination,PageParams} from "../index.d"
 interface Blog {
-    id      : number;
-    title   : string;
-    content : string;
-    createAt: string;
-    updateAt: string;
+    id      ?: number;
+    title    : string;
+    content  : string;
+    createAt?: string;
+    updateAt?: string;
 }
-interface PageParams   {
-    pageIndex: number
-    pageSize : number
-}
-interface QueryAllBlogs extends PageParams {
+
+interface QueryBlogList extends PageParams {
 
 }
 
-interface Pagination<T> {
-    pageIndex: number
-    pageSize : number
-    prePage  : number
-    nextPage : number
-    pages    : number
-    total    : number
+type CreateBlog = {
+    
+}
+type DeleteBlog = {
 
-    isLastPage : boolean
-    isFirstPage: boolean
-    hasNextPage: boolean
-    hasPrePage : boolean
+}
+type EditBlog  = {
 
-    list: T[]
 }
 
-export const QueryAllBlogs = (params:QueryAllBlogs) => http.get<Pagination<Blog>>(params) 
+export const QueryBlogList = (params:QueryBlogList) => http.get<Pagination<Blog>>(params) 
+
+export const CreateBlog = (params:CreateBlog) => http.post<boolean>(params)
+
+export const DeleteBlog = (params:DeleteBlog) => http.delete<boolean>(params)
+
+export const EditBlog = (params:EditBlog) => http.put<boolean>(params)
