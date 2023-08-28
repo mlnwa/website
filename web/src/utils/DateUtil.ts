@@ -69,8 +69,8 @@ export const DateUtil = class {
     return formattedString;
   }
   add(value: number, unit?: UnitType) {
-    unit  = unit ?? "days";
-    value = unit === "weeks" ? value * 7 : value;
+          unit    = unit ?? "days";
+          value   = unit === "weeks" ? value * 7 : value;
     const setData = this.unitMatch[unit].setData;
     const getData = this.unitMatch[unit].getData;
     setData(this.date, getData(this.date) + value);

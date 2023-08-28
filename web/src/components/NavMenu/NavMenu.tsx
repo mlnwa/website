@@ -11,7 +11,9 @@ import style from "../../assets/css/common.module.scss";
 import { useNavigate, useLocation } from "react-router-dom";
 import { CustomRoute, root } from "../../router";
 
-const NaveMenu = function () {
+const NavMenu = function () {
+  console.log('NavMenu');
+  
   const navList = root.children as CustomRoute[];
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,4 +60,4 @@ const NaveMenu = function () {
     </Segment>
   );
 };
-export default NaveMenu;
+export default NavMenu;
