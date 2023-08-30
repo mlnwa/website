@@ -24,15 +24,12 @@ function genBlogs(){
 }
 
 const Blog =  function () {
-  console.log('Blog');
   const [blogList,setBlogList] = useState<BlogSummary[]>([])
   useEffect(()=>{
-    console.log("useEffect");
     genBlogs().then((data)=>{
       setBlogList(data)
     })
-  })
-  // const blogList:BlogSummary[] = await genBlogs()
+  },[])
   return (
     <div className={`${style.m_container} ${style.padding_tb_big}`}>
       <Container>

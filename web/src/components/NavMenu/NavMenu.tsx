@@ -12,8 +12,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { CustomRoute, root } from "../../router";
 
 const NavMenu = function () {
-  console.log('NavMenu');
-  
   const navList = root.children as CustomRoute[];
   const location = useLocation();
   const navigate = useNavigate();
