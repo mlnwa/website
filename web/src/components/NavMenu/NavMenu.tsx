@@ -33,7 +33,7 @@ const NavMenu = function () {
       attached
     >
       <Container textAlign="center">
-        <Menu inverted secondary>
+        <Menu inverted secondary stackable>
           <Menu.Item>
             <Header as="h1"  color="teal">
               Brad
@@ -50,7 +50,7 @@ const NavMenu = function () {
               {item.customProp.label}
             </Menu.Item>
           ))}
-          <Menu.Item position="right">
+          <Menu.Item position="right" >
             <Input placeholder="Search..." icon="search"></Input>
           </Menu.Item>
         </Menu>

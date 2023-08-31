@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import style from "../../assets/css/common.module.scss";
-import { Container, Grid, Header, Item, Segment } from "semantic-ui-react";
+import { Container, Grid, Header, Icon, Item, Label, Menu, Segment } from "semantic-ui-react";
 import dotenv from "dotenv";
 import { Constants } from "../../assets/ts/Constants";
 import BlogItem from "../../components/BlogItem/BlogItem";
-import { BlogSummary } from "../../types";
+import { BlogCatSummary, BlogSummary } from "../../types";
 import { IdUtil } from "../../utils";
 const blogList :BlogSummary[] = new Array(10).fill(null).map( _ => {
   const blogSummaryItem:BlogSummary = {
@@ -19,15 +19,30 @@ const blogList :BlogSummary[] = new Array(10).fill(null).map( _ => {
   }
   return blogSummaryItem
 })
+const blogCatList:BlogCatSummary[] = new Array(5).fill(null).map( _ => {
+  const blogCatSummaryItem:BlogCatSummary = {
+    id:IdUtil.uuidOfNumber(10),
+    number:13,
+    name:"学习日志"
+  }
+  return blogCatSummaryItem
+})
 function genBlogs(){
   return Promise.resolve(blogList)
+}
+function genBlogCats() {
+   return Promise.resolve(blogCatList)
 }
 
 const Blog =  function () {
   const [blogList,setBlogList] = useState<BlogSummary[]>([])
+  const [blogCatList,setBlogCatList] = useState<BlogCatSummary[]>([])
   useEffect(()=>{
     genBlogs().then((data)=>{
       setBlogList(data)
+    })
+    genBlogCats().then(data=>{
+      setBlogCatList(data)
     })
   },[])
   return (
@@ -69,7 +84,84 @@ const Blog =  function () {
               }
             </Segment>
           </Grid.Column>
-          <Grid.Column width={5}></Grid.Column>
+          <Grid.Column width={5} className="m-mobile-hide" >
+            {/* 分类 */}
+            <Segment.Group>
+              <Segment secondary>
+                <Grid columns={2} >
+                  <Grid.Column>
+                    <Icon name="idea"></Icon>
+                    分类
+                  </Grid.Column>
+                  <Grid.Column textAlign="right">
+                    <a href="">
+                      more
+                      <Icon name="angle double right"></Icon>
+                    </a>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+              <Segment color="teal">
+                <Menu fluid vertical>
+                  {blogCatList.map(item => (
+                    <Item as='a' key={item.id}>
+                      {item.name}
+                      <Label basic color="teal" pointing="left" content={item.number}></Label>
+                    </Item>
+                  ))}
+                </Menu>
+              </Segment>
+            </Segment.Group>
+            {/* 标签 */}
+            <Segment.Group>
+              <Segment secondary>
+                <Grid columns={2} >
+                  <Grid.Column>
+                    <Icon name="tags"></Icon>
+                    标签
+                  </Grid.Column>
+                  <Grid.Column textAlign="right">
+                    <a href="">
+                      more
+                      <Icon name="angle double right"></Icon>
+                    </a>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+              <Segment color="teal">
+                  {blogCatList.map(item => (
+                    <Label as='a' basic color="teal" pointing="left" key={item.id} className={style.m_margin_tb_tiny}>
+                      {item.name}
+                      <Label.Detail  color="teal" pointing="left" content={item.number}></Label.Detail>
+                    </Label>
+                  ))}
+              </Segment>
+            </Segment.Group>
+            {/* 推荐 */}
+            <Segment.Group>
+              <Segment secondary>
+                <Grid columns={2}>
+                  <Grid.Column>
+                    <Icon name="columns"></Icon>
+                    专栏
+                  </Grid.Column>
+                  <Grid.Column textAlign="right">
+                    <a href="">
+                      more
+                      <Icon name="angle double right"></Icon>
+                    </a>
+                  </Grid.Column>
+                </Grid>
+              </Segment>
+              {
+                blogCatList.map(item => (
+                  <Segment key={item.id}>
+                    <Item className={style.m_text_thin}>{item.name}</Item>
+                  </Segment>
+                ))
+              }
+            </Segment.Group>
+          </Grid.Column>
         </Grid>
       </Container>
     </div>

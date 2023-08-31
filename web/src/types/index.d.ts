@@ -1,3 +1,5 @@
+export type Id = string | number
+
 export interface BlogSummary {
     id             : Id,
     createAt       : string,
@@ -9,4 +11,8 @@ export interface BlogSummary {
     authorAvatarUrl: string
 }
 
-export type Id = string | number
+export interface BlogCatSummary {
+    id    : Id,
+    name  : string,
+    number: number
+}

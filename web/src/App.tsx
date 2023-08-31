@@ -6,7 +6,7 @@ import Footer from "./components/Footer/Footer";
 const App = () => {
     return (
         <div className="main">
-            <div className="header ">
+            <div className="header-nav">
                 <NavMenu ></NavMenu>
             </div>
             <div className="body">

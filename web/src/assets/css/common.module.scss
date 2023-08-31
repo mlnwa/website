@@ -31,6 +31,15 @@
     padding-top: 5rem !important;
     padding-bottom: 5rem !important;
 }
+/**********************margin****************************/
+.m_margin_tb_mini {
+    margin-top: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+}
+.m_margin_tb_tiny {
+    margin-top: 0.2rem !important;
+    margin-bottom: 0.2rem !important;
+}
 /**********************opcity****************************/
 .opcity_tiny {
     opacity: 0.6 !important;
@@ -63,4 +72,11 @@
 .m_header {
     display: inline-block !important;
     width: auto !important;
+}
+
+/*************************text***************************************/
+.m_text {
+    font-weight: 300 !important;
+    letter-spacing: 1px !important;
+    line-height: 1.8;
 }
