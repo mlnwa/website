@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Get, Post, Req, UseGuards,Headers, UsePipes, ValidationPipe } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { ResultModel } from "src/common/result/ResultModel";
-import { UserCreateDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import {validate} from "class-validator"
 import { RolesGuard } from "src/common/guards";
 import { Public } from "src/common/decorators/public.decorator";
@@ -25,7 +25,7 @@ export class UserController {
     }
     @Public()
     @Post()
-    async create(@Body() user:UserCreateDto){
+    async create(@Body() user:CreateUserDto){
         return this.userService.create(user)
     }
 }

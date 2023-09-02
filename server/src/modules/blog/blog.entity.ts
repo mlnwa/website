@@ -7,11 +7,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { User } from '../user/user.entity';
+import { UserEntity } from '../user/user.entity';
 import { BlogStatus } from './blog.enum';
 
 @Entity()
-export class Blog {
+export class BlogEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,8 +28,8 @@ export class Blog {
   @Column()
   content: string;
 
-  @ManyToOne(() => User, (user) => user.blogs)
-  user: User;
+  @ManyToOne(() => UserEntity, (user) => user.blogs)
+  user: UserEntity;
 
   @CreateDateColumn({ 
     type: 'datetime',
