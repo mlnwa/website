@@ -1,12 +1,12 @@
-export class ResultModel {
+export class ResultModel<R=any> {
   constructor() { }
-  static builderSuccess():ResultModel{
-    const resultModel = new ResultModel()
+  static builderSuccess<T=any>():ResultModel<T>{
+    const resultModel = new ResultModel<T>()
     resultModel.setSuccess(true)
     return resultModel
   }
-  static builderSuccessMsg(msg:string):ResultModel {
-    const resultModel = ResultModel.builderSuccess()
+  static builderSuccessMsg<T=any>(msg:string):ResultModel<T> {
+    const resultModel = ResultModel.builderSuccess<T>()
     resultModel.setMsg(msg)
     return resultModel
   }
@@ -17,7 +17,7 @@ export class ResultModel {
     return resultModel
   }
   private success: boolean;
-  private result: any;
+  private result: R;
   private msg: string;
   private code: number;
 
@@ -34,16 +34,16 @@ export class ResultModel {
     return this.success;
   }
 
-  public setSuccess(success: boolean): ResultModel {
+  public setSuccess(success: boolean): ResultModel<R> {
     this.success = success;
     return this;
   }
 
-  public getResult(): any {
+  public getResult(): R {
     return this.result;
   }
 
-  public setResult(result: any): ResultModel {
+  public setResult(result: R): ResultModel<R> {
     this.result = result;
     return this;
   }

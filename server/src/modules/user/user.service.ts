@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { Injectable } from '@nestjs/common';
@@ -8,8 +8,8 @@ export class UserService {
   constructor(
     @InjectDataSource()
     private readonly dataSource: DataSource,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity)
+    private readonly userRepository: Repository<UserEntity>,
   ) {}
   async findAll(): Promise<ResultModel> {
       const result = await this.userRepository.find({

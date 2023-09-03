@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { BlogStatus } from './blog.enum';
+import { CatgoryEntity } from '../catgory/catgory.entity';
 
 @Entity()
 export class BlogEntity {
@@ -30,6 +31,9 @@ export class BlogEntity {
 
   @ManyToOne(() => UserEntity, (user) => user.blogs)
   user: UserEntity;
+
+  @ManyToOne(() => CatgoryEntity,(catgory) => catgory.blogs)
+  catgory: CatgoryEntity
 
   @CreateDateColumn({ 
     type: 'datetime',
