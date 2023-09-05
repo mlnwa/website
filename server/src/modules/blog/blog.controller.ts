@@ -16,8 +16,8 @@ export class BlogController {
     ){}
 
     @Get()
-    queryBlogList(@Body() params:PaginationDto){
-        
+    queryBlogList(@Body() pagenationDto:PaginationDto){
+        return this.blogService.queryBlogList(pagenationDto)
     }
 
     @Post()
