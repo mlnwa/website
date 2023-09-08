@@ -5,7 +5,7 @@ import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters';
 import { LoggerMiddleware } from './common/middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService,ConfigModule } from '@nestjs/config';
+import { ConfigService, ConfigModule } from '@nestjs/config';
 import { databaseConfig } from './config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModuel } from './modules/auth/auth.module';
@@ -17,18 +17,18 @@ import { TagModule } from './modules/tag/tag.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load:[databaseConfig],
-      isGlobal:true
+      load: [databaseConfig],
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
-      useFactory:(config:ConfigService) => config.get('database'),
-      inject:[ConfigService]
+      useFactory: (config: ConfigService) => config.get('database'),
+      inject: [ConfigService],
     }),
     UserModule,
     AuthModuel,
     BlogModule,
     CatgoryModule,
-    TagModule
+    TagModule,
   ],
   controllers: [AppController],
   providers: [
@@ -38,9 +38,9 @@ import { TagModule } from './modules/tag/tag.module';
       useClass: HttpExceptionFilter,
     },
     {
-      provide:APP_GUARD,
-      useClass:JwtAuthGuard
-    }
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {

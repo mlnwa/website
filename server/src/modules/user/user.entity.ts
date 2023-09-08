@@ -19,15 +19,15 @@ export class UserEntity {
   @Column('varchar')
   password: string;
 
-  @Column({default:1})
+  @Column({ default: 1 })
   status: number;
 
   @OneToMany(() => BlogEntity, (blog) => blog.user)
   blogs: BlogEntity[];
 
-  @CreateDateColumn({ 
-    type: 'datetime', 
-    // default: 'CURRENT_TIMESTAMP' 
+  @CreateDateColumn({
+    type: 'datetime',
+    // default: 'CURRENT_TIMESTAMP'
   })
   createAt: Date;
 

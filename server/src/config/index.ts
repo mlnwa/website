@@ -1,1 +1,1 @@
-export {databaseConfig} from './database.config'
+export { databaseConfig } from './database.config';

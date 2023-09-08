@@ -20,11 +20,11 @@ export class BlogEntity {
   title: string;
 
   @Column({
-    type:'enum',
-    enum:BlogStatus,
-    default:BlogStatus.DRAFT
+    type: 'enum',
+    enum: BlogStatus,
+    default: BlogStatus.DRAFT,
   })
-  status:BlogStatus
+  status: BlogStatus;
 
   @Column()
   content: string;
@@ -32,10 +32,10 @@ export class BlogEntity {
   @ManyToOne(() => UserEntity, (user) => user.blogs)
   user: UserEntity;
 
-  @ManyToOne(() => CatgoryEntity,(catgory) => catgory.blogs)
-  catgory: CatgoryEntity
+  @ManyToOne(() => CatgoryEntity, (catgory) => catgory.blogs)
+  catgory: CatgoryEntity;
 
-  @CreateDateColumn({ 
+  @CreateDateColumn({
     type: 'datetime',
   })
   createAt: Date;

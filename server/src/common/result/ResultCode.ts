@@ -1,3 +1,3 @@
 export class ErrorCodes {
-    static ServerError = 9999
+  static ServerError = 9999;
 }

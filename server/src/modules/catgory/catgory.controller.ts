@@ -1,6 +1,6 @@
-import { Controller } from "@nestjs/common";
+import { Controller } from '@nestjs/common';
 
 @Controller('cat')
-export  class CatgoryController  {
-    constructor(){}
+export class CatgoryController {
+  constructor() {}
 }
