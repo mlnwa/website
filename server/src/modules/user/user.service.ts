@@ -3,6 +3,8 @@ import { UserEntity } from './user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { Injectable } from '@nestjs/common';
+import { CreateUserDto } from './dto/create-user.dto';
+import { PaginationDto } from 'src/common/dtos';
 
 export class UserService {
   constructor(
@@ -11,28 +13,35 @@ export class UserService {
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
+
   async findAll(): Promise<ResultModel> {
     const result = await this.userRepository.find({
       // relations:['blogs']
     });
-    return ResultModel.builderSuccess().setResult(result);
+    return ResultModel.builderSuccess<UserEntity[]>().setResult(result);
   }
-  async findByUserName(name: string): Promise<ResultModel> {
+
+  async findByUserName(name: string): Promise<ResultModel<UserEntity>> {
     const result = await this.userRepository.findOne({
       where: { name },
     });
-    return ResultModel.builderSuccess().setResult(result);
+    if (result == null) {
+      return ResultModel.builderErrorMsg('用户不存在');
+    }
+    return ResultModel.builderSuccess<UserEntity>().setResult(result);
   }
 
-  async create(user): Promise<ResultModel> {
-    const { name } = user;
+  async create(createUserDto: CreateUserDto): Promise<ResultModel> {
+    const { name } = createUserDto;
     const isFound = await this.userRepository.findOne({
       where: { name },
     });
     if (isFound) {
       return ResultModel.builderErrorMsg('用户已存在');
     }
-    await this.userRepository.save(user);
+    await this.userRepository.save(createUserDto);
     return ResultModel.builderSuccess();
   }
+
+  async findUsersByPagination(paginationDto: PaginationDto) {}
 }

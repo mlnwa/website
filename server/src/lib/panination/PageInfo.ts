@@ -1,4 +1,4 @@
-class PageInfo<T> {
+export class PageInfo<T> {
   private pageIndex: number;
   private pageSize: number;
   private size: number;
@@ -18,7 +18,7 @@ class PageInfo<T> {
   private navigateFirstPage: number;
   private navigateNextPage: number;
 
-  private list: T[];
+  private list: T[] = [];
 
   public getPageIndex(): number {
     return this.pageIndex;
@@ -156,5 +156,3 @@ class PageInfo<T> {
     this.list = list;
   }
 }
-
-export default PageInfo;

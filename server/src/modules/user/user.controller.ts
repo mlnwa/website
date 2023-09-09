@@ -5,6 +5,7 @@ import {
   Get,
   Post,
   Req,
+  Query,
   UseGuards,
   Headers,
   UsePipes,
@@ -17,6 +18,7 @@ import { validate } from 'class-validator';
 import { RolesGuard } from 'src/common/guards';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Request } from 'express';
+import { PaginationDto } from 'src/common/dtos';
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -36,5 +38,10 @@ export class UserController {
   @Post()
   async create(@Body() user: CreateUserDto) {
     return this.userService.create(user);
+  }
+
+  @Get('list')
+  async getUserList(@Query() paginationDto: PaginationDto) {
+    console.log(paginationDto);
   }
 }

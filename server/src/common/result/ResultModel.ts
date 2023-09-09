@@ -1,3 +1,5 @@
+import { PageInfo } from 'src/lib/panination';
+
 export class ResultModel<R = any> {
   constructor() {}
   static builderSuccess<T = any>(): ResultModel<T> {
@@ -57,3 +59,5 @@ export class ResultModel<R = any> {
     return this;
   }
 }
+
+export type PageModel<R = any> = ResultModel<PageInfo<R>>;

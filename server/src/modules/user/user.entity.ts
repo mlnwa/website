@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
 
-@Entity()
+@Entity({ name: 'user' })
 export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -27,14 +27,13 @@ export class UserEntity {
 
   @CreateDateColumn({
     type: 'datetime',
-    // default: 'CURRENT_TIMESTAMP'
+    name: 'create_at',
   })
   createAt: Date;
 
   @UpdateDateColumn({
     type: 'datetime',
-    // default:'CURRENT_TIMESTAMP',
-    // onUpdate: 'CURRENT_TIMESTAMP',
+    name: 'update_at',
   })
   updateAt: Date;
 }
