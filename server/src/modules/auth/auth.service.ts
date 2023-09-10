@@ -6,13 +6,10 @@ import { ResultModel } from 'src/common/result/ResultModel';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
   async validateUser(userName: string, password: string): Promise<any> {
-    const userResultModel = await this.userService.findByUserName(userName);
+    const userResultModel = await this.userService.findByName(userName);
     if (!userResultModel.getSuccess()) return userResultModel.getMsg();
     const user: UserEntity = userResultModel.getResult();
     if (user.password == password) {

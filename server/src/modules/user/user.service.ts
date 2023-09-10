@@ -5,6 +5,7 @@ import { ResultModel } from 'src/common/result/ResultModel';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dtos';
+import { SelectPage } from 'src/lib/panination';
 
 export class UserService {
   constructor(
@@ -21,7 +22,7 @@ export class UserService {
     return ResultModel.builderSuccess<UserEntity[]>().setResult(result);
   }
 
-  async findByUserName(name: string): Promise<ResultModel<UserEntity>> {
+  async findByName(name: string): Promise<ResultModel<UserEntity>> {
     const result = await this.userRepository.findOne({
       where: { name },
     });
@@ -33,9 +34,7 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto): Promise<ResultModel> {
     const { name } = createUserDto;
-    const isFound = await this.userRepository.findOne({
-      where: { name },
-    });
+    const isFound = await this.userRepository.findOne({ where: { name } });
     if (isFound) {
       return ResultModel.builderErrorMsg('用户已存在');
     }
@@ -43,5 +42,8 @@ export class UserService {
     return ResultModel.builderSuccess();
   }
 
-  async findUsersByPagination(paginationDto: PaginationDto) {}
+  async findByPagination(paginationDto: PaginationDto) {
+    const result = await SelectPage.paginate<UserEntity>(this.userRepository, paginationDto);
+    return ResultModel.builderSuccess().setResult(result);
+  }
 }

@@ -1,4 +1,5 @@
 export class PageInfo<T> {
+  constructor() {}
   private pageIndex: number;
   private pageSize: number;
   private size: number;
@@ -7,6 +8,7 @@ export class PageInfo<T> {
   private pages: number;
   private prePage: number;
   private nextPage: number;
+  private total: number;
 
   private isFirstPage: boolean;
   private isLastPage: boolean;
@@ -20,6 +22,13 @@ export class PageInfo<T> {
 
   private list: T[] = [];
 
+  public getTotal(): number {
+    return this.total;
+  }
+
+  public setTotal(total: number): void {
+    this.total = total;
+  }
   public getPageIndex(): number {
     return this.pageIndex;
   }

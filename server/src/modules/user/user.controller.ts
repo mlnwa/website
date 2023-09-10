@@ -42,6 +42,6 @@ export class UserController {
 
   @Get('list')
   async getUserList(@Query() paginationDto: PaginationDto) {
-    console.log(paginationDto);
+    return this.userService.findByPagination(paginationDto);
   }
 }
