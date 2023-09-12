@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -11,6 +12,7 @@ import {
 import { UserEntity } from '../user/user.entity';
 import { BlogStatus } from './blog.enum';
 import { CatgoryEntity } from '../catgory/catgory.entity';
+import { TagEntity } from '../tag/tag.entity';
 
 @Entity({ name: 'blog' })
 export class BlogEntity {
@@ -31,12 +33,16 @@ export class BlogEntity {
   content: string;
 
   @ManyToOne(() => UserEntity, (user) => user.blogs)
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
   @ManyToOne(() => CatgoryEntity, (catgory) => catgory.blogs)
-  @JoinColumn({ name: 'cargory_id' })
+  @JoinColumn({ name: 'cargory_id', referencedColumnName: 'id' })
   catgory: CatgoryEntity;
+
+  @ManyToMany(() => TagEntity)
+  @JoinTable({ name: 'tag', joinColumn: { name: 'tag_id', referencedColumnName: 'id' } })
+  tags: TagEntity[];
 
   @CreateDateColumn({
     type: 'datetime',

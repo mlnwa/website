@@ -24,24 +24,24 @@ import { PaginationDto } from 'src/common/dtos';
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class UserController {
   constructor(private userService: UserService) {}
-  @Get()
-  async findAll() {
-    let res;
-    try {
-      res = await this.userService.findAll();
-    } catch (error) {
-      return ResultModel.builderErrorMsg(error.message);
-    }
-    return res;
-  }
+  // @Get()
+  // async findAllUser() {
+  //   let res;
+  //   try {
+  //     res = await this.userService.findAll();
+  //   } catch (error) {
+  //     return ResultModel.builderErrorMsg(error.message);
+  //   }
+  //   return res;
+  // }
   @Public()
   @Post()
-  async create(@Body() user: CreateUserDto) {
+  async createUser(@Body() user: CreateUserDto) {
     return this.userService.create(user);
   }
 
-  @Get('list')
+  @Get()
   async getUserList(@Query() paginationDto: PaginationDto) {
-    return this.userService.findByPagination(paginationDto);
+    return this.userService.queryPages(paginationDto);
   }
 }

@@ -1,16 +1,16 @@
 import { DataSource, Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { ResultModel } from 'src/common/result/ResultModel';
+import { PageModel, ResultModel } from 'src/common/result/ResultModel';
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dtos';
-import { SelectPage } from 'src/lib/panination';
+import { PageInfo, SelectPage } from 'src/lib/panination';
 
 export class UserService {
   constructor(
-    @InjectDataSource()
-    private readonly dataSource: DataSource,
+    // @InjectDataSource()
+    // private readonly dataSource: DataSource,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
@@ -42,8 +42,8 @@ export class UserService {
     return ResultModel.builderSuccess();
   }
 
-  async findByPagination(paginationDto: PaginationDto) {
+  async queryPages(paginationDto: PaginationDto): Promise<PageModel<UserEntity>> {
     const result = await SelectPage.paginate<UserEntity>(this.userRepository, paginationDto);
-    return ResultModel.builderSuccess().setResult(result);
+    return ResultModel.builderSuccess<PageInfo<UserEntity>>().setResult(result);
   }
 }

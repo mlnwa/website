@@ -12,12 +12,12 @@ export class BlogService {
     private readonly blogRepository: Repository<BlogEntity>,
   ) {}
 
-  async createBlog(blog: BlogEntity): Promise<ResultModel> {
+  async create(blog: BlogEntity): Promise<ResultModel> {
     await this.blogRepository.save(blog);
     return ResultModel.builderSuccessMsg('新增成功');
   }
 
-  async queryBlogList(paginationDto: PaginationDto) {}
+  async findPages(paginationDto: PaginationDto) {}
 
-  async queryBlogById() {}
+  async findById() {}
 }

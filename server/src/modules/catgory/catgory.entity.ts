@@ -1,14 +1,7 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
 
-@Entity()
+@Entity({ name: 'catgory' })
 export class CatgoryEntity {
   @PrimaryGeneratedColumn()
   id: number;

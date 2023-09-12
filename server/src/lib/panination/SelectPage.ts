@@ -17,7 +17,7 @@ export class SelectPage {
     const count: number = await entity.count(otherConditions);
     const skip = (pageIndex - 1) * take;
     const pageInfo = new PageInfo<E>();
-    let result: E[] = [];
+    let result: E[] = []; 
     if (skip < count) {
       result = await entity.find({
         skip,

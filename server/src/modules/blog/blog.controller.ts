@@ -1,14 +1,4 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Post,
-  Put,
-  Req,
-  UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { plainToClass } from 'class-transformer';
 import { BlogEntity } from './blog.entity';
@@ -24,8 +14,8 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Get()
-  queryBlogList(@Body() pagenationDto: PaginationDto) {
-    return this.blogService.queryBlogList(pagenationDto);
+  getBlogList(@Body() pagenationDto: PaginationDto) {
+    return this.blogService.findPages(pagenationDto);
   }
 
   @Post()
@@ -34,7 +24,7 @@ export class BlogController {
     const userId = user.userId;
     const blog = JSON.parse(createBlogDto.data) as BlogEntity;
     blog.user = { id: userId } as unknown as UserEntity;
-    this.blogService.createBlog(blog);
+    this.blogService.create(blog);
   }
 
   @Put()
