@@ -6,19 +6,16 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dtos';
 import { PageInfo, SelectPage } from 'src/lib/panination';
+import { IdUtil } from 'src/utils';
 
 export class UserService {
   constructor(
-    // @InjectDataSource()
-    // private readonly dataSource: DataSource,
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
   async findAll(): Promise<ResultModel> {
-    const result = await this.userRepository.find({
-      // relations:['blogs']
-    });
+    const result = await this.userRepository.find();
     return ResultModel.builderSuccess<UserEntity[]>().setResult(result);
   }
 
@@ -38,6 +35,7 @@ export class UserService {
     if (isFound) {
       return ResultModel.builderErrorMsg('用户已存在');
     }
+    // createUserDto.uid = IdUtil.uuid('Axx_1xxx');
     await this.userRepository.save(createUserDto);
     return ResultModel.builderSuccess();
   }

@@ -10,6 +10,8 @@ import {
   Headers,
   UsePipes,
   ValidationPipe,
+  Put,
+  Delete,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ResultModel } from 'src/common/result/ResultModel';
@@ -44,4 +46,10 @@ export class UserController {
   async getUserList(@Query() paginationDto: PaginationDto) {
     return this.userService.queryPages(paginationDto);
   }
+
+  @Put()
+  updateUser() {}
+
+  @Delete()
+  deleteUser() {}
 }
