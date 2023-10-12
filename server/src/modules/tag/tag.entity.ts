@@ -26,4 +26,7 @@ export class TagEntity {
     type: 'datetime',
   })
   createAt: Date;
+
+  @ManyToMany(() => BlogEntity, (blog) => blog.tags)
+  blogs: BlogEntity[];
 }

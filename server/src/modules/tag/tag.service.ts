@@ -5,10 +5,14 @@ import { QueryPagesTagDto } from './dto/query-tag.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
 import { PageModel, ResultModel } from 'src/common/result/ResultModel';
 import { CreateTagDto } from './dto/create-tag.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TagService {
-  constructor(private readonly tagRepository: Repository<TagEntity>) {}
+  constructor(
+    @InjectRepository(TagEntity)
+    private readonly tagRepository: Repository<TagEntity>,
+  ) {}
 
   async findById() {}
 

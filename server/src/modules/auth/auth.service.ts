@@ -8,15 +8,15 @@ import { ResultModel } from 'src/common/result/ResultModel';
 export class AuthService {
   constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
-  async validateUser(userName: string, password: string): Promise<any> {
+  async validateUser(userName: string, password: string): Promise<ResultModel> {
     const userResultModel = await this.userService.findByName(userName);
-    if (!userResultModel.getSuccess()) return userResultModel.getMsg();
+    if (!userResultModel.getSuccess()) return userResultModel;
     const user: UserEntity = userResultModel.getResult();
     if (user.password == password) {
       const { password, ...result } = user;
-      return result;
+      return ResultModel.builderSuccess().setResult(result);
     }
-    return null;
+    return ResultModel.builderErrorMsg('密码错误');
   }
 
   async login(user: any): Promise<ResultModel> {

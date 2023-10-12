@@ -23,6 +23,11 @@ export class BlogEntity {
   title: string;
 
   @Column({
+    name: 'publish_id',
+  })
+  publishId: number;
+
+  @Column({
     type: 'enum',
     enum: BlogStatus,
     default: BlogStatus.DRAFT,
@@ -40,8 +45,12 @@ export class BlogEntity {
   @JoinColumn({ name: 'cargory_id', referencedColumnName: 'id' })
   catgory: CatgoryEntity;
 
-  @ManyToMany(() => TagEntity)
-  @JoinTable({ name: 'tag', joinColumn: { name: 'tag_id', referencedColumnName: 'id' } })
+  @ManyToMany(() => TagEntity, (tag) => tag.blogs)
+  @JoinTable({
+    name: 'blog_tags',
+    joinColumn: { name: 'blog_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+  })
   tags: TagEntity[];
 
   @CreateDateColumn({

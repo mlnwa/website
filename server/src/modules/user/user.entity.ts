@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
+import dayjs from 'dayjs';
 
 @Entity({ name: 'user' })
 export class UserEntity {
@@ -18,10 +19,10 @@ export class UserEntity {
   @Column('varchar')
   uid: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, default: '' })
   email: string;
 
-  @Column()
+  @Column({ default: 0 })
   phone: number;
 
   @OneToMany(() => BlogEntity, (blog) => blog.user)
@@ -30,6 +31,16 @@ export class UserEntity {
   @CreateDateColumn({
     type: 'datetime',
     name: 'create_at',
+    transformer: {
+      to(value) {
+        value = dayjs(value).format('YYYY-MM-DD HH:mm:ss');
+        return value;
+      },
+      from(value) {
+        value = dayjs(value);
+        return value;
+      },
+    },
   })
   createAt: Date;
 
