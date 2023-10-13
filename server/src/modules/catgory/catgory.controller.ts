@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CatgoryService } from './catgory.service';
 import { QueryPagesCatgoryDto } from './dto/query-catgory.dto';
 import { CreateCatgoryDto } from './dto/create-catgory.dto';
@@ -20,9 +32,16 @@ export class CatgoryController {
     return this.catgoryService.create(createCatgoryDto);
   }
 
-  @Delete()
-  async deleteCatgory() {}
+  @Delete(':id')
+  async deleteCatgory(@Param('id', new ParseIntPipe()) id: number) {
+    return this.catgoryService.deleteById(id);
+  }
 
-  @Put()
-  async updateCatgory() {}
+  @Put(':id')
+  async updateCatgory(@Param('id', new ParseIntPipe()) id: number, @Body() createCatgoryDto: CreateCatgoryDto) {
+    const catgory = {
+      name: createCatgoryDto.name,
+    };
+    return this.catgoryService.update(id, catgory);
+  }
 }

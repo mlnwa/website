@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Get, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+  Param,
+  ParseIntPipe,
+} from '@nestjs/common';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { QueryPagesTagDto } from './dto/query-tag.dto';
 import { TagService } from './tag.service';
@@ -20,9 +32,16 @@ export class TagController {
     return this.tagService.create(createTagDto);
   }
 
-  @Delete()
-  async deleteTag() {}
+  @Delete(':id')
+  async deleteTag(@Param('id', new ParseIntPipe()) id: number) {
+    return this.tagService.deleteById(id);
+  }
 
-  @Put()
-  async updateTag() {}
+  @Put('update/:id')
+  async updateTag(@Param('id', new ParseIntPipe()) id: number, @Body() createTagDto: CreateTagDto) {
+    const tag = {
+      name: createTagDto.name,
+    };
+    return this.tagService.update(id, tag);
+  }
 }

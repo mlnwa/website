@@ -32,4 +32,23 @@ export class CatgoryService {
     const result = await SelectPage.paginate<CatgoryEntity>(this.catgoryRepository, queryPagesCatgoryDto);
     return ResultModel.builderSuccess<PageInfo<CatgoryEntity>>().setResult(result);
   }
+
+  async findByName(name: string) {
+    const res = await this.catgoryRepository.findOne({ where: { name } });
+    if (res !== null) return ResultModel.builderSuccess<CatgoryEntity>().setResult(res);
+    return ResultModel.builderErrorMsg('分类不存在');
+  }
+
+  async deleteById(id: number) {
+    let res = await this.catgoryRepository.delete(id);
+    if (res.affected == 0) return ResultModel.builderErrorMsg('分类不存在');
+    return ResultModel.builderSuccessMsg('删除成功');
+  }
+
+  async update(id: number, catgory: Partial<CatgoryEntity>) {
+    const queryCatgory = await this.findByName(catgory.name);
+    if (queryCatgory.getSuccess()) return ResultModel.builderErrorMsg('分类已存在');
+    await this.catgoryRepository.update(id, catgory);
+    return ResultModel.builderSuccessMsg('更新成功');
+  }
 }
