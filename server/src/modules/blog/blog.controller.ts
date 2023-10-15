@@ -22,16 +22,20 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { BlogStatus } from './blog.enum';
 import { UserService } from '../user/user.service';
 import { ResultModel } from 'src/common/result/ResultModel';
+import { QueryPagesTagDto } from './dto/query-blog.dto';
 
 @Controller('blogs')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class BlogController {
   constructor(private readonly blogService: BlogService, private readonly userService: UserService) {}
 
-  @Get()
+  @Get(':status')
   @Public()
-  getBlogList(@Body() pagenationDto: PaginationDto) {
-    return this.blogService.findPages(pagenationDto);
+  getBlogList(
+    @Param('status', new ParseIntPipe()) status: BlogStatus,
+    @Query(ValidationPipe) queryPagesTagDto: QueryPagesTagDto,
+  ) {
+    return this.blogService.findPages(status, queryPagesTagDto);
   }
 
   @Post()

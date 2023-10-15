@@ -3,8 +3,9 @@ import { Repository } from 'typeorm';
 import { BlogEntity } from './blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
-import { PaginationDto } from 'src/common/dtos';
 import { BlogStatus } from './blog.enum';
+import { QueryPagesTagDto } from './dto/query-blog.dto';
+import { PageInfo, SelectPage } from 'src/lib/panination';
 
 @Injectable()
 export class BlogService {
@@ -18,7 +19,17 @@ export class BlogService {
     return ResultModel.builderSuccessMsg('保存成功');
   }
 
-  async findPages(paginationDto: PaginationDto) {}
+  async findPages(status: BlogStatus, condition: QueryPagesTagDto) {
+    const { pageIndex, pageSize } = condition;
+    const pageList = await SelectPage.paginate<BlogEntity>(this.blogRepository, {
+      pageIndex,
+      pageSize,
+      where: {
+        status,
+      },
+    });
+    return ResultModel.builderSuccess<PageInfo<BlogEntity>>().setResult(pageList);
+  }
 
   async findById(id: number) {
     return await this.blogRepository.findOne({ where: { id } });

@@ -13,6 +13,7 @@ import { UserEntity } from '../user/user.entity';
 import { BlogStatus } from './blog.enum';
 import { CatgoryEntity } from '../catgory/catgory.entity';
 import { TagEntity } from '../tag/tag.entity';
+import { ColumnEntity } from '../column/column.entity';
 
 @Entity({ name: 'blog' })
 export class BlogEntity {
@@ -44,6 +45,10 @@ export class BlogEntity {
   @ManyToOne(() => CatgoryEntity, (catgory) => catgory.blogs)
   @JoinColumn({ name: 'cargory_id', referencedColumnName: 'id' })
   catgory: CatgoryEntity;
+
+  @ManyToOne(() => ColumnEntity, (column) => column.blogs)
+  @JoinColumn({ name: 'column_id', referencedColumnName: 'id' })
+  column: ColumnEntity;
 
   @ManyToMany(() => TagEntity, (tag) => tag.blogs)
   @JoinTable({

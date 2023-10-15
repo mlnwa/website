@@ -16,7 +16,7 @@ export class CatgoryService {
 
   async create(createCatgoryDto: CreateCatgoryDto) {
     const { name } = createCatgoryDto;
-    const isFound = this.catgoryRepository.findOne({
+    const isFound = await this.catgoryRepository.findOne({
       where: {
         name,
       },
@@ -24,7 +24,7 @@ export class CatgoryService {
     if (isFound) {
       return ResultModel.builderErrorMsg(`类别：${name}已存在`);
     }
-    this.catgoryRepository.save(createCatgoryDto);
+    await this.catgoryRepository.save(createCatgoryDto);
     return ResultModel.builderSuccessMsg('新建成功');
   }
 
