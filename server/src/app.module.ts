@@ -13,6 +13,7 @@ import { JwtAuthGuard } from './common/guards';
 import { BlogModule } from './modules/blog/blog.module';
 import { CatgoryModule } from './modules/catgory/catgory.module';
 import { TagModule } from './modules/tag/tag.module';
+import { ColumnModule } from './modules/column/column.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TagModule } from './modules/tag/tag.module';
     BlogModule,
     CatgoryModule,
     TagModule,
+    ColumnModule,
   ],
   controllers: [AppController],
   providers: [

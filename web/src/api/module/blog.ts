@@ -11,7 +11,9 @@ interface Blog {
 interface QueryBlogList extends PageParams {}
 
 type CreateBlog = {};
-type DeleteBlog = {};
+type DeleteBlog = {
+  id: number;
+};
 type EditBlog = {};
 
 export const QueryBlogList = (params: QueryBlogList) => http.get<Pagination<Blog>>(params);

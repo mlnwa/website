@@ -1,7 +1,12 @@
-import http from "../requrest"
+import http from '../requrest';
 
-interface Login {
-    userName:string
-    password:string
+export interface LoginParam {
+  username: string;
+  password: string;
 }
-export const Login = (params:Login) => http.post<string>(params)
+const URL = '/auth';
+export const Login = (data: LoginParam) =>
+  http.post<string>({
+    url: `${URL}/login`,
+    data,
+  });

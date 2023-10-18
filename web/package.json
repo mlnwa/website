@@ -45,7 +45,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.9.3",
+    "@reduxjs/toolkit": "^1.9.7",
     "axios": "^1.4.0",
     "lodash": "^4.17.21",
     "node-sass": "npm:dart-sass@^1.25.0",

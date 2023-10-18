@@ -16,6 +16,7 @@ const devConfig = {
       "/api": {
         target: "http://localhost:3000",
         secure: false,
+        changeOrigin: true,
         pathRewrite: {
           "^/api": "",
         },
@@ -39,10 +40,10 @@ const devConfig = {
       directory: path.join(__dirname, "../public"),
     },
   },
-  plugins:[
+  plugins: [
     new DefinePlugin({
-      'process.env':{
-        NODE_ENV:JSON.stringify('development')
+      'process.env': {
+        NODE_ENV: JSON.stringify('development')
       }
     })
   ]
