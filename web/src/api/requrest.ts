@@ -1,4 +1,6 @@
-import axios, { AxiosHeaders, AxiosInstance, Method } from 'axios';
+import { message } from 'antd';
+import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, Method } from 'axios';
+import { IMessage } from '../components/IMessage';
 const WhiteCodeList: (string | number)[] = [1101];
 type ResultModel<T> = {
   success: boolean;
@@ -9,15 +11,27 @@ type ResultModel<T> = {
 
 const HttpRequest = class {
   instance: AxiosInstance;
-  constructor() {
-    this.instance = axios.create({
+  constructor(config?: CreateAxiosDefaults) {
+    const defaultConfigs = {
       timeout: 5000,
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       baseURL: '/api',
-    });
+    };
+    if (config) {
+      config = {
+        ...defaultConfigs,
+        ...config,
+      };
+    } else {
+      config = defaultConfigs;
+    }
+    this.instance = axios.create(config);
     this.interceptors();
+  }
+  create(config: CreateAxiosDefaults) {
+    return new HttpRequest(config);
   }
   /**
    * request repsonse interceptors
@@ -35,8 +49,10 @@ const HttpRequest = class {
       (response) => {
         const data = response.data as ResultModel<any>;
         if (data.success !== true && !WhiteCodeList.includes(data.code)) {
-          alert(data.msg);
-          return Promise.reject(data.msg);
+          IMessage.error(data.msg);
+        }
+        if (data.msg) {
+          IMessage.success(data.msg);
         }
         return response;
       },
@@ -45,15 +61,15 @@ const HttpRequest = class {
       },
     );
   }
-  private request<T>(data: any, method: Method) {
+  private request<T>(data: Partial<AxiosRequestConfig>, method: Method) {
     return new Promise<ResultModel<T>>((resolve, reject) => {
       this.instance
-        .request({
+        .request<ResultModel<T>>({
           method,
           ...data,
         })
         .then((res) => {
-          const data = res.data as ResultModel<T>;
+          const data = res.data;
           resolve(data);
         })
         .catch((err) => {
@@ -61,16 +77,16 @@ const HttpRequest = class {
         });
     });
   }
-  post<T>(data?: any) {
+  post<T>(data?: Partial<AxiosRequestConfig>) {
     return this.request<T>(data, 'POST');
   }
-  get<T>(data?: any) {
+  get<T>(data?: Partial<AxiosRequestConfig>) {
     return this.request<T>(data, 'GET');
   }
-  delete<T>(data?: any) {
+  delete<T>(data?: Partial<AxiosRequestConfig>) {
     return this.request<T>(data, 'DELETE');
   }
-  put<T>(data?: any) {
+  put<T>(data?: Partial<AxiosRequestConfig>) {
     return this.request<T>(data, 'PUT');
   }
 };

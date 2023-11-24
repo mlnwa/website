@@ -1,0 +1,1 @@
+export { IMessageFC } from './IMessageFC';

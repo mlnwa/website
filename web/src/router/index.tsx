@@ -14,6 +14,7 @@ export type CustomRoute = RouteObject & {
   customProp: CustomProps;
   children: CustomRoute[];
 };
+// 游客内容
 export const root = {
   path: '/',
   element: <App></App>,
@@ -46,11 +47,12 @@ export const root = {
     },
   ],
 } as CustomRoute;
-const routerList = [
-  root,
+// 发布者
+export const author: RouteObject[] = [
   {
     path: '/Login',
     element: <Login></Login>,
   },
-] as RouteObject[];
+];
+const routerList = [root, ...author] as RouteObject[];
 export const router = createHashRouter(routerList);

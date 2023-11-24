@@ -1,23 +1,27 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Login, LoginParam } from '../../api/module/user';
 export interface LoginState {
-  token: string;
+  accessToken: string;
+  freshToken: string;
   userInfo: {
-    userId: string;
+    username: string;
     password: string;
   };
 }
 
 const initialState: LoginState = {
-  token: '',
+  accessToken: '',
   userInfo: {
-    userId: '',
+    username: '',
     password: '',
   },
+  freshToken: '',
 };
 export const loginStore = createAsyncThunk('login', async (payload: LoginParam, { dispatch }) => {
   const res = await Login(payload);
-  console.log(res.result);
+  if (res.success) {
+    dispatch(afterLogin({ ...res.result, ...payload }));
+  }
   return res;
 });
 export const loginSlice = createSlice({
@@ -25,9 +29,9 @@ export const loginSlice = createSlice({
   initialState,
   reducers: {
     afterLogin: (state, { payload }) => {
-      console.log(state);
-      state.token = payload.token;
-      state.userInfo.userId = payload.userId;
+      state.accessToken = payload.accessToken;
+      state.freshToken = payload.freshToken;
+      state.userInfo.username = payload.username;
       state.userInfo.password = payload.password;
     },
   },

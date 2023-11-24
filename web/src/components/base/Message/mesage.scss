@@ -1,0 +1,41 @@
+.i-message {
+    width: max-content;
+    margin: 15px auto;
+    opacity: 0;
+    position: relative;
+    // transition: all 0.5s ease;
+    min-width: 100px;
+    &__visible {
+        opacity: 0;
+        animation: visible 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0s 1 forwards;
+    }
+
+    &__hidden {
+        opacity: 1;
+        animation: hidden 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 0s 1 forwards;
+    }
+}
+
+@keyframes visible {
+    from {
+        opacity: 0;
+        top: -30px;
+    }
+
+    to {
+        opacity: 1;
+        top: 0;
+    }
+}
+
+@keyframes hidden {
+    from {
+        opacity: 1;
+        top: 0;
+    }
+
+    to {
+        opacity: 0;
+        top: -30px;
+    }
+}
