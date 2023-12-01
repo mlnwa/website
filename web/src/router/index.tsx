@@ -6,6 +6,7 @@ import Archives from '../pages/archives/archives';
 import React from 'react';
 import { SemanticICONS } from 'semantic-ui-react';
 import Login from '../pages/login/login';
+import adminRoute from './routes/admin';
 type CustomProps = {
   icon: SemanticICONS;
   label: string;
@@ -50,9 +51,9 @@ export const root = {
 // 发布者
 export const author: RouteObject[] = [
   {
-    path: '/Login',
+    path: '/login',
     element: <Login></Login>,
   },
 ];
-const routerList = [root, ...author] as RouteObject[];
+const routerList = [root, ...author, adminRoute] as RouteObject[];
 export const router = createHashRouter(routerList);

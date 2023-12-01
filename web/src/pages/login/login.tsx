@@ -3,7 +3,6 @@ import style from './login.module.scss';
 import { loginStore } from '../../store/features/loginSlice';
 import { useDispatch } from 'react-redux';
 import store, { AppDispatch } from '../../store';
-import { LoginParam } from '../../api/module/user';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 const Login = function () {
   const dispatch = useDispatch<AppDispatch>();
