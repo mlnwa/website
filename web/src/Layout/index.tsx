@@ -14,7 +14,7 @@ const Layout = function () {
     <Sidebar.Pushable>
       <Side visible={sideVisible}></Side>
       <Sidebar.Pusher dimmed={false} className="main" style={{ minHeight: '100vh', background: '#fff' }}>
-        <Header setSideVisible={switchSide}></Header>
+        <Header setSideVisible={switchSide} sideVisible={sideVisible}></Header>
         <MainContent></MainContent>
         <Footer></Footer>
       </Sidebar.Pusher>

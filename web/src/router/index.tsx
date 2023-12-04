@@ -13,7 +13,7 @@ type CustomProps = {
 };
 export type CustomRoute = RouteObject & {
   customProp: CustomProps;
-  children: CustomRoute[];
+  children?: CustomRoute[];
 };
 // 游客内容
 export const root = {
