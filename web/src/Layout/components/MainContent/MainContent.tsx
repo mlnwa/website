@@ -1,11 +1,12 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-
+import { Segment, Transition } from 'semantic-ui-react';
+import style from '../../layout.module.scss';
 const MainContent = () => {
   return (
-    <div style={{ flex: 1 }}>
+    <Segment className={`${style.main_content}`}>
       <Outlet></Outlet>
-    </div>
+    </Segment>
   );
 };
 

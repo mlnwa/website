@@ -1,0 +1,11 @@
+.main_content {
+    margin: 0 1rem 1rem !important;
+    flex: 1;
+    overflow: auto;
+}
+.sidebar_pusher {
+    min-height: 100vh !important;
+    background-color: #fff !important;
+    display: flex;
+    flex-direction: column;
+}
