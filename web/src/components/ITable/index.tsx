@@ -8,7 +8,8 @@ export type ColumnType = {
   sorted?: StrictTableHeaderCellProps['sorted'];
   sortable?: boolean;
   sorter?: (a: any, b: any) => number;
-  render?: (value: any, record: any, index: number) => React.ReactNode;
+  render?: (row: any, index: number) => React.ReactNode;
+  renderHeader?: (column: any) => React.ReactNode;
 };
 interface Props {
   list: any[];
@@ -30,7 +31,7 @@ const ITable = function (props: Props) {
                 onClick={column.onClick}
                 sortable={column.sortable}
               >
-                {column.title}
+                {column.renderHeader ? column.renderHeader(column) : column.title}
               </Table.HeaderCell>
             );
           })}
@@ -43,7 +44,7 @@ const ITable = function (props: Props) {
               {props.columns.map((column, index) => {
                 return (
                   <Table.Cell key={index} width={column.width}>
-                    {item[column.key]}
+                    {column.render ? column.render(item, index) : item[column.key]}
                   </Table.Cell>
                 );
               })}

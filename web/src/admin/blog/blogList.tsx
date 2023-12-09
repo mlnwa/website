@@ -3,9 +3,12 @@ import { Button, Container, Flag, Input, Label, Segment } from 'semantic-ui-reac
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker, Drawer } from 'antd';
 import { IMessage } from '../../components/IMessage';
+import IDrawer from '../../components/IDrawer';
+import { BlogFilterForm } from '../../class/FormStructs';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
+  const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
   const columns: ColumnType[] = [
     {
       title: '标题',
@@ -35,6 +38,12 @@ const BlogList = function () {
   const onClose = () => {
     setOpen(false);
   };
+  const showFilter = function () {
+    setOpen(true);
+  };
+  const onFilter = function () {
+    setOpen(false);
+  };
   return (
     <div>
       <Label>
@@ -43,15 +52,16 @@ const BlogList = function () {
       </Label>
 
       <Button icon="search" content="搜索" size="small"></Button>
-      <Button icon="filter" content="筛选条件" size="small" onClick={() => setOpen(true)}></Button>
+      <Button icon="filter" content="筛选条件" size="small" onClick={() => showFilter()}></Button>
       <ITable list={list} columns={columns}></ITable>
-      <Drawer open={open} onClose={onClose} placement="right" width={600} title="筛选条件">
-        <Input label="作者" size="small"></Input>
-        <Input label="状态" size="small"></Input>
-        <Input label="专栏" size="small"></Input>
-        <Input label="类别" size="small"></Input>
-        <Input label="标签" size="small"></Input>
-      </Drawer>
+      <IDrawer open={open} onClose={onClose}>
+        {filterForm.panelList.map((item, index) => {
+          return <IDrawer.Panel key={index} data={item}></IDrawer.Panel>;
+        })}
+        <IDrawer.Footer>
+          <Button content="确认" positive icon="save" onClick={onFilter}></Button>
+        </IDrawer.Footer>
+      </IDrawer>
     </div>
   );
 };
