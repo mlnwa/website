@@ -6,10 +6,14 @@ export interface Panel {
   icon: SemanticICONS;
   content: FormFiledTypes[];
 }
-const FormStruct = class {
+export const FormStruct = class {
   panelList: Panel[];
   constructor() {}
   generateFormData(formData: any) {}
+  updateContent(panelIndex: number, contentIndex: number, value: any) {
+    this.panelList[panelIndex].content[contentIndex].value = value;
+    return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
+  }
 };
 
 export class BlogFilterForm extends FormStruct {

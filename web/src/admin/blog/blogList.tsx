@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Container, Flag, Input, Label, Segment } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker, Drawer } from 'antd';
@@ -44,6 +44,11 @@ const BlogList = function () {
   const onFilter = function () {
     setOpen(false);
   };
+  const setFormHandle = function (panelIndex: number, contentIndex: number, value: any) {
+    setFilterForm((prevState: BlogFilterForm) => {
+      return prevState.updateContent(panelIndex, contentIndex, value);
+    });
+  };
   return (
     <div>
       <Label>
@@ -56,7 +61,15 @@ const BlogList = function () {
       <ITable list={list} columns={columns}></ITable>
       <IDrawer open={open} onClose={onClose}>
         {filterForm.panelList.map((item, index) => {
-          return <IDrawer.Panel key={index} data={item}></IDrawer.Panel>;
+          return (
+            <IDrawer.Panel
+              key={index}
+              data={item}
+              onChange={(contentIndex, value) => {
+                setFormHandle(index, contentIndex, value);
+              }}
+            ></IDrawer.Panel>
+          );
         })}
         <IDrawer.Footer>
           <Button content="确认" positive icon="save" onClick={onFilter}></Button>

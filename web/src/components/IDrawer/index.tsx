@@ -11,6 +11,7 @@ type IDrawerHeaderProps = {
 };
 type IDrawerPanelProps = {
   data: Panel;
+  onChange: (contentIndex: number, value: any) => void;
 };
 type IDrawerFooterProps = {
   children?: React.ReactNode | React.ReactNode[];
@@ -33,7 +34,7 @@ const IDrawer = ({ children, ...drawerProps }: IDrawerProps) => {
 IDrawer.Header = ({ title }: IDrawerHeaderProps) => {
   return <div>{title}</div>;
 };
-IDrawer.Panel = ({ data }: IDrawerPanelProps) => {
+IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
   return (
     <div>
       <Divider horizontal>
@@ -43,7 +44,7 @@ IDrawer.Panel = ({ data }: IDrawerPanelProps) => {
         </Header>
       </Divider>
       <Grid>
-        {data.content.map((item) => {
+        {data.content.map((item, index) => {
           if (item.type === 'input') {
             return (
               <Form.Input
@@ -55,7 +56,9 @@ IDrawer.Panel = ({ data }: IDrawerPanelProps) => {
                 placeholder={item.placeholder}
                 size="small"
                 value={item.value}
-                onChange={(e) => {}}
+                onChange={(e) => {
+                  onChange(index, e.target.value);
+                }}
               ></Form.Input>
             );
           }
