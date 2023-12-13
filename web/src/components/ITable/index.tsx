@@ -16,13 +16,19 @@ interface Props {
   columns: ColumnType[];
   pagination?: any;
   loading?: boolean;
+  children?: React.ReactNode | React.ReactNode[];
 }
-const ITable = function (props: Props) {
+const ITable = function ({ children, list, columns }: Props) {
   return (
     <Table celled>
       <Table.Header>
         <Table.Row>
-          {props.columns.map((column, index) => {
+          <Table.HeaderCell colSpan={columns.length}>{children}</Table.HeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Header>
+        <Table.Row>
+          {columns.map((column, index) => {
             return (
               <Table.HeaderCell
                 key={index}
@@ -38,10 +44,10 @@ const ITable = function (props: Props) {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {props.list.map((item, index) => {
+        {list.map((item, index) => {
           return (
             <Table.Row key={index}>
-              {props.columns.map((column, index) => {
+              {columns.map((column, index) => {
                 return (
                   <Table.Cell key={index} width={column.width}>
                     {column.render ? column.render(item, index) : item[column.key]}

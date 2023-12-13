@@ -9,7 +9,14 @@ export interface Panel {
 export const FormStruct = class {
   panelList: Panel[];
   constructor() {}
-  generateFormData(formData: any) {}
+  generateFormData() {
+    return this.panelList.reduce((acc, panel) => {
+      panel.content.forEach((content) => {
+        Reflect.set(acc, content.key, content.value);
+      });
+      return acc;
+    }, {});
+  }
   updateContent(panelIndex: number, contentIndex: number, value: any) {
     this.panelList[panelIndex].content[contentIndex].value = value;
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
@@ -20,16 +27,6 @@ export class BlogFilterForm extends FormStruct {
   constructor() {
     super();
     this.panelList = [
-      {
-        title: '筛选条件',
-        icon: 'filter',
-        content: [
-          new InputFiled('用户名', 'name', 'z', false),
-          new InputFiled('专栏', 'column', '', false),
-          new InputFiled('类别', 'cat', '', false),
-          new InputFiled('标签', 'label', '', false),
-        ],
-      },
       {
         title: '筛选条件',
         icon: 'filter',
