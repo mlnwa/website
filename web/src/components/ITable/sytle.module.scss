@@ -1,0 +1,27 @@
+.table {
+    flex: 1;
+    overflow: auto;
+    width: 100%;
+    border-bottom: none !important;
+    border-top: none !important;
+}
+.body {
+    flex: 1;
+    overflow: auto;
+}
+.header {
+    position: sticky;
+    top: 0;
+    th {
+        border-top: 1px solid rgba(34, 36, 38, 0.1) !important;
+
+    }
+}
+.footer {
+    position: sticky;
+    bottom: 0;
+    th {
+        border-bottom: 1px solid rgba(34, 36, 38, 0.1) !important;
+
+    }
+}

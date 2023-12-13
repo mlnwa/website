@@ -5,11 +5,17 @@ import { DatePicker, Drawer } from 'antd';
 import { IMessage } from '../../components/IMessage';
 import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
+import { cloneDeep } from 'lodash';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
   const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
   const columns: ColumnType[] = [
+    {
+      title: '序号',
+      key: 'order',
+      width: '2',
+    },
     {
       title: '标题',
       key: 'title',
@@ -31,20 +37,13 @@ const BlogList = function () {
       width: '2',
     },
   ];
-  const list = [
-    {
+  const list = new Array(20).fill(null).map((item, index) => {
+    return cloneDeep({
+      order: index + 1,
       title: '111',
       name: '111',
-    },
-    {
-      title: '111',
-      name: '111',
-    },
-    {
-      title: '111',
-      name: '111',
-    },
-  ];
+    });
+  });
   const onClose = () => {
     setOpen(false);
   };

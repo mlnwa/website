@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
-import { SemanticWIDTHS, StrictTableHeaderCellProps, Table } from 'semantic-ui-react';
+import { Pagination, SemanticWIDTHS, StrictTableHeaderCellProps, Table } from 'semantic-ui-react';
+import style from './sytle.module.scss';
 export type ColumnType = {
   title: ReactNode;
   onClick?: any;
@@ -20,13 +21,11 @@ interface Props {
 }
 const ITable = function ({ children, list, columns }: Props) {
   return (
-    <Table celled>
-      <Table.Header>
+    <Table celled striped stackable className={style.table}>
+      <Table.Header className={style.header}>
         <Table.Row>
           <Table.HeaderCell colSpan={columns.length}>{children}</Table.HeaderCell>
         </Table.Row>
-      </Table.Header>
-      <Table.Header>
         <Table.Row>
           {columns.map((column, index) => {
             return (
@@ -43,7 +42,8 @@ const ITable = function ({ children, list, columns }: Props) {
           })}
         </Table.Row>
       </Table.Header>
-      <Table.Body>
+
+      <Table.Body className={style.body}>
         {list.map((item, index) => {
           return (
             <Table.Row key={index}>
@@ -58,9 +58,13 @@ const ITable = function ({ children, list, columns }: Props) {
           );
         })}
       </Table.Body>
-      {/* <Table.Footer  fullWidth>
-        <Table.Row>{props.pagination}</Table.Row>
-      </Table.Footer> */}
+      <Table.Footer className={style.footer}>
+        <Table.Row>
+          <Table.HeaderCell colSpan={columns.length}>
+            <Pagination defaultActivePage={5} totalPages={10}></Pagination>
+          </Table.HeaderCell>
+        </Table.Row>
+      </Table.Footer>
     </Table>
   );
 };
