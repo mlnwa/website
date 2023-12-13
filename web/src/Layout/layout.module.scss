@@ -1,11 +1,27 @@
+.sidebar_pusher {
+    height: 100vh !important;
+    background-color: #fff !important;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.5s ease ,transform 0.5s ease !important; 
+}
+.sidebar_pusher_v{
+    width: calc(100% - 150px);
+}
+.sidebar_pusher_h {
+    width: 100%;
+}
 .main_content {
     margin: 0 1rem 1rem !important;
     flex: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
-.sidebar_pusher {
-    min-height: 100vh !important;
-    background-color: #fff !important;
+.main_content >div:first-child {
+    flex: 1;
+    overflow: auto;
+    max-height: 100%;
     display: flex;
     flex-direction: column;
 }

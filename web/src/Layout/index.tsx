@@ -13,7 +13,10 @@ const Layout = function () {
   return (
     <Sidebar.Pushable>
       <Side visible={sideVisible}></Side>
-      <Sidebar.Pusher dimmed={false} className={`${style.sidebar_pusher}`}>
+      <Sidebar.Pusher
+        dimmed={false}
+        className={`${style.sidebar_pusher} ${sideVisible ? style.sidebar_pusher_v : style.sidebar_pusher_h}`}
+      >
         <Header setSideVisible={switchSide} sideVisible={sideVisible}></Header>
         <MainContent></MainContent>
         <Footer></Footer>
