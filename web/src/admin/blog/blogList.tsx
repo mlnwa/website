@@ -6,10 +6,16 @@ import { IMessage } from '../../components/IMessage';
 import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
 import { cloneDeep } from 'lodash';
+import { Constants } from '../../assets/ts/Constants';
+import { IdUtil } from '../../utils';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
   const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
+  const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
+  const [pageIndex, setPageIndex] = useState(1);
+  const [list, setList] = useState([]);
+  const [total, setTotal] = useState(100);
   const columns: ColumnType[] = [
     {
       title: '序号',
@@ -37,22 +43,25 @@ const BlogList = function () {
       width: '2',
     },
   ];
-  const list = new Array(20).fill(null).map((item, index) => {
-    return cloneDeep({
-      order: index + 1,
-      title: '111',
-      name: '111',
-    });
-  });
+
   const onClose = () => {
     setOpen(false);
   };
   const showFilter = function () {
     setOpen(true);
   };
+  const allList = new Array(total).fill(null).map((item, index) => {
+    return cloneDeep({
+      order: index + 1,
+      title: '111',
+      name: '111',
+    });
+  });
   const search = function () {
-    const filterFormData = filterForm.generateFormData();
-    console.log(filterFormData);
+    // const filterFormData = filterForm.generateFormData();
+    const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
+    setList(list);
+    // setTotal(Math.ceil(Math.random() * 200));
   };
   const onFilter = function () {
     setOpen(false);
@@ -63,9 +72,15 @@ const BlogList = function () {
       return prevState.updateContent(panelIndex, contentIndex, value);
     });
   };
+  useEffect(() => {
+    search();
+  }, []);
+  useEffect(() => {
+    search();
+  }, [pageIndex, pageSize]);
   return (
     <div>
-      <ITable list={list} columns={columns}>
+      <ITable list={list} columns={columns} total={total} onPageChange={setPageIndex} onPageSizeChange={setPageSize}>
         <Label>
           时间：<DatePicker size="small"></DatePicker>
         </Label>

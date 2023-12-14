@@ -1,6 +1,17 @@
 import React, { ReactNode } from 'react';
-import { Pagination, SemanticWIDTHS, StrictTableHeaderCellProps, Table } from 'semantic-ui-react';
+import {
+  DropdownItemProps,
+  DropdownProps,
+  Pagination,
+  PaginationProps,
+  Select,
+  SemanticWIDTHS,
+  StrictTableHeaderCellProps,
+  Table,
+} from 'semantic-ui-react';
 import style from './sytle.module.scss';
+import { IDebounce } from '../../utils';
+import { Constants } from '../../assets/ts/Constants';
 export type ColumnType = {
   title: ReactNode;
   onClick?: any;
@@ -18,16 +29,40 @@ interface Props {
   pagination?: any;
   loading?: boolean;
   children?: React.ReactNode | React.ReactNode[];
+  total?: number;
+  onPageChange?: (pageIndex: number) => void;
+  onPageSizeChange?: (pageSize: number) => void;
 }
-const ITable = function ({ children, list, columns }: Props) {
+const pageOptions: DropdownItemProps[] = Constants.PAGE_SIZE_OPTIONS.map((item) => {
+  return {
+    text: `${item}条/页`,
+    value: item,
+  };
+});
+const ITable = function ({ children, ...props }: Props) {
+  const needFooter = props.total !== undefined;
+  const [pageSize, setPageSize] = React.useState(Constants.PAGE_SIZE);
+  let totalPages = 0;
+  if (needFooter) {
+    totalPages = Math.ceil(props.total / pageSize);
+  }
+  const pageChange = (pageProps: PaginationProps) => {
+    props?.onPageChange(Number(pageProps.activePage));
+  };
+  const pageSizeChange = (data: DropdownProps) => {
+    if (props.onPageSizeChange) {
+      props.onPageSizeChange(Number(data.value));
+    }
+  };
+  const debounceOnPageChange = IDebounce(pageChange, 200);
   return (
-    <Table celled striped stackable className={style.table}>
+    <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`}>
       <Table.Header className={style.header}>
         <Table.Row>
-          <Table.HeaderCell colSpan={columns.length}>{children}</Table.HeaderCell>
+          <Table.HeaderCell colSpan={props.columns.length}>{children}</Table.HeaderCell>
         </Table.Row>
         <Table.Row>
-          {columns.map((column, index) => {
+          {props.columns.map((column, index) => {
             return (
               <Table.HeaderCell
                 key={index}
@@ -44,10 +79,10 @@ const ITable = function ({ children, list, columns }: Props) {
       </Table.Header>
 
       <Table.Body className={style.body}>
-        {list.map((item, index) => {
+        {props.list.map((item, index) => {
           return (
             <Table.Row key={index}>
-              {columns.map((column, index) => {
+              {props.columns.map((column, index) => {
                 return (
                   <Table.Cell key={index} width={column.width}>
                     {column.render ? column.render(item, index) : item[column.key]}
@@ -58,13 +93,29 @@ const ITable = function ({ children, list, columns }: Props) {
           );
         })}
       </Table.Body>
-      <Table.Footer className={style.footer}>
-        <Table.Row>
-          <Table.HeaderCell colSpan={columns.length}>
-            <Pagination defaultActivePage={5} totalPages={10}></Pagination>
-          </Table.HeaderCell>
-        </Table.Row>
-      </Table.Footer>
+      {needFooter && (
+        <Table.Footer className={style.footer}>
+          <Table.Row>
+            <Table.HeaderCell colSpan={props.columns.length}>
+              共{props.total}条
+              <Pagination
+                defaultActivePage={1}
+                totalPages={totalPages}
+                onPageChange={(e, props) => {
+                  debounceOnPageChange(props);
+                }}
+              ></Pagination>
+              <Select
+                options={pageOptions}
+                defaultValue={Constants.PAGE_SIZE}
+                onChange={(e, data) => {
+                  pageSizeChange(data);
+                }}
+              ></Select>
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      )}
     </Table>
   );
 };
