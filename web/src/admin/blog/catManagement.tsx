@@ -9,11 +9,10 @@ import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
 import { IdUtil } from '../../utils';
 
-const BlogList = function () {
+const CatManagement = function () {
   const [open, setOpen] = React.useState(false);
   const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
-  const [pageIndex, setPageIndex] = useState(1);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(100);
   const columns: ColumnType[] = [
@@ -58,9 +57,10 @@ const BlogList = function () {
     });
   });
   const search = function (pageIndex = 1) {
-    const filterFormData = filterForm.generateFormData();
+    // const filterFormData = filterForm.generateFormData();
     const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
     setList(list);
+    // setTotal(Math.ceil(Math.random() * 200));
   };
   const onFilter = function () {
     setOpen(false);
@@ -71,6 +71,9 @@ const BlogList = function () {
       return prevState.updateContent(panelIndex, contentIndex, value);
     });
   };
+  useEffect(() => {
+    search();
+  }, []);
   useEffect(() => {
     search();
   }, [pageSize]);
@@ -103,4 +106,4 @@ const BlogList = function () {
   );
 };
 
-export default BlogList;
+export default CatManagement;

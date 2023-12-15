@@ -2,6 +2,7 @@ import React from 'react';
 import { CustomRoute } from '..';
 import Layout from '../../Layout';
 import BlogList from '../../admin/blog/blogList';
+import CatManagement from '../../admin/blog/catManagement';
 
 const adminRoute = {
   path: '/admin',
@@ -33,7 +34,7 @@ const adminRoute = {
         },
         {
           path: '/admin/blog/catManage',
-          element: <BlogList></BlogList>,
+          element: <CatManagement></CatManagement>,
           customProp: {
             icon: 'th',
             label: '类别管理',

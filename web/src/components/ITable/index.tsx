@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   DropdownItemProps,
   DropdownProps,
@@ -22,6 +22,7 @@ export type ColumnType = {
   sorter?: (a: any, b: any) => number;
   render?: (row: any, index: number) => React.ReactNode;
   renderHeader?: (column: any) => React.ReactNode;
+  pageIndex?: number;
 };
 interface Props {
   list: any[];
@@ -30,8 +31,9 @@ interface Props {
   loading?: boolean;
   children?: React.ReactNode | React.ReactNode[];
   total?: number;
-  onPageChange?: (pageIndex: number) => void;
+  onPageIndexChange?: (pageIndex: number) => void;
   onPageSizeChange?: (pageSize: number) => void;
+  pageIndex?: number;
 }
 const pageOptions: DropdownItemProps[] = Constants.PAGE_SIZE_OPTIONS.map((item) => {
   return {
@@ -39,22 +41,31 @@ const pageOptions: DropdownItemProps[] = Constants.PAGE_SIZE_OPTIONS.map((item) 
     value: item,
   };
 });
+let pageSize = Constants.PAGE_SIZE;
+let cachePageIndex = 1;
+let debounceOnPageIndexChange = (_: PaginationProps) => {};
 const ITable = function ({ children, ...props }: Props) {
+  const [pageIndex, setPageIndex] = useState(cachePageIndex);
+  useEffect(() => {
+    // setPageIndex(props.pageIndex);
+    pageSize = Constants.PAGE_SIZE;
+    debounceOnPageIndexChange = IDebounce(pageChange, 200);
+  }, []);
   const needFooter = props.total !== undefined;
-  const [pageSize, setPageSize] = React.useState(Constants.PAGE_SIZE);
   let totalPages = 0;
   if (needFooter) {
     totalPages = Math.ceil(props.total / pageSize);
   }
   const pageChange = (pageProps: PaginationProps) => {
-    props?.onPageChange(Number(pageProps.activePage));
+    if (!props.onPageIndexChange) return;
+    props.onPageIndexChange(Number(pageProps.activePage));
   };
   const pageSizeChange = (data: DropdownProps) => {
-    if (props.onPageSizeChange) {
-      props.onPageSizeChange(Number(data.value));
-    }
+    pageSize = Number(data.value);
+    setPageIndex(1);
+    if (!props.onPageSizeChange) return;
+    props.onPageSizeChange(pageSize);
   };
-  const debounceOnPageChange = IDebounce(pageChange, 200);
   return (
     <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`}>
       <Table.Header className={style.header}>
@@ -99,10 +110,11 @@ const ITable = function ({ children, ...props }: Props) {
             <Table.HeaderCell colSpan={props.columns.length}>
               共{props.total}条
               <Pagination
-                defaultActivePage={1}
+                activePage={pageIndex}
                 totalPages={totalPages}
                 onPageChange={(e, props) => {
-                  debounceOnPageChange(props);
+                  setPageIndex(Number(props.activePage));
+                  debounceOnPageIndexChange(props);
                 }}
               ></Pagination>
               <Select
