@@ -1,7 +1,10 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
+  Dimmer,
   DropdownItemProps,
   DropdownProps,
+  Input,
+  Loader,
   Pagination,
   PaginationProps,
   Select,
@@ -42,93 +45,119 @@ const pageOptions: DropdownItemProps[] = Constants.PAGE_SIZE_OPTIONS.map((item) 
   };
 });
 let pageSize = Constants.PAGE_SIZE;
-let cachePageIndex = 1;
-let debounceOnPageIndexChange = (_: PaginationProps) => {};
+let debounceOnPageIndexChange = (_: number) => {};
 const ITable = function ({ children, ...props }: Props) {
-  const [pageIndex, setPageIndex] = useState(cachePageIndex);
+  const [activePage, setActivePage] = useState(1);
+  const [toPageIndex, setToPageIndex] = useState(1);
   useEffect(() => {
-    // setPageIndex(props.pageIndex);
     pageSize = Constants.PAGE_SIZE;
-    debounceOnPageIndexChange = IDebounce(pageChange, 200);
+    debounceOnPageIndexChange = IDebounce(pageIndexChange, 200);
   }, []);
+  useEffect(() => {
+    setToPageIndex(activePage);
+  }, [activePage]);
   const needFooter = props.total !== undefined;
   let totalPages = 0;
   if (needFooter) {
     totalPages = Math.ceil(props.total / pageSize);
   }
-  const pageChange = (pageProps: PaginationProps) => {
+  const pageIndexChange = (pageIndex: number) => {
     if (!props.onPageIndexChange) return;
-    props.onPageIndexChange(Number(pageProps.activePage));
+    props.onPageIndexChange(pageIndex);
   };
-  const pageSizeChange = (data: DropdownProps) => {
+  const pageIndexChangeHandler = (pageIndex: number) => {
+    if (pageIndex == activePage) return;
+    pageIndex = Math.max(1, Math.min(pageIndex, totalPages));
+    setActivePage(pageIndex);
+    debounceOnPageIndexChange(pageIndex);
+  };
+  const pageSizeChangeHandler = (event: React.SyntheticEvent<HTMLElement>, data: DropdownProps) => {
     pageSize = Number(data.value);
-    setPageIndex(1);
-    if (!props.onPageSizeChange) return;
+    setActivePage(1);
     props.onPageSizeChange(pageSize);
   };
   return (
-    <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`}>
-      <Table.Header className={style.header}>
-        <Table.Row>
-          <Table.HeaderCell colSpan={props.columns.length}>{children}</Table.HeaderCell>
-        </Table.Row>
-        <Table.Row>
-          {props.columns.map((column, index) => {
+    <div>
+      <Dimmer active={props.loading}>
+        <Loader />
+      </Dimmer>
+      <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`}>
+        <Table.Header className={style.header}>
+          <Table.Row>
+            <Table.HeaderCell colSpan={props.columns.length}>{children}</Table.HeaderCell>
+          </Table.Row>
+          <Table.Row>
+            {props.columns.map((column, index) => {
+              return (
+                <Table.HeaderCell
+                  key={index}
+                  width={column.width}
+                  sorted={column.sorted}
+                  onClick={column.onClick}
+                  sortable={column.sortable}
+                >
+                  {column.renderHeader ? column.renderHeader(column) : column.title}
+                </Table.HeaderCell>
+              );
+            })}
+          </Table.Row>
+        </Table.Header>
+
+        <Table.Body className={style.body}>
+          {props.list.map((item, index) => {
             return (
-              <Table.HeaderCell
-                key={index}
-                width={column.width}
-                sorted={column.sorted}
-                onClick={column.onClick}
-                sortable={column.sortable}
-              >
-                {column.renderHeader ? column.renderHeader(column) : column.title}
-              </Table.HeaderCell>
+              <Table.Row key={index}>
+                {props.columns.map((column, index) => {
+                  return (
+                    <Table.Cell key={index} width={column.width}>
+                      {column.render ? column.render(item, index) : item[column.key]}
+                    </Table.Cell>
+                  );
+                })}
+              </Table.Row>
             );
           })}
-        </Table.Row>
-      </Table.Header>
-
-      <Table.Body className={style.body}>
-        {props.list.map((item, index) => {
-          return (
-            <Table.Row key={index}>
-              {props.columns.map((column, index) => {
-                return (
-                  <Table.Cell key={index} width={column.width}>
-                    {column.render ? column.render(item, index) : item[column.key]}
-                  </Table.Cell>
-                );
-              })}
+        </Table.Body>
+        {needFooter && (
+          <Table.Footer className={style.footer}>
+            <Table.Row>
+              <Table.HeaderCell colSpan={props.columns.length}>
+                <div className={style.pagination}>
+                  共{props.total}条
+                  <Pagination
+                    activePage={Math.min(activePage, totalPages)}
+                    totalPages={totalPages}
+                    onPageChange={(e, props) => {
+                      pageIndexChangeHandler(Number(props.activePage));
+                    }}
+                  ></Pagination>
+                  {props.onPageSizeChange && (
+                    <Select
+                      options={pageOptions}
+                      defaultValue={Constants.PAGE_SIZE}
+                      onChange={pageSizeChangeHandler}
+                    ></Select>
+                  )}
+                  跳至
+                  <Input
+                    value={Math.min(toPageIndex, totalPages)}
+                    onChange={(e) => {
+                      e.target.value = e.target.value.replace(/[^\d]/g, '');
+                      setToPageIndex(Number(e.target.value));
+                    }}
+                    onBlur={(e: React.FocusEvent<HTMLInputElement, Element>) => {
+                      pageIndexChangeHandler(Number(e.target.value));
+                    }}
+                    style={{ width: '60px' }}
+                  ></Input>
+                  页
+                </div>
+              </Table.HeaderCell>
             </Table.Row>
-          );
-        })}
-      </Table.Body>
-      {needFooter && (
-        <Table.Footer className={style.footer}>
-          <Table.Row>
-            <Table.HeaderCell colSpan={props.columns.length}>
-              共{props.total}条
-              <Pagination
-                activePage={pageIndex}
-                totalPages={totalPages}
-                onPageChange={(e, props) => {
-                  setPageIndex(Number(props.activePage));
-                  debounceOnPageIndexChange(props);
-                }}
-              ></Pagination>
-              <Select
-                options={pageOptions}
-                defaultValue={Constants.PAGE_SIZE}
-                onChange={(e, data) => {
-                  pageSizeChange(data);
-                }}
-              ></Select>
-            </Table.HeaderCell>
-          </Table.Row>
-        </Table.Footer>
-      )}
-    </Table>
+          </Table.Footer>
+        )}
+      </Table>
+    </div>
   );
 };
 export default ITable;

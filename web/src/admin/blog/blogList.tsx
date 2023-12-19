@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Flag, Input, Label, Segment } from 'semantic-ui-react';
+import { Button, Container, Dimmer, Flag, Input, Label, Segment } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker, Drawer } from 'antd';
 import { IMessage } from '../../components/IMessage';
@@ -7,15 +7,14 @@ import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
 import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
-import { IdUtil } from '../../utils';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
   const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
-  const [pageIndex, setPageIndex] = useState(1);
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(1);
+  const [loading, setLoading] = useState(false);
   const columns: ColumnType[] = [
     {
       title: '序号',
@@ -50,17 +49,23 @@ const BlogList = function () {
   const showFilter = function () {
     setOpen(true);
   };
-  const allList = new Array(total).fill(null).map((item, index) => {
-    return cloneDeep({
-      order: index + 1,
-      title: '111',
-      name: '111',
-    });
-  });
-  const search = function (pageIndex = 1) {
+
+  const search = async function (pageIndex = 1) {
+    setLoading(true);
     const filterFormData = filterForm.generateFormData();
+    const allList = new Array(Math.ceil(Math.random() * 100) * 100).fill(null).map((item, index) => {
+      return cloneDeep({
+        order: index + 1,
+        title: '111',
+        name: '111',
+      });
+    });
     const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
     setList(list);
+    setTotal(allList.length);
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
   };
   const onFilter = function () {
     setOpen(false);
@@ -76,13 +81,21 @@ const BlogList = function () {
   }, [pageSize]);
   return (
     <div>
-      <ITable list={list} columns={columns} total={total} onPageIndexChange={search} onPageSizeChange={setPageSize}>
+      <ITable
+        list={list}
+        columns={columns}
+        loading={loading}
+        total={total}
+        onPageIndexChange={search}
+        onPageSizeChange={setPageSize}
+      >
         <Label>
           时间：<DatePicker size="small"></DatePicker>
         </Label>
         <Button icon="search" content="搜索" size="small" onClick={() => search()}></Button>
         <Button icon="filter" content="筛选条件" size="small" onClick={() => showFilter()}></Button>
       </ITable>
+
       <IDrawer open={open} onClose={onClose}>
         {filterForm.panelList.map((item, index) => {
           return (
