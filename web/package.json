@@ -48,6 +48,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "antd": "^5.10.2",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.10",
     "lodash": "^4.17.21",
     "node-sass": "npm:dart-sass@^1.25.0",
     "react": "^18.2.0",

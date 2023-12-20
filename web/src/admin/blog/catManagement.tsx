@@ -1,34 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Flag, Input, Label, Segment } from 'semantic-ui-react';
+import { Button, Icon, Label } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
-import { DatePicker, Drawer } from 'antd';
-import { IMessage } from '../../components/IMessage';
+import { DatePicker } from 'antd';
 import IDrawer from '../../components/IDrawer';
-import { BlogFilterForm } from '../../class/FormStructs';
-import { cloneDeep } from 'lodash';
+import { CategoryForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
-import { IdUtil } from '../../utils';
+import { cloneDeep } from 'lodash';
+import dayjs from 'dayjs';
 
 const CatManagement = function () {
   const [open, setOpen] = React.useState(false);
-  const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
+  const [isEdit, setIsEdit] = useState(false);
+  const [categoryForm, setCategoryForm] = useState(new CategoryForm());
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState(100);
+  const [total, setTotal] = useState(0);
   const columns: ColumnType[] = [
     {
-      title: '序号',
-      key: 'order',
+      title: '类别名称',
+      key: 'categoryName',
       width: '2',
     },
     {
-      title: '标题',
-      key: 'title',
-      width: '2',
-    },
-    {
-      title: '姓名',
-      key: 'name',
+      title: '博客数量',
+      key: 'blogNumber',
       width: '2',
     },
     {
@@ -37,46 +32,63 @@ const CatManagement = function () {
       width: '3',
     },
     {
-      title: '分类',
-      key: 'cat',
-      width: '2',
+      title: '修改时间',
+      key: 'updateAt',
+      width: '3',
+    },
+    {
+      title: '操作',
+      width: '5',
+      render: (row, index) => {
+        return (
+          <Icon
+            name="edit"
+            onClick={() => {
+              toEdit(row);
+            }}
+            content="编辑"
+          ></Icon>
+        );
+      },
     },
   ];
 
-  const onClose = () => {
-    setOpen(false);
-  };
-  const showFilter = function () {
-    setOpen(true);
-  };
-  const allList = new Array(total).fill(null).map((item, index) => {
-    return cloneDeep({
-      order: index + 1,
-      title: '111',
-      name: '111',
-    });
-  });
   const search = function (pageIndex = 1) {
-    // const filterFormData = filterForm.generateFormData();
+    let total = Math.ceil(Math.random() * 100) * 100;
+    const allList = new Array(100).fill(null).map((item, index) => {
+      return cloneDeep({
+        categoryName: index + 1,
+        blogNumber: 100,
+        createAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+        updateAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      });
+    });
     const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
     setList(list);
-    // setTotal(Math.ceil(Math.random() * 200));
+    setTotal(allList.length);
   };
-  const onFilter = function () {
-    setOpen(false);
-    search();
-  };
-  const setFormHandle = function (panelIndex: number, contentIndex: number, value: any) {
-    setFilterForm((prevState: BlogFilterForm) => {
-      return prevState.updateContent(panelIndex, contentIndex, value);
-    });
-  };
-  useEffect(() => {
-    search();
-  }, []);
   useEffect(() => {
     search();
   }, [pageSize]);
+  const toEdit = function (row: any) {
+    setIsEdit(true);
+    setCategoryForm(categoryForm.insertFormData(row));
+    setOpen(true);
+  };
+  const toAdd = function () {
+    setIsEdit(false);
+    setCategoryForm(categoryForm.resetFormData());
+    setOpen(true);
+  };
+  const onSaveHandle = function () {
+    // 保存
+    setOpen(false);
+  };
+  const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
+    setCategoryForm((prevState: CategoryForm) => {
+      return prevState.updateContent(index, contentIndex, value);
+    });
+  };
   return (
     <div>
       <ITable list={list} columns={columns} total={total} onPageIndexChange={search} onPageSizeChange={setPageSize}>
@@ -84,22 +96,27 @@ const CatManagement = function () {
           时间：<DatePicker size="small"></DatePicker>
         </Label>
         <Button icon="search" content="搜索" size="small" onClick={() => search()}></Button>
-        <Button icon="filter" content="筛选条件" size="small" onClick={() => showFilter()}></Button>
+        <Button icon="add" content="新增" size="small" onClick={toAdd}></Button>
       </ITable>
-      <IDrawer open={open} onClose={onClose}>
-        {filterForm.panelList.map((item, index) => {
+      <IDrawer
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        {categoryForm.panelList.map((item, index) => {
           return (
             <IDrawer.Panel
               key={index}
               data={item}
               onChange={(contentIndex, value) => {
-                setFormHandle(index, contentIndex, value);
+                onFormChangeHandle(index, contentIndex, value);
               }}
             ></IDrawer.Panel>
           );
         })}
         <IDrawer.Footer>
-          <Button content="确认" positive icon="save" onClick={onFilter}></Button>
+          <Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>
         </IDrawer.Footer>
       </IDrawer>
     </div>
