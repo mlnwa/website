@@ -18,7 +18,7 @@ import { Constants } from '../../assets/ts/Constants';
 export type ColumnType = {
   title: ReactNode;
   onClick?: any;
-  key: string;
+  key?: string;
   width?: SemanticWIDTHS;
   sorted?: StrictTableHeaderCellProps['sorted'];
   sortable?: boolean;
@@ -59,7 +59,7 @@ const ITable = function ({ children, ...props }: Props) {
   const needFooter = props.total !== undefined;
   let totalPages = 0;
   if (needFooter) {
-    totalPages = Math.ceil(props.total / pageSize);
+    totalPages = Math.max(Math.ceil(props.total / pageSize), 1);
   }
   const pageIndexChange = (pageIndex: number) => {
     if (!props.onPageIndexChange) return;
@@ -77,7 +77,7 @@ const ITable = function ({ children, ...props }: Props) {
     props.onPageSizeChange(pageSize);
   };
   return (
-    <div>
+    <div className={style.table_container}>
       <Dimmer active={props.loading}>
         <Loader />
       </Dimmer>
@@ -107,9 +107,9 @@ const ITable = function ({ children, ...props }: Props) {
           {props.list.map((item, index) => {
             return (
               <Table.Row key={index}>
-                {props.columns.map((column, index) => {
+                {props.columns.map((column, idx) => {
                   return (
-                    <Table.Cell key={index} width={column.width}>
+                    <Table.Cell key={idx} width={column.width}>
                       {column.render ? column.render(item, index) : item[column.key]}
                     </Table.Cell>
                   );
@@ -117,6 +117,13 @@ const ITable = function ({ children, ...props }: Props) {
               </Table.Row>
             );
           })}
+          {props.list.length === 0 && (
+            <Table.Row>
+              <Table.Cell colSpan={props.columns.length} textAlign="center">
+                暂无数据
+              </Table.Cell>
+            </Table.Row>
+          )}
         </Table.Body>
         {needFooter && (
           <Table.Footer className={style.footer}>
