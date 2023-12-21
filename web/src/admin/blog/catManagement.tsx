@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Icon, Label } from 'semantic-ui-react';
+import { Button, Container, Icon, Label, Menu } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker } from 'antd';
 import IDrawer from '../../components/IDrawer';
@@ -7,6 +7,7 @@ import { CategoryForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
+import { IMessage } from '../../components/IMessage';
 
 const CatManagement = function () {
   const [open, setOpen] = React.useState(false);
@@ -38,16 +39,35 @@ const CatManagement = function () {
     },
     {
       title: '操作',
-      width: '5',
+      width: '1',
       render: (row, index) => {
         return (
-          <Icon
-            name="edit"
-            onClick={() => {
-              toEdit(row);
-            }}
-            content="编辑"
-          ></Icon>
+          <Menu secondary>
+            <Button
+              floated="right"
+              icon
+              labelPosition="left"
+              primary
+              size="small"
+              onClick={() => {
+                toEdit(row);
+              }}
+            >
+              <Icon name="edit" /> 编辑
+            </Button>
+            <Button
+              floated="right"
+              icon
+              labelPosition="left"
+              negative
+              size="small"
+              onClick={() => {
+                onDeleteHandle(row);
+              }}
+            >
+              <Icon name="delete" /> 删除
+            </Button>
+          </Menu>
         );
       },
     },
@@ -83,6 +103,18 @@ const CatManagement = function () {
   const onSaveHandle = function () {
     // 保存
     setOpen(false);
+    const formData = categoryForm.generateFormData();
+    IMessage.success('保存成功');
+  };
+  const onAddHandle = function () {
+    // 新增
+    setOpen(false);
+    const formData = categoryForm.generateFormData();
+    IMessage.success('新增成功');
+  };
+  const onDeleteHandle = function (row: any) {
+    // 删除
+    IMessage.success('删除成功');
   };
   const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
     setCategoryForm((prevState: CategoryForm) => {
@@ -116,7 +148,8 @@ const CatManagement = function () {
           );
         })}
         <IDrawer.Footer>
-          <Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>
+          {isEdit && <Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>}
+          {!isEdit && <Button icon="add" positive content="新增" onClick={onAddHandle}></Button>}
         </IDrawer.Footer>
       </IDrawer>
     </div>

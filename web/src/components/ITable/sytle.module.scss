@@ -20,6 +20,7 @@
 .header {
     position: sticky;
     top: 0;
+    z-index: 100;
     th {
         border-top: 1px solid rgba(34, 36, 38, 0.1) !important;
 
@@ -27,7 +28,7 @@
 }
 .footer {
     position: sticky;
-    bottom: 0;
+    bottom: -1px;
     th {
         border-bottom: 1px solid rgba(34, 36, 38, 0.1) !important;
 

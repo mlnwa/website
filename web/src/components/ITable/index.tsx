@@ -81,7 +81,7 @@ const ITable = function ({ children, ...props }: Props) {
       <Dimmer active={props.loading}>
         <Loader />
       </Dimmer>
-      <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`}>
+      <Table celled striped className={`${style.table} ${needFooter ? style.table_has_footer : ''}`} selectable>
         <Table.Header className={style.header}>
           <Table.Row>
             <Table.HeaderCell colSpan={props.columns.length}>{children}</Table.HeaderCell>
