@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
 import { BlogStatus } from './blog.enum';
-import { CatgoryEntity } from '../catgory/catgory.entity';
+import { CategoryEntity } from '../category/category.entity';
 import { TagEntity } from '../tag/tag.entity';
 import { ColumnEntity } from '../column/column.entity';
 
@@ -42,9 +42,9 @@ export class BlogEntity {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   user: UserEntity;
 
-  @ManyToOne(() => CatgoryEntity, (catgory) => catgory.blogs)
-  @JoinColumn({ name: 'cargory_id', referencedColumnName: 'id' })
-  catgory: CatgoryEntity;
+  @ManyToOne(() => CategoryEntity, (category) => category.blogs)
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
+  category: CategoryEntity;
 
   @ManyToOne(() => ColumnEntity, (column) => column.blogs)
   @JoinColumn({ name: 'column_id', referencedColumnName: 'id' })

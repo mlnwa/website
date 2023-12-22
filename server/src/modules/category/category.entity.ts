@@ -1,8 +1,8 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
 
-@Entity({ name: 'catgory' })
-export class CatgoryEntity {
+@Entity({ name: 'category' })
+export class CategoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,6 +24,6 @@ export class CatgoryEntity {
   })
   updateAt: Date;
 
-  @OneToMany(() => BlogEntity, (blog) => blog.catgory)
+  @OneToMany(() => BlogEntity, (blog) => blog.category)
   blogs: BlogEntity[];
 }

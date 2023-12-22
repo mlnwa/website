@@ -11,7 +11,7 @@ import { UserModule } from './modules/user/user.module';
 import { AuthModuel } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
 import { BlogModule } from './modules/blog/blog.module';
-import { CatgoryModule } from './modules/catgory/catgory.module';
+import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
 import { ColumnModule } from './modules/column/column.module';
 
@@ -28,7 +28,7 @@ import { ColumnModule } from './modules/column/column.module';
     UserModule,
     AuthModuel,
     BlogModule,
-    CatgoryModule,
+    CategoryModule,
     TagModule,
     ColumnModule,
   ],
