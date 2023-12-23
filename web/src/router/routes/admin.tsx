@@ -7,11 +7,13 @@ import CatManagement from '../../admin/blog/catManagement';
 const adminRoute = {
   path: '/admin',
   element: <Layout></Layout>,
+  authorize: true,
   children: [
     {
       index: true,
       path: '/admin',
       element: <div>Admin index</div>,
+      authorize: true,
       customProp: {
         icon: 'add user',
         label: '首页',
@@ -19,6 +21,7 @@ const adminRoute = {
     },
     {
       path: '/admin/blog',
+      authorize: true,
       customProp: {
         icon: 'add user',
         label: '博客管理',
@@ -26,6 +29,7 @@ const adminRoute = {
       children: [
         {
           path: '/admin/blog/list',
+          authorize: true,
           element: <BlogList></BlogList>,
           customProp: {
             icon: 'th list',
@@ -34,6 +38,7 @@ const adminRoute = {
         },
         {
           path: '/admin/blog/catManage',
+          authorize: true,
           element: <CatManagement></CatManagement>,
           customProp: {
             icon: 'th',
@@ -42,6 +47,7 @@ const adminRoute = {
         },
         {
           path: '/admin/blog/tagManage',
+          authorize: true,
           element: <BlogList></BlogList>,
           customProp: {
             icon: 'tags',
@@ -50,6 +56,7 @@ const adminRoute = {
         },
         {
           path: '/admin/blog/columnManage',
+          authorize: true,
           element: <BlogList></BlogList>,
           customProp: {
             icon: 'columns',
@@ -60,6 +67,7 @@ const adminRoute = {
     },
     {
       path: '/admin/projects',
+      authorize: true,
       customProp: {
         icon: 'add user',
         label: '项目管理',
@@ -67,6 +75,7 @@ const adminRoute = {
       children: [
         {
           path: '/admin/projects/list',
+          authorize: true,
           element: <div>项目列表</div>,
           customProp: {
             icon: 'th list',
@@ -77,6 +86,7 @@ const adminRoute = {
     },
     {
       path: '/admin/users',
+      authorize: true,
       customProp: {
         icon: 'user',
         label: '用户管理',
@@ -94,6 +104,7 @@ const adminRoute = {
     },
     {
       path: '/admin/analyse',
+      authorize: true,
       customProp: {
         icon: 'add user',
         label: '数据分析',
@@ -101,6 +112,7 @@ const adminRoute = {
       children: [
         {
           path: '/admin/analyse/trend',
+          authorize: true,
           element: <div>趋势图</div>,
           customProp: {
             icon: 'chart line',

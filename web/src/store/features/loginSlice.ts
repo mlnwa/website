@@ -1,16 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { Login, LoginParam } from '../../api/module/user';
+
+type LoginStatus = 'login' | 'logout';
+
 export interface LoginState {
   accessToken: string;
   freshToken: string;
+  status: LoginStatus;
   userInfo: {
     username: string;
     password: string;
   };
 }
-
 const initialState: LoginState = {
   accessToken: '',
+  status: 'logout',
   userInfo: {
     username: '',
     password: '',
@@ -31,8 +35,10 @@ export const loginSlice = createSlice({
     afterLogin: (state, { payload }) => {
       state.accessToken = payload.accessToken;
       state.freshToken = payload.freshToken;
+      state.status = 'login';
       state.userInfo.username = payload.username;
       state.userInfo.password = payload.password;
+      localStorage.setItem('access_token', payload.accessToken);
     },
   },
 });

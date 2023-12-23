@@ -7,12 +7,14 @@ import React from 'react';
 import { SemanticICONS } from 'semantic-ui-react';
 import Login from '../pages/login/login';
 import adminRoute from './routes/admin';
+import Permission from './Permission';
 type CustomProps = {
   icon: SemanticICONS;
   label: string;
 };
 export type CustomRoute = RouteObject & {
   customProp: CustomProps;
+  authorize: boolean;
   children?: CustomRoute[];
 };
 // 游客内容
@@ -55,5 +57,18 @@ export const author: RouteObject[] = [
     element: <Login></Login>,
   },
 ];
-const routerList = [root, ...author, adminRoute] as RouteObject[];
-export const router = createHashRouter(routerList);
+export const routerList = [root, ...author, adminRoute] as CustomRoute[];
+
+function permissionRoutes(routerList: CustomRoute[]) {
+  return routerList.map((item: CustomRoute) => {
+    if (item.element) {
+      item.element = <Permission authorize={item.authorize}>{item.element}</Permission>;
+    }
+    if (item.children) {
+      item.children = permissionRoutes(item.children);
+    }
+    return item;
+  });
+}
+let routes = permissionRoutes(routerList);
+export const router = createHashRouter(routes);

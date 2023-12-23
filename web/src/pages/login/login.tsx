@@ -4,20 +4,24 @@ import { loginStore } from '../../store/features/loginSlice';
 import { useDispatch } from 'react-redux';
 import store, { AppDispatch } from '../../store';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
+import { useNavigate } from 'react-router-dom';
 const Login = function () {
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   useEffect(() => {}, []);
   const onSubmit = async function (e: React.MouseEvent) {
-    await dispatch(
+    const res = await dispatch(
       loginStore({
         username,
         password,
       }),
     );
     const loginInfo = store.getState().login;
-    console.log(loginInfo);
+    if (loginInfo.status === 'login') {
+      navigate('/admin');
+    }
   };
   return (
     <div className="main">
