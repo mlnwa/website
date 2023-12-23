@@ -6,8 +6,8 @@ export class CategoryEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 10 })
-  name: string;
+  @Column({ length: 10, name: 'category_name' })
+  categoryName: string;
 
   @Column('varchar')
   description: string;

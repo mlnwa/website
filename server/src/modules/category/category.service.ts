@@ -15,14 +15,14 @@ export class CategoryService {
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
-    const { name } = createCategoryDto;
+    const { categoryName } = createCategoryDto;
     const isFound = await this.categoryRepository.findOne({
       where: {
-        name,
+        categoryName,
       },
     });
     if (isFound) {
-      return ResultModel.builderErrorMsg(`类别：${name}已存在`);
+      return ResultModel.builderErrorMsg(`类别：${categoryName}已存在`);
     }
     await this.categoryRepository.save(createCategoryDto);
     return ResultModel.builderSuccessMsg('新建成功');
@@ -34,7 +34,7 @@ export class CategoryService {
   }
 
   async findByName(name: string) {
-    const res = await this.categoryRepository.findOne({ where: { name } });
+    const res = await this.categoryRepository.findOne({ where: { categoryName: name } });
     if (res !== null) return ResultModel.builderSuccess<CategoryEntity>().setResult(res);
     return ResultModel.builderErrorMsg('分类不存在');
   }
@@ -46,7 +46,7 @@ export class CategoryService {
   }
 
   async update(id: number, category: Partial<CategoryEntity>) {
-    const queryCategory = await this.findByName(category.name);
+    const queryCategory = await this.findByName(category.categoryName);
     if (queryCategory.getSuccess()) return ResultModel.builderErrorMsg('分类已存在');
     await this.categoryRepository.update(id, category);
     return ResultModel.builderSuccessMsg('更新成功');
