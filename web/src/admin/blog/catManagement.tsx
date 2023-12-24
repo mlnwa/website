@@ -8,6 +8,7 @@ import { Constants } from '../../assets/ts/Constants';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IMessage } from '../../components/IMessage';
+import { AddCategory, DeleteCategory, EditCategory, QueryCategoryList } from '../../api/module/category';
 
 const CatManagement = function () {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +17,7 @@ const CatManagement = function () {
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
+  const [currentId, setCurrentId] = useState(0);
   const columns: ColumnType[] = [
     {
       title: '类别名称',
@@ -73,19 +75,21 @@ const CatManagement = function () {
     },
   ];
 
-  const search = function (pageIndex = 1) {
-    let total = Math.ceil(Math.random() * 100) * 100;
-    const allList = new Array(100).fill(null).map((item, index) => {
-      return cloneDeep({
-        categoryName: index + 1,
-        blogNumber: 100,
-        createAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-        updateAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+  const search = async function (pageIndex = 1) {
+    let res;
+    try {
+      res = await QueryCategoryList({
+        pageIndex,
+        pageSize,
       });
-    });
-    const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
+    } catch (error) {
+      console.log(error);
+      return;
+    }
+    const list = res.result.list;
+    const total = res.result.total;
     setList(list);
-    setTotal(allList.length);
+    setTotal(total);
   };
   useEffect(() => {
     search();
@@ -93,6 +97,7 @@ const CatManagement = function () {
   const toEdit = function (row: any) {
     setIsEdit(true);
     setCategoryForm(categoryForm.insertFormData(row));
+    setCurrentId(row.id);
     setOpen(true);
   };
   const toAdd = function () {
@@ -100,21 +105,27 @@ const CatManagement = function () {
     setCategoryForm(categoryForm.resetFormData());
     setOpen(true);
   };
-  const onSaveHandle = function () {
+  const onSaveHandle = async function () {
     // 保存
     setOpen(false);
-    const formData = categoryForm.generateFormData();
-    IMessage.success('保存成功');
+    const formData = categoryForm.generateFormData() as any;
+    await EditCategory(currentId, {
+      categoryName: formData.categoryName,
+      description: formData.description,
+    });
   };
-  const onAddHandle = function () {
+  const onAddHandle = async function () {
     // 新增
     setOpen(false);
-    const formData = categoryForm.generateFormData();
-    IMessage.success('新增成功');
+    const formData = categoryForm.generateFormData() as any;
+    await AddCategory({
+      categoryName: formData.categoryName,
+      description: formData.description,
+    });
   };
-  const onDeleteHandle = function (row: any) {
+  const onDeleteHandle = async function (row: any) {
     // 删除
-    IMessage.success('删除成功');
+    await DeleteCategory(row.id);
   };
   const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
     setCategoryForm((prevState: CategoryForm) => {

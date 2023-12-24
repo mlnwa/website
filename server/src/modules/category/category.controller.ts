@@ -17,12 +17,11 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 
 @Controller('category')
-@UsePipes(new ValidationPipe({ whitelist: true }))
+@UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
   @Get()
-  @Public()
   async getCatoryList(@Query() queryPagesCategoryDto: QueryPagesCategoryDto) {
     return this.categoryService.queryPages(queryPagesCategoryDto);
   }

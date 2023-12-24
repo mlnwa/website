@@ -88,7 +88,7 @@ export class CategoryForm extends FormStruct {
         icon: 'info',
         content: [
           new InputFiled('类别名称', 'categoryName', '', '', true),
-          new TextareaFiled('描述', 'desc', '', '', false),
+          new InputFiled('描述', 'description', '', '', false),
         ],
       },
     ];

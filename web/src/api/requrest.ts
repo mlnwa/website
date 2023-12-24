@@ -57,15 +57,26 @@ const HttpRequest = class {
         return response;
       },
       (error) => {
+        if (error.response) {
+          const data = error.response.data as ResultModel<any>;
+          if (data.msg) {
+            IMessage.error(data.msg);
+            return Promise.reject(data);
+          }
+        }
         return Promise.reject(error);
       },
     );
   }
   private request<T>(data: Partial<AxiosRequestConfig>, method: Method) {
+    const token = localStorage.getItem('access_token') || '';
     return new Promise<ResultModel<T>>((resolve, reject) => {
       this.instance
         .request<ResultModel<T>>({
           method,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
           ...data,
         })
         .then((res) => {

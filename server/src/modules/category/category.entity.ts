@@ -9,7 +9,7 @@ export class CategoryEntity {
   @Column({ length: 10, name: 'category_name' })
   categoryName: string;
 
-  @Column('varchar')
+  @Column({ type: 'varchar', default: '' })
   description: string;
 
   @CreateDateColumn({
