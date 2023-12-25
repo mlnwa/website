@@ -40,6 +40,7 @@ export class CategoryController {
   async updateCategory(@Param('id', new ParseIntPipe()) id: number, @Body() createCategoryDto: CreateCategoryDto) {
     const category = {
       categoryName: createCategoryDto.categoryName,
+      description: createCategoryDto.description,
     };
     return this.categoryService.update(id, category);
   }

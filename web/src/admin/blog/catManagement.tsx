@@ -113,6 +113,7 @@ const CatManagement = function () {
       categoryName: formData.categoryName,
       description: formData.description,
     });
+    search();
   };
   const onAddHandle = async function () {
     // 新增
@@ -122,10 +123,12 @@ const CatManagement = function () {
       categoryName: formData.categoryName,
       description: formData.description,
     });
+    search();
   };
   const onDeleteHandle = async function (row: any) {
     // 删除
     await DeleteCategory(row.id);
+    search();
   };
   const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
     setCategoryForm((prevState: CategoryForm) => {

@@ -44,10 +44,12 @@ export class CategoryService {
     if (res.affected == 0) return ResultModel.builderErrorMsg('分类不存在');
     return ResultModel.builderSuccessMsg('删除成功');
   }
-
+  async findById(id: number) {
+    return await this.categoryRepository.findOne({ where: { id } });
+  }
   async update(id: number, category: Partial<CategoryEntity>) {
-    const queryCategory = await this.findByName(category.categoryName);
-    if (queryCategory.getSuccess()) return ResultModel.builderErrorMsg('分类已存在');
+    const queryCategory = await this.findById(id);
+    if (queryCategory == null) return ResultModel.builderErrorMsg('分类不存在');
     await this.categoryRepository.update(id, category);
     return ResultModel.builderSuccessMsg('更新成功');
   }
