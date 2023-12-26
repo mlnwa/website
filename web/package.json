@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+    "@types/react-syntax-highlighter": "^15.5.11",
     "antd": "^5.10.2",
     "axios": "^1.4.0",
     "dayjs": "^1.11.10",
@@ -53,8 +54,10 @@
     "node-sass": "npm:dart-sass@^1.25.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.9.0",
+    "react-syntax-highlighter": "^15.5.0",
     "react-transition-group": "^4.4.5",
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.4"

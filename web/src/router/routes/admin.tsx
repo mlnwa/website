@@ -3,6 +3,7 @@ import { CustomRoute } from '..';
 import Layout from '../../Layout';
 import BlogList from '../../admin/blog/blogList';
 import CatManagement from '../../admin/blog/catManagement';
+import BlogEdit from '../../admin/blogEdit';
 
 const adminRoute = {
   path: '/admin',
@@ -120,6 +121,15 @@ const adminRoute = {
           },
         },
       ],
+    },
+    {
+      path: '/admin/edit',
+      authorize: true,
+      element: <BlogEdit></BlogEdit>,
+      customProp: {
+        icon: 'edit',
+        label: '新增/编辑',
+      },
     },
   ],
 } as CustomRoute;

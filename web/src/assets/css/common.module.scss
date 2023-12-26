@@ -40,6 +40,10 @@
     margin-top: 0.2rem !important;
     margin-bottom: 0.2rem !important;
 }
+.m_margin_lr_none {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
 /**********************opcity****************************/
 .opcity_tiny {
     opacity: 0.6 !important;
@@ -79,4 +83,10 @@
     font-weight: 300 !important;
     letter-spacing: 1px !important;
     line-height: 1.8;
+}
+/*************************flex***************************************/
+.flex_container {
+    flex: 1;
+    display: flex;
+    width: 100%;
 }
