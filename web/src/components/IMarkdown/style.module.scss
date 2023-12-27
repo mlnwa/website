@@ -15,9 +15,19 @@
     flex: 1;
     height: 100%;
 }
-
+.textarea {
+    background: #f4f4f5 !important;
+    border: 1px solid #d1d5db !important;
+    border-radius: 0 !important;
+}
+.textarea::selection {
+    background-color: #3264cf !important;
+    color: #fff !important; 
+}
 .preview {
     flex:1;
     overflow: auto;
     height: 100%;
+    font-size: 1.1rem;
+    letter-spacing: 0.04rem;
 }

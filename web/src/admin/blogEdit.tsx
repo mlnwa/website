@@ -91,7 +91,7 @@ const BlogEdit = function () {
       </Form>
       <IMarkdown>
         <IMarkdown.Editer value={value} onChange={(value) => setValue(value)}></IMarkdown.Editer>
-        <IMarkdown.Preview value={value}></IMarkdown.Preview>
+        <IMarkdown.Preview value={value} darkMode></IMarkdown.Preview>
       </IMarkdown>
     </Container>
   );
