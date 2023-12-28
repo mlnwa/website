@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Button,
   Container,
   Dropdown,
   DropdownItemProps,
@@ -16,6 +17,7 @@ import {
 import commonStyle from '../assets/css/common.module.scss';
 import { QueryCategoryList } from '../api/module/category';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
+import { CreateBlog } from '../api/module/blog';
 const fromWhomOptions: DropdownItemProps[] = [
   { text: '原创', value: '原创' },
   { text: '转载', value: '转载' },
@@ -26,7 +28,7 @@ const BlogEdit = function () {
   const [categoryId, setCategoryId] = React.useState<number>();
   const [tagIds, setTagIds] = React.useState<number[]>([]);
   const [title, setTitle] = React.useState<string>('');
-  const [value, setValue] = React.useState<string>('');
+  const [content, setContent] = React.useState<string>('');
   useEffect(() => {
     getCategorys();
   }, []);
@@ -48,6 +50,17 @@ const BlogEdit = function () {
     });
     setCategoryList(list);
   };
+  const onSaveHandle = async () => {
+    let res;
+    try {
+      res = await CreateBlog({
+        title,
+        status: 1,
+        content,
+      });
+    } catch (error) {}
+  };
+  const onPublishHandle = async () => {};
   return (
     <Container>
       <Form>
@@ -90,9 +103,13 @@ const BlogEdit = function () {
         </Form.Group>
       </Form>
       <IMarkdown>
-        <IMarkdown.Editer value={value} onChange={(value) => setValue(value)}></IMarkdown.Editer>
-        <IMarkdown.Preview value={value} darkMode></IMarkdown.Preview>
+        <IMarkdown.Editer value={content} onChange={(value) => setContent(value)}></IMarkdown.Editer>
+        <IMarkdown.Preview value={content} darkMode></IMarkdown.Preview>
       </IMarkdown>
+      <Segment textAlign="right" basic size="mini">
+        <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
+        <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
+      </Segment>
     </Container>
   );
 };

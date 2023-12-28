@@ -7,20 +7,16 @@ import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
 import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
+import { QueryBlogList } from '../../api/module/blog';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
   const [filterForm, setFilterForm] = React.useState(new BlogFilterForm());
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
   const [list, setList] = useState([]);
-  const [total, setTotal] = useState(1);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const columns: ColumnType[] = [
-    {
-      title: '序号',
-      key: 'order',
-      width: '2',
-    },
     {
       title: '标题',
       key: 'title',
@@ -52,20 +48,21 @@ const BlogList = function () {
 
   const search = async function (pageIndex = 1) {
     setLoading(true);
-    const filterFormData = filterForm.generateFormData();
-    const allList = new Array(Math.ceil(Math.random() * 100) * 100).fill(null).map((item, index) => {
-      return cloneDeep({
-        order: index + 1,
-        title: '111',
-        name: '111',
+    let res;
+    try {
+      res = await QueryBlogList({
+        pageIndex,
+        pageSize,
+        status: 2,
       });
-    });
-    const list = allList.slice((pageIndex - 1) * pageSize, pageIndex * pageSize);
-    setList(list);
-    setTotal(allList.length);
-    setTimeout(() => {
+    } catch (error) {
       setLoading(false);
-    }, 2000);
+      return;
+    }
+    const list = res.result.list;
+    setList(list);
+    setTotal(res.result.total);
+    setLoading(false);
   };
   const onFilter = function () {
     setOpen(false);

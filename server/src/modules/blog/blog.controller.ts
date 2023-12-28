@@ -24,17 +24,14 @@ import { UserService } from '../user/user.service';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesTagDto } from './dto/query-blog.dto';
 
-@Controller('blogs')
+@Controller('blog')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class BlogController {
   constructor(private readonly blogService: BlogService, private readonly userService: UserService) {}
 
   @Get(':status')
   @Public()
-  getBlogList(
-    @Param('status', new ParseIntPipe()) status: BlogStatus,
-    @Query(ValidationPipe) queryPagesTagDto: QueryPagesTagDto,
-  ) {
+  getBlogList(@Param('status', new ParseIntPipe()) status: BlogStatus, @Query() queryPagesTagDto: QueryPagesTagDto) {
     return this.blogService.findPages(status, queryPagesTagDto);
   }
 
@@ -44,14 +41,14 @@ export class BlogController {
     const userId = parseInt(user.userId);
     const userModel = await this.userService.findById(userId);
     if (userModel.getSuccess() == false) return userModel;
-    const blog = JSON.parse(createBlogDto.data) as Partial<BlogEntity>;
+    const blog = createBlogDto as Partial<BlogEntity>;
     blog.user = userModel.getResult();
     return this.blogService.create(blog);
   }
 
   @Put('/update/:id')
   updateDraft(@Body() createBlogDto: CreateBlogDto) {
-    const draft = JSON.parse(createBlogDto.data) as Partial<BlogEntity>;
+    const draft = createBlogDto as Partial<BlogEntity>;
     return this.blogService.update(draft);
   }
 
@@ -62,7 +59,7 @@ export class BlogController {
 
   @Put('/publish/:id')
   publishBlog(@Param('id', new ParseIntPipe()) id: number, @Body() createBlogDto: CreateBlogDto) {
-    const draft = JSON.parse(createBlogDto.data) as Partial<BlogEntity>;
+    const draft = createBlogDto as Partial<BlogEntity>;
     return this.blogService.publish(id, draft);
   }
 }

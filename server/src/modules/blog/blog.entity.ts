@@ -25,6 +25,7 @@ export class BlogEntity {
 
   @Column({
     name: 'publish_id',
+    default: 0,
   })
   publishId: number;
 

@@ -21,6 +21,8 @@ interface QueryBlogList extends PageParams {
 
 interface CreateBlog {
   title: string;
+  content: string;
+  status: BlogStatus;
 }
 type DeleteBlog = {
   id: number;
@@ -29,10 +31,10 @@ type EditBlog = {
   id: number;
 };
 
-export const QueryBlogList = (data: QueryBlogList) =>
+export const QueryBlogList = ({ status, ...params }: QueryBlogList) =>
   http.get<Pagination<Blog>>({
-    url: `${URL}/${data.status}`,
-    data,
+    url: `${URL}/${status}`,
+    params,
   });
 
 export const CreateBlog = (data: CreateBlog) =>
