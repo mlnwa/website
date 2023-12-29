@@ -16,26 +16,30 @@ interface Blog {
 }
 
 interface QueryBlogList extends PageParams {
-  status: BlogStatus;
+  status?: BlogStatus;
+  title?: string;
 }
-
+interface QueryPublishedBlogList extends PageParams {}
 interface CreateBlog {
   title: string;
   content: string;
-  status: BlogStatus;
+  categoryId: number;
+  status?: BlogStatus;
 }
-type DeleteBlog = {
-  id: number;
-};
 type EditBlog = {
   id: number;
 };
 
-export const QueryBlogList = ({ status, ...params }: QueryBlogList) =>
+export const QueryBlogList = (params: QueryBlogList) =>
   http.get<Pagination<Blog>>({
-    url: `${URL}/${status}`,
+    url: `${URL}/list`,
     params,
   });
+
+export const QueryPublishedBlogList = (params: QueryPublishedBlogList) =>
+  http.get<Pagination<Blog>>({ url: `${URL}/list/published`, params });
+
+export const QueryBlogDetail = (id: number) => http.get<Blog>({ url: `${URL}/detail/${id}` });
 
 export const CreateBlog = (data: CreateBlog) =>
   http.post<boolean>({
@@ -43,9 +47,9 @@ export const CreateBlog = (data: CreateBlog) =>
     data,
   });
 
-export const DeleteBlog = (data: DeleteBlog) =>
+export const DeleteBlog = (id: number) =>
   http.delete<boolean>({
-    url: `${URL}/${data.id}`,
+    url: `${URL}/${id}`,
   });
 
 export const EditBlog = (data: EditBlog) =>
@@ -54,8 +58,8 @@ export const EditBlog = (data: EditBlog) =>
     data,
   });
 
-export const PublishBlog = (data: EditBlog) =>
+export const PublishBlog = ({ id, ...data }: EditBlog) =>
   http.put<boolean>({
-    url: `${URL}/${data.id}`,
+    url: `${URL}/${id}`,
     data,
   });

@@ -17,7 +17,9 @@ import {
 import commonStyle from '../assets/css/common.module.scss';
 import { QueryCategoryList } from '../api/module/category';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
-import { CreateBlog } from '../api/module/blog';
+import { CreateBlog, QueryBlogDetail } from '../api/module/blog';
+import { useLocation, useParams } from 'react-router-dom';
+import { isNaN, isNumber } from 'lodash';
 const fromWhomOptions: DropdownItemProps[] = [
   { text: '原创', value: '原创' },
   { text: '转载', value: '转载' },
@@ -29,9 +31,14 @@ const BlogEdit = function () {
   const [tagIds, setTagIds] = React.useState<number[]>([]);
   const [title, setTitle] = React.useState<string>('');
   const [content, setContent] = React.useState<string>('');
+  const { id } = useParams();
   useEffect(() => {
-    getCategorys();
+    init();
   }, []);
+  const init = async () => {
+    await getCategorys();
+    await getBlogDetail();
+  };
   const getCategorys = async () => {
     let res;
     try {
@@ -50,13 +57,25 @@ const BlogEdit = function () {
     });
     setCategoryList(list);
   };
+  const getBlogDetail = async () => {
+    const blogId = parseInt(id);
+    if (isNaN(blogId)) return;
+    let res;
+    try {
+      res = await QueryBlogDetail(blogId);
+    } catch (error) {
+      return;
+    }
+    setContent(res.result.content);
+    setTitle(res.result.title);
+  };
   const onSaveHandle = async () => {
     let res;
     try {
       res = await CreateBlog({
         title,
-        status: 1,
         content,
+        categoryId,
       });
     } catch (error) {}
   };
@@ -89,7 +108,7 @@ const BlogEdit = function () {
               setCategoryId(Number(data.value));
             }}
           ></Form.Field>
-          <Form.Field
+          {/* <Form.Field
             label="标签"
             control={Select}
             options={categoryList}
@@ -99,7 +118,7 @@ const BlogEdit = function () {
               const tagIds = data.value as unknown as number[];
               setTagIds(tagIds);
             }}
-          ></Form.Field>
+          ></Form.Field> */}
         </Form.Group>
       </Form>
       <IMarkdown>

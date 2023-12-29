@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Container, Dimmer, Flag, Input, Label, Segment } from 'semantic-ui-react';
+import { Button, Container, Dimmer, Flag, Icon, Input, Label, Menu, Segment } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker, Drawer } from 'antd';
 import { IMessage } from '../../components/IMessage';
@@ -7,7 +7,8 @@ import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
 import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
-import { QueryBlogList } from '../../api/module/blog';
+import { DeleteBlog, QueryBlogList } from '../../api/module/blog';
+import { useNavigate } from 'react-router-dom';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
@@ -16,6 +17,7 @@ const BlogList = function () {
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const columns: ColumnType[] = [
     {
       title: '标题',
@@ -23,7 +25,7 @@ const BlogList = function () {
       width: '2',
     },
     {
-      title: '姓名',
+      title: '作者',
       key: 'name',
       width: '2',
     },
@@ -36,6 +38,40 @@ const BlogList = function () {
       title: '分类',
       key: 'cat',
       width: '2',
+    },
+    {
+      title: '操作',
+      width: '1',
+      render: (row, index) => {
+        return (
+          <Menu secondary>
+            <Button
+              floated="right"
+              icon
+              labelPosition="left"
+              primary
+              size="small"
+              onClick={() => {
+                toEdit(row);
+              }}
+            >
+              <Icon name="edit" /> 编辑
+            </Button>
+            <Button
+              floated="right"
+              icon
+              labelPosition="left"
+              negative
+              size="small"
+              onClick={() => {
+                onDeleteHandle(row);
+              }}
+            >
+              <Icon name="delete" /> 删除
+            </Button>
+          </Menu>
+        );
+      },
     },
   ];
 
@@ -53,7 +89,6 @@ const BlogList = function () {
       res = await QueryBlogList({
         pageIndex,
         pageSize,
-        status: 2,
       });
     } catch (error) {
       setLoading(false);
@@ -63,6 +98,13 @@ const BlogList = function () {
     setList(list);
     setTotal(res.result.total);
     setLoading(false);
+  };
+  const toEdit = (row: any) => {
+    navigate(`/admin/edit/${row.id}`);
+  };
+  const onDeleteHandle = async (row: any) => {
+    await DeleteBlog(row.id);
+    search();
   };
   const onFilter = function () {
     setOpen(false);

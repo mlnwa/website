@@ -15,24 +15,37 @@ import {
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { BlogEntity } from './blog.entity';
 import { Request } from 'express';
-import { PaginationDto } from 'src/common/dtos';
 import { BlogService } from './blog.service';
-import { UserEntity } from '../user/user.entity';
 import { Public } from 'src/common/decorators/public.decorator';
 import { BlogStatus } from './blog.enum';
 import { UserService } from '../user/user.service';
-import { ResultModel } from 'src/common/result/ResultModel';
-import { QueryPagesTagDto } from './dto/query-blog.dto';
+import { QueryPagesBlogDto, QueryPagesPublishedBlogDto } from './dto/query-blog.dto';
+import { CategoryService } from '../category/category.service';
 
 @Controller('blog')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class BlogController {
-  constructor(private readonly blogService: BlogService, private readonly userService: UserService) {}
+  constructor(
+    private readonly blogService: BlogService,
+    private readonly userService: UserService,
+    private readonly categoryService: CategoryService,
+  ) {}
 
-  @Get(':status')
+  @Get('/list/published')
   @Public()
-  getBlogList(@Param('status', new ParseIntPipe()) status: BlogStatus, @Query() queryPagesTagDto: QueryPagesTagDto) {
-    return this.blogService.findPages(status, queryPagesTagDto);
+  getPublishedBlogList(@Query() queryPagesBlogDto: QueryPagesBlogDto) {
+    return this.blogService.findPages(queryPagesBlogDto);
+  }
+
+  @Get('/list')
+  getBlogList(@Query() queryPagesPublishedBlogDto: QueryPagesPublishedBlogDto) {
+    return this.blogService.findPages(queryPagesPublishedBlogDto);
+  }
+
+  @Get('/detail/:id')
+  @Public()
+  getBlogDetail(@Param('id', new ParseIntPipe()) id: number) {
+    return this.blogService.findById(id);
   }
 
   @Post()
@@ -43,6 +56,9 @@ export class BlogController {
     if (userModel.getSuccess() == false) return userModel;
     const blog = createBlogDto as Partial<BlogEntity>;
     blog.user = userModel.getResult();
+    const categoryModel = await this.categoryService.findById(createBlogDto.categoryId);
+    if (categoryModel.getSuccess() == false) return categoryModel;
+    blog.category = categoryModel.getResult();
     return this.blogService.create(blog);
   }
 

@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
 export class CreateBlogDto {
   @IsNotEmpty()
@@ -9,4 +9,9 @@ export class CreateBlogDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Type(() => Number)
+  categoryId: number;
 }

@@ -45,7 +45,11 @@ export class CategoryService {
     return ResultModel.builderSuccessMsg('删除成功');
   }
   async findById(id: number) {
-    return await this.categoryRepository.findOne({ where: { id } });
+    const result = await this.categoryRepository.findOne({ where: { id } });
+    if (result == null) {
+      return ResultModel.builderErrorMsg('分类不存在');
+    }
+    return ResultModel.builderSuccess<CategoryEntity>().setResult(result);
   }
   async update(id: number, category: Partial<CategoryEntity>) {
     const queryCategory = await this.findById(id);

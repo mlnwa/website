@@ -1,9 +1,17 @@
 import { Type } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from 'src/common/dtos';
+import { BlogStatus } from '../blog.enum';
 
-export class QueryPagesTagDto extends PaginationDto {
+export class QueryPagesBlogDto extends PaginationDto {
   @IsString()
-  @Type(() => String)
-  title?: string = '';
+  @IsOptional()
+  title?: string;
+
+  @IsOptional()
+  @IsEnum(BlogStatus)
+  @Type(() => Number)
+  status?: BlogStatus;
 }
+
+export class QueryPagesPublishedBlogDto extends PaginationDto {}

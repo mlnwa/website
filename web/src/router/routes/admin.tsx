@@ -123,7 +123,7 @@ const adminRoute = {
       ],
     },
     {
-      path: '/admin/edit',
+      path: '/admin/edit/:id',
       authorize: true,
       element: <BlogEdit></BlogEdit>,
       customProp: {

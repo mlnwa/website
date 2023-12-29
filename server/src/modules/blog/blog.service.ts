@@ -4,7 +4,7 @@ import { BlogEntity } from './blog.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { BlogStatus } from './blog.enum';
-import { QueryPagesTagDto } from './dto/query-blog.dto';
+import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
 
 @Injectable()
@@ -19,21 +19,23 @@ export class BlogService {
     return ResultModel.builderSuccessMsg('保存成功');
   }
 
-  async findPages(status: BlogStatus, condition: QueryPagesTagDto) {
-    const { pageIndex, pageSize } = condition;
+  async findPages(queryPagesBlogDto: QueryPagesBlogDto) {
+    const { pageIndex, pageSize, ...condition } = queryPagesBlogDto;
     const pageList = await SelectPage.paginate<BlogEntity>(this.blogRepository, {
       pageIndex,
       pageSize,
-      where: {
-        status,
-      },
+      where: { ...condition },
     });
     return ResultModel.builderSuccess<PageInfo<BlogEntity>>().setResult(pageList);
   }
 
   async findById(id: number) {
-    return await this.blogRepository.findOne({ where: { id } });
+    const res = await this.blogRepository.findOneBy({ id });
+    if (!res) return ResultModel.builderErrorMsg('博客不存在');
+    return ResultModel.builderSuccess<BlogEntity>().setResult(res);
   }
+
+  async findDetailById(id: number) {}
 
   async deleteById(id: number) {
     let res = await this.blogRepository.delete({ id });
