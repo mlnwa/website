@@ -2,24 +2,24 @@ type InitData<T> = {
   pageIndex: number;
   pageSize: number;
   list: T[];
-  count: number;
+  total: number;
 };
 export class PageInfo<T> {
   constructor();
   constructor(initData: InitData<T>);
   constructor(initData?: InitData<T>) {
     if (!initData) return;
-    const { count, pageIndex, pageSize, list } = initData;
+    const { total, pageIndex, pageSize, list } = initData;
     this.list = list;
     this.size = list.length;
-    this.total = count;
-    this.pages = Math.ceil(count / pageSize);
+    this.total = total;
+    this.pages = Math.ceil(total / pageSize);
     this.pageIndex = pageIndex;
     this.pageSize = pageSize;
     this.isFirstPage = pageIndex === 1;
-    this.isLastPage = pageIndex * pageSize >= count;
-    this.hasPrePage = pageIndex > 1 && count > 0;
-    this.hasNextPage = pageIndex * pageSize < count;
+    this.isLastPage = pageIndex * pageSize >= total;
+    this.hasPrePage = pageIndex > 1 && total > 0;
+    this.hasNextPage = pageIndex * pageSize < total;
   }
   private pageIndex: number;
   private pageSize: number;

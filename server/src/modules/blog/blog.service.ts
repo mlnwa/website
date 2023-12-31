@@ -6,13 +6,11 @@ import { ResultModel } from 'src/common/result/ResultModel';
 import { BlogStatus } from './blog.enum';
 import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
+import { BlogRepository } from './blog.repository';
 
 @Injectable()
 export class BlogService {
-  constructor(
-    @InjectRepository(BlogEntity)
-    private readonly blogRepository: Repository<BlogEntity>,
-  ) {}
+  constructor(private readonly blogRepository: BlogRepository) {}
 
   async create(blog: Partial<BlogEntity>): Promise<ResultModel> {
     await this.blogRepository.save(blog);
@@ -20,13 +18,16 @@ export class BlogService {
   }
 
   async findPages(queryPagesBlogDto: QueryPagesBlogDto) {
-    const { pageIndex, pageSize, ...condition } = queryPagesBlogDto;
-    const pageList = await SelectPage.paginate<BlogEntity>(this.blogRepository, {
+    const { pageIndex, pageSize } = queryPagesBlogDto;
+    const resultModel = new ResultModel<PageInfo<BlogEntity>>();
+    const pageInfo = new PageInfo<BlogEntity>({
+      ...(await this.blogRepository.findBlogList(queryPagesBlogDto)),
       pageIndex,
       pageSize,
-      where: { ...condition },
     });
-    return ResultModel.builderSuccess<PageInfo<BlogEntity>>().setResult(pageList);
+    resultModel.setSuccess(true);
+    resultModel.setResult(pageInfo);
+    return resultModel;
   }
 
   async findById(id: number) {
