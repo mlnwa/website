@@ -9,7 +9,7 @@ interface Category {
   description: string;
   createAt: string;
   updateAt: string;
-  blogNumber: number;
+  number: number;
 }
 interface CreateCategoryData {
   name: string;

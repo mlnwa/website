@@ -5,6 +5,7 @@ const URL = '/tag';
 interface Tag {
   id: number;
   name: string;
+  number: number;
   createAt: string;
   updataAt: string;
 }
@@ -27,7 +28,7 @@ export const CreateTag = (data: CreateTagData) =>
     data,
   });
 
-export const EditTag = (id: number, data: UpdateTagData) =>
+export const UpdateTag = (id: number, data: UpdateTagData) =>
   http.put<boolean>({
     url: `${URL}/${id}`,
     data,
