@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { Login, LoginParam } from '../../api/module/user';
+import { LoginParam } from '../../api/module/user';
+import { Login } from '../../api';
 
 type LoginStatus = 'login' | 'logout';
 

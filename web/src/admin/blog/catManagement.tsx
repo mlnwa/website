@@ -8,7 +8,7 @@ import { Constants } from '../../assets/ts/Constants';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IMessage } from '../../components/IMessage';
-import { CreateCategory, DeleteCategory, UpdateCategory, QueryCategoryList } from '../../api/module/category';
+import { CreateCategory, DeleteCategory, UpdateCategory, QueryCategoryList } from '../../api';
 
 const CatManagement = function () {
   const [open, setOpen] = React.useState(false);

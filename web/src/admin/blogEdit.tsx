@@ -15,9 +15,9 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import commonStyle from '../assets/css/common.module.scss';
-import { QueryCategoryList } from '../api/module/category';
+import { QueryCategoryList } from '../api';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
-import { CreateBlog, QueryBlogDetail } from '../api/module/blog';
+import { CreateBlog, QueryBlogDetail } from '../api';
 import { useLocation, useParams } from 'react-router-dom';
 import { isNaN, isNumber } from 'lodash';
 const fromWhomOptions: DropdownItemProps[] = [

@@ -7,7 +7,7 @@ import IDrawer from '../../components/IDrawer';
 import { BlogFilterForm } from '../../class/FormStructs';
 import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
-import { DeleteBlog, QueryBlogList } from '../../api/module/blog';
+import { DeleteBlog, QueryBlogList } from '../../api';
 import { useNavigate } from 'react-router-dom';
 
 const BlogList = function () {
