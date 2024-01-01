@@ -8,7 +8,7 @@ import { Constants } from '../../assets/ts/Constants';
 import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IMessage } from '../../components/IMessage';
-import { AddCategory, DeleteCategory, EditCategory, QueryCategoryList } from '../../api/module/category';
+import { CreateCategory, DeleteCategory, UpdateCategory, QueryCategoryList } from '../../api/module/category';
 
 const CatManagement = function () {
   const [open, setOpen] = React.useState(false);
@@ -109,7 +109,7 @@ const CatManagement = function () {
     // 保存
     setOpen(false);
     const formData = categoryForm.generateFormData() as any;
-    await EditCategory(currentId, {
+    await UpdateCategory(currentId, {
       name: formData.name,
       description: formData.description,
     });
@@ -119,7 +119,7 @@ const CatManagement = function () {
     // 新增
     setOpen(false);
     const formData = categoryForm.generateFormData() as any;
-    await AddCategory({
+    await CreateCategory({
       name: formData.name,
       description: formData.description,
     });

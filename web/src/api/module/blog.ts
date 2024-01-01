@@ -1,36 +1,44 @@
 import http from '../requrest';
 import { Pagination, PageParams } from '../type';
+const URL = '/blog';
 export enum BlogStatus {
   PUBLISHED = 1,
   DRAFT = 2,
   ARCHIVED = 3,
 }
-const URL = '/blog';
 interface Blog {
   id: number;
-  publishId?: number;
+  publishId: number;
   title: string;
-  content: string;
-  createAt?: string;
-  updateAt?: string;
+  content?: string;
+  createAt: string;
+  updateAt: string;
+  status: BlogStatus;
+  categoryId: number;
+  categoryName: string;
+  tagIds: number[];
+  tagNames: string[];
+  columnId: number;
+  columnName: string;
+  viewCount: number;
 }
 
-interface QueryBlogList extends PageParams {
+interface QueryBlogListParams extends PageParams {
   status?: BlogStatus;
   title?: string;
 }
 interface QueryPublishedBlogList extends PageParams {}
-interface CreateBlog {
+interface CreateBlogData {
   title: string;
   content: string;
   categoryId: number;
+  tagIds?: number[];
+  columnId?: number;
   status?: BlogStatus;
 }
-type EditBlog = {
-  id: number;
-};
+interface UpdateBlogData extends Partial<CreateBlogData> {}
 
-export const QueryBlogList = (params: QueryBlogList) =>
+export const QueryBlogList = (params: QueryBlogListParams) =>
   http.get<Pagination<Blog>>({
     url: `${URL}/list`,
     params,
@@ -41,7 +49,7 @@ export const QueryPublishedBlogList = (params: QueryPublishedBlogList) =>
 
 export const QueryBlogDetail = (id: number) => http.get<Blog>({ url: `${URL}/detail/${id}` });
 
-export const CreateBlog = (data: CreateBlog) =>
+export const CreateBlog = (data: CreateBlogData) =>
   http.post<boolean>({
     url: `${URL}`,
     data,
@@ -52,14 +60,14 @@ export const DeleteBlog = (id: number) =>
     url: `${URL}/${id}`,
   });
 
-export const EditBlog = (data: EditBlog) =>
+export const UpdateBlog = (id: number, data: UpdateBlogData) =>
   http.put<boolean>({
-    url: URL,
+    url: `${URL}/${id}`,
     data,
   });
 
-export const PublishBlog = ({ id, ...data }: EditBlog) =>
+export const PublishBlog = (id: number, data: UpdateBlogData) =>
   http.put<boolean>({
-    url: `${URL}/${id}`,
+    url: `${URL}/publish/${id}`,
     data,
   });

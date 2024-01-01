@@ -9,10 +9,10 @@ interface Tag {
   updataAt: string;
 }
 
-interface CreateTagDto {
+interface CreateTagData {
   name: string;
 }
-
+interface UpdateTagData extends Partial<CreateTagData> {}
 interface QueryTagListParams extends PageParams {}
 
 export const QueryTagList = (params: QueryTagListParams) =>
@@ -21,13 +21,13 @@ export const QueryTagList = (params: QueryTagListParams) =>
     params,
   });
 
-export const CreateTag = (data: CreateTagDto) =>
+export const CreateTag = (data: CreateTagData) =>
   http.post<boolean>({
     url: `${URL}`,
     data,
   });
 
-export const UpdateTag = (id: number, data: CreateTagDto) =>
+export const EditTag = (id: number, data: UpdateTagData) =>
   http.put<boolean>({
     url: `${URL}/${id}`,
     data,

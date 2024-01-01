@@ -7,18 +7,23 @@ interface Category {
   id: number;
   name: string;
   description: string;
+  createAt: string;
+  updateAt: string;
+  blogNumber: number;
 }
+interface CreateCategoryData {
+  name: string;
+  description?: string;
+}
+interface UpdateCategoryData extends Partial<CreateCategoryData> {}
 interface QueryCategoryListParams extends PageParams {}
 export const QueryCategoryList = (params: QueryCategoryListParams) =>
   http.get<Pagination<Category>>({
     url: `${URL}`,
     params,
   });
-interface AddCategoryParams {
-  name: string;
-  description?: string;
-}
-export const AddCategory = (data: AddCategoryParams) =>
+
+export const CreateCategory = (data: CreateCategoryData) =>
   http.post<boolean>({
     url: `${URL}`,
     data,
@@ -29,7 +34,7 @@ export const DeleteCategory = (id: number) =>
     url: `${URL}/${id}`,
   });
 
-export const EditCategory = (id: number, data: AddCategoryParams) =>
+export const UpdateCategory = (id: number, data: UpdateCategoryData) =>
   http.put<boolean>({
     url: `${URL}/${id}`,
     data,
