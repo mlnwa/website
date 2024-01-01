@@ -52,7 +52,7 @@ const BlogEdit = function () {
     const list = res.result.list.map((item) => {
       return {
         value: item.id,
-        text: item.categoryName,
+        text: item.name,
       };
     });
     setCategoryList(list);

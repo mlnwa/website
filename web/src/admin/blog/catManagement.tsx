@@ -21,7 +21,7 @@ const CatManagement = function () {
   const columns: ColumnType[] = [
     {
       title: '类别名称',
-      key: 'categoryName',
+      key: 'name',
       width: '2',
     },
     {
@@ -110,7 +110,7 @@ const CatManagement = function () {
     setOpen(false);
     const formData = categoryForm.generateFormData() as any;
     await EditCategory(currentId, {
-      categoryName: formData.categoryName,
+      name: formData.name,
       description: formData.description,
     });
     search();
@@ -120,7 +120,7 @@ const CatManagement = function () {
     setOpen(false);
     const formData = categoryForm.generateFormData() as any;
     await AddCategory({
-      categoryName: formData.categoryName,
+      name: formData.name,
       description: formData.description,
     });
     search();

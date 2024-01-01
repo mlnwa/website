@@ -2,11 +2,11 @@ import { DataSource, Repository } from 'typeorm';
 import { BlogEntity } from './blog.entity';
 import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { Injectable } from '@nestjs/common';
+import { BlogDetailVo, BlogPageVo } from './vo/blog-page.vo';
 
 @Injectable()
 export class BlogRepository extends Repository<BlogEntity> {
   constructor(dataSource: DataSource) {
-    console.log(dataSource);
     super(BlogEntity, dataSource.createEntityManager());
   }
   // 查询博客列表
@@ -22,7 +22,7 @@ export class BlogRepository extends Repository<BlogEntity> {
         'user.id as userId',
         'user.name as userName',
         'category.id as categoryId',
-        'category.category_name as categoryName',
+        'category.name as categoryName',
       ])
       .leftJoin('blog.user', 'user')
       .leftJoin('blog.category', 'category')
@@ -32,10 +32,34 @@ export class BlogRepository extends Repository<BlogEntity> {
       .orderBy('blog.createAt', 'DESC');
     const count = await queryBuilder.getCount();
     const skip = pageSize * (pageIndex - 1);
-    let result: BlogEntity[] = [];
+    let result: BlogPageVo[] = [];
     if (skip < count) {
       result = await queryBuilder.skip(skip).take(pageSize).getRawMany();
     }
     return { list: result, total: count };
+  }
+
+  async findBlogDetailById(id: number) {
+    const queryBuilder = this.createQueryBuilder('blog');
+    queryBuilder
+      .select([
+        'blog.id as id',
+        'blog.title as title',
+        'blog.content as content',
+        'blog.createAt as createAt',
+        'blog.updateAt as updateAt',
+        'user.id as userId',
+        'user.name as userName',
+        'category.id as categoryId',
+        'category.name as categoryName',
+        'column.id as columnId',
+        'column.name as columnName',
+      ])
+      .leftJoin('blog.user', 'user')
+      .leftJoin('blog.category', 'category')
+      .leftJoin('blog.column', 'column')
+      .where('blog.id = :id', { id });
+    const result = await queryBuilder.getRawOne<BlogDetailVo>();
+    return result;
   }
 }

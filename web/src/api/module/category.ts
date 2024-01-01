@@ -5,7 +5,7 @@ const URL = '/category';
 
 interface Category {
   id: number;
-  categoryName: string;
+  name: string;
   description: string;
 }
 interface QueryCategoryListParams extends PageParams {}
@@ -15,7 +15,7 @@ export const QueryCategoryList = (params: QueryCategoryListParams) =>
     params,
   });
 interface AddCategoryParams {
-  categoryName: string;
+  name: string;
   description?: string;
 }
 export const AddCategory = (data: AddCategoryParams) =>

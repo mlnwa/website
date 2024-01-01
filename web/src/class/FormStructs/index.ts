@@ -87,7 +87,7 @@ export class CategoryForm extends FormStruct {
         title: '基础信息',
         icon: 'info',
         content: [
-          new InputFiled('类别名称', 'categoryName', '', '', true),
+          new InputFiled('类别名称', 'name', '', '', true),
           new InputFiled('描述', 'description', '', '', false),
         ],
       },
@@ -102,7 +102,7 @@ export class CategoryFilterForm extends FormStruct {
       {
         title: '筛选条件',
         icon: 'filter',
-        content: [new InputFiled('类别名称', 'categoryName', '', '', false)],
+        content: [new InputFiled('类别名称', 'name', '', '', false)],
       },
     ];
   }

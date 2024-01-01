@@ -7,6 +7,7 @@ import { BlogStatus } from './blog.enum';
 import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
 import { BlogRepository } from './blog.repository';
+import { BlogDetailVo, BlogPageVo } from './vo/blog-page.vo';
 
 @Injectable()
 export class BlogService {
@@ -19,8 +20,8 @@ export class BlogService {
 
   async findPages(queryPagesBlogDto: QueryPagesBlogDto) {
     const { pageIndex, pageSize } = queryPagesBlogDto;
-    const resultModel = new ResultModel<PageInfo<BlogEntity>>();
-    const pageInfo = new PageInfo<BlogEntity>({
+    const resultModel = new ResultModel<PageInfo<BlogPageVo>>();
+    const pageInfo = new PageInfo<BlogPageVo>({
       ...(await this.blogRepository.findBlogList(queryPagesBlogDto)),
       pageIndex,
       pageSize,
@@ -36,7 +37,11 @@ export class BlogService {
     return ResultModel.builderSuccess<BlogEntity>().setResult(res);
   }
 
-  async findDetailById(id: number) {}
+  async findDetailById(id: number) {
+    const res = await this.blogRepository.findBlogDetailById(id);
+    if (!res) return ResultModel.builderErrorMsg('博客不存在');
+    return ResultModel.builderSuccess<BlogDetailVo>().setResult(res);
+  }
 
   async deleteById(id: number) {
     let res = await this.blogRepository.delete({ id });
