@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Icon, Label, Menu } from 'semantic-ui-react';
+import { Button, Container, Icon, Label, Menu } from 'semantic-ui-react';
 import ITable, { ColumnType } from '../../components/ITable';
 import { DatePicker } from 'antd';
 import IDrawer from '../../components/IDrawer';
-import { TagForm } from '../../class/FormStructs';
+import { CategoryForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
-import { CreateTag, DeleteTag, UpdateTag, QueryTagList } from '../../api';
+import { cloneDeep } from 'lodash';
+import dayjs from 'dayjs';
+import { IMessage } from '../../components/IMessage';
+import { CreateCategory, DeleteCategory, UpdateCategory, QueryCategoryList } from '../../api';
 
-const TagManagement = function () {
+const CategoryManage = function () {
   const [open, setOpen] = React.useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [tagForm, setTagForm] = useState(new TagForm());
+  const [categoryForm, setCategoryForm] = useState(new CategoryForm());
   const [pageSize, setPageSize] = useState(Constants.PAGE_SIZE);
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentId, setCurrentId] = useState(0);
   const columns: ColumnType[] = [
     {
-      title: '标签名称',
+      title: '类别名称',
       key: 'name',
       width: '2',
     },
     {
       title: '博客数量',
-      key: 'number',
+      key: 'blogNumber',
       width: '2',
     },
     {
@@ -75,7 +78,7 @@ const TagManagement = function () {
   const search = async function (pageIndex = 1) {
     let res;
     try {
-      res = await QueryTagList({
+      res = await QueryCategoryList({
         pageIndex,
         pageSize,
       });
@@ -93,20 +96,20 @@ const TagManagement = function () {
   }, [pageSize]);
   const toEdit = function (row: any) {
     setIsEdit(true);
-    setTagForm(tagForm.insertFormData(row));
+    setCategoryForm(categoryForm.insertFormData(row));
     setCurrentId(row.id);
     setOpen(true);
   };
   const toAdd = function () {
     setIsEdit(false);
-    setTagForm(tagForm.resetFormData());
+    setCategoryForm(categoryForm.resetFormData());
     setOpen(true);
   };
   const onSaveHandle = async function () {
     // 保存
     setOpen(false);
-    const formData = tagForm.generateFormData() as any;
-    await UpdateTag(currentId, {
+    const formData = categoryForm.generateFormData() as any;
+    await UpdateCategory(currentId, {
       name: formData.name,
       description: formData.description,
     });
@@ -115,8 +118,8 @@ const TagManagement = function () {
   const onAddHandle = async function () {
     // 新增
     setOpen(false);
-    const formData = tagForm.generateFormData() as any;
-    await CreateTag({
+    const formData = categoryForm.generateFormData() as any;
+    await CreateCategory({
       name: formData.name,
       description: formData.description,
     });
@@ -124,11 +127,11 @@ const TagManagement = function () {
   };
   const onDeleteHandle = async function (row: any) {
     // 删除
-    await DeleteTag(row.id);
+    await DeleteCategory(row.id);
     search();
   };
   const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
-    setTagForm((prevState: TagForm) => {
+    setCategoryForm((prevState: CategoryForm) => {
       return prevState.updateContent(index, contentIndex, value);
     });
   };
@@ -147,7 +150,7 @@ const TagManagement = function () {
           setOpen(false);
         }}
       >
-        {tagForm.panelList.map((item, index) => {
+        {categoryForm.panelList.map((item, index) => {
           return (
             <IDrawer.Panel
               key={index}
@@ -167,4 +170,4 @@ const TagManagement = function () {
   );
 };
 
-export default TagManagement;
+export default CategoryManage;

@@ -2,10 +2,10 @@ import React from 'react';
 import { CustomRoute } from '..';
 import Layout from '../../Layout';
 import BlogList from '../../admin/blog/blogList';
-import CatManagement from '../../admin/blog/catManagement';
+import CategoryManage from '../../admin/blog/categoryManage';
 import BlogEdit from '../../admin/blogEdit';
-import TagManagement from '../../admin/blog/tagManagement';
-import ColumnManagement from '../../admin/blog/columnManagement';
+import TagManage from '../../admin/blog/tagManage';
+import ColumnManage from '../../admin/blog/columnManage';
 
 const adminRoute = {
   path: '/admin',
@@ -42,7 +42,7 @@ const adminRoute = {
         {
           path: '/admin/blog/catManage',
           authorize: true,
-          element: <CatManagement></CatManagement>,
+          element: <CategoryManage></CategoryManage>,
           customProp: {
             icon: 'th',
             label: '类别管理',
@@ -51,7 +51,7 @@ const adminRoute = {
         {
           path: '/admin/blog/tagManage',
           authorize: true,
-          element: <TagManagement></TagManagement>,
+          element: <TagManage></TagManage>,
           customProp: {
             icon: 'tags',
             label: '标签管理',
@@ -60,7 +60,7 @@ const adminRoute = {
         {
           path: '/admin/blog/columnManage',
           authorize: true,
-          element: <ColumnManagement></ColumnManagement>,
+          element: <ColumnManage></ColumnManage>,
           customProp: {
             icon: 'columns',
             label: '专栏管理',

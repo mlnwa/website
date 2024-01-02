@@ -7,7 +7,7 @@ import { ColumnForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
 import { CreateColumn, DeleteColumn, UpdateColumn, QueryColumnList } from '../../api';
 
-const ColumnManagement = function () {
+const ColumnManage = function () {
   const [open, setOpen] = React.useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [columnForm, setColumnForm] = useState(new ColumnForm());
@@ -167,4 +167,4 @@ const ColumnManagement = function () {
   );
 };
 
-export default ColumnManagement;
+export default ColumnManage;
