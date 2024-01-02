@@ -8,20 +8,24 @@ export interface Panel {
 }
 export const FormStruct = class {
   panelList: Panel[];
+  private changedKeysSet = new Set<string>();
+  private isEdit = false;
   constructor() {}
-  generateFormData() {
+  public generateFormData() {
     return this.panelList.reduce((acc, panel) => {
       panel.content.forEach((content) => {
+        if (!this.changedKeysSet.has(content.key) && this.isEdit) return;
         Reflect.set(acc, content.key, content.value);
       });
       return acc;
     }, {});
   }
-  updateContent(panelIndex: number, contentIndex: number, value: any) {
+  public updateContent(panelIndex: number, contentIndex: number, value: any) {
     this.panelList[panelIndex].content[contentIndex].value = value;
+    this.changedKeysSet.add(this.panelList[panelIndex].content[contentIndex].key);
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
   }
-  insertFormData(formData: any) {
+  public insertFormData(formData: any) {
     this.panelList.forEach((item) => {
       item.content.forEach((val) => {
         if (Reflect.has(formData, val.key)) {
@@ -29,14 +33,18 @@ export const FormStruct = class {
         }
       });
     });
+    this.changedKeysSet.clear();
+    this.isEdit = true;
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
   }
-  resetFormData() {
+  public resetFormData() {
     this.panelList.forEach((item) => {
       item.content.forEach((val) => {
         val.value = val.defaultValue;
       });
     });
+    this.changedKeysSet.clear();
+    this.isEdit = false;
     return Object.assign(Object.create(Object.getPrototypeOf(this)), this);
   }
 };

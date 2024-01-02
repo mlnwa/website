@@ -37,11 +37,10 @@ export class CategoryController {
   }
 
   @Put(':id')
-  async updateCategory(@Param('id', new ParseIntPipe()) id: number, @Body() createCategoryDto: CreateCategoryDto) {
-    const category = {
-      name: createCategoryDto.name,
-      description: createCategoryDto.description,
-    };
-    return this.categoryService.update(id, category);
+  async updateCategory(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() createCategoryDto: Partial<CreateCategoryDto>,
+  ) {
+    return this.categoryService.update(id, createCategoryDto);
   }
 }
