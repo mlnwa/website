@@ -12,6 +12,7 @@ interface Column {
 
 interface CreateColumnData {
   name: string;
+  description: string;
 }
 interface UpdateColumnData extends Partial<CreateColumnData> {}
 interface QueryColumnListParams extends PageParams {}

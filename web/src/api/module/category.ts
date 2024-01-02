@@ -19,7 +19,7 @@ interface UpdateCategoryData extends Partial<CreateCategoryData> {}
 interface QueryCategoryListParams extends PageParams {}
 export const QueryCategoryList = (params: QueryCategoryListParams) =>
   http.get<Pagination<Category>>({
-    url: `${URL}`,
+    url: `${URL}/list`,
     params,
   });
 

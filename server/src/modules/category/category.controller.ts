@@ -21,7 +21,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Get()
+  @Get('/list')
   async getCatoryList(@Query() queryPagesCategoryDto: QueryPagesCategoryDto) {
     return this.categoryService.queryPages(queryPagesCategoryDto);
   }

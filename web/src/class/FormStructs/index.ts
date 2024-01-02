@@ -115,3 +115,57 @@ export class CategoryFilterForm extends FormStruct {
     ];
   }
 }
+export class ColumnForm extends FormStruct {
+  constructor() {
+    super();
+    this.panelList = [
+      {
+        title: '基础信息',
+        icon: 'info',
+        content: [
+          new InputFiled('专栏名称', 'name', '', '', true),
+          new InputFiled('描述', 'description', '', '', false),
+        ],
+      },
+    ];
+  }
+}
+export class ColumnFilterForm extends FormStruct {
+  constructor() {
+    super();
+    this.panelList = [
+      {
+        title: '筛选条件',
+        icon: 'filter',
+        content: [new InputFiled('专栏名称', 'name', '', '', false)],
+      },
+    ];
+  }
+}
+export class TagForm extends FormStruct {
+  constructor() {
+    super();
+    this.panelList = [
+      {
+        title: '基础信息',
+        icon: 'info',
+        content: [
+          new InputFiled('标签名称', 'name', '', '', true),
+          new InputFiled('描述', 'description', '', '', false),
+        ],
+      },
+    ];
+  }
+}
+export class TagFilterForm extends FormStruct {
+  constructor() {
+    super();
+    this.panelList = [
+      {
+        title: '筛选条件',
+        icon: 'filter',
+        content: [new InputFiled('标签名称', 'name', '', '', false)],
+      },
+    ];
+  }
+}

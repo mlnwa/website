@@ -4,6 +4,8 @@ import Layout from '../../Layout';
 import BlogList from '../../admin/blog/blogList';
 import CatManagement from '../../admin/blog/catManagement';
 import BlogEdit from '../../admin/blogEdit';
+import TagManagement from '../../admin/blog/tagManagement';
+import ColumnManagement from '../../admin/blog/columnManagement';
 
 const adminRoute = {
   path: '/admin',
@@ -49,7 +51,7 @@ const adminRoute = {
         {
           path: '/admin/blog/tagManage',
           authorize: true,
-          element: <BlogList></BlogList>,
+          element: <TagManagement></TagManagement>,
           customProp: {
             icon: 'tags',
             label: '标签管理',
@@ -58,7 +60,7 @@ const adminRoute = {
         {
           path: '/admin/blog/columnManage',
           authorize: true,
-          element: <BlogList></BlogList>,
+          element: <ColumnManagement></ColumnManagement>,
           customProp: {
             icon: 'columns',
             label: '专栏管理',

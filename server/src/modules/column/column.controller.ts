@@ -21,7 +21,7 @@ import { QueryPagesColumnDto } from './dto/query-column.dto';
 export class ColumnController {
   constructor(private readonly columnService: ColumnService) {}
 
-  @Get()
+  @Get('/list')
   @Public()
   getColumnList(@Query(ValidationPipe) queryColumnPagesDto: QueryPagesColumnDto) {
     return this.columnService.queryPages(queryColumnPagesDto);

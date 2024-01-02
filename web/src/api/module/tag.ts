@@ -12,6 +12,7 @@ interface Tag {
 
 interface CreateTagData {
   name: string;
+  description: string;
 }
 interface UpdateTagData extends Partial<CreateTagData> {}
 interface QueryTagListParams extends PageParams {}

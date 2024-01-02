@@ -21,7 +21,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 
-  @Get()
+  @Get('/list')
   @Public()
   getTagList(@Query() queryPagesTagDto: QueryPagesTagDto) {
     return this.tagService.queryPages(queryPagesTagDto);
