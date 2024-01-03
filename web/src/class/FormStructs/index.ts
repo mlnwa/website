@@ -1,10 +1,10 @@
 import { SemanticICONS } from 'semantic-ui-react';
-import { FormFiledTypes, InputFiled, TextareaFiled } from './formFields';
+import { FormFieldTypes, InputField, TextareaField } from './formFields';
 
 export interface Panel {
   title: string;
   icon: SemanticICONS;
-  content: FormFiledTypes[];
+  content: FormFieldTypes[];
 }
 export const FormStruct = class {
   panelList: Panel[];
@@ -57,10 +57,10 @@ export class BlogFilterForm extends FormStruct {
         title: '筛选条件',
         icon: 'filter',
         content: [
-          new InputFiled('用户名', 'name', '', '', false),
-          new InputFiled('专栏', 'column', '', '', false),
-          new InputFiled('类别', 'cat', '', '', false),
-          new InputFiled('标签', 'label', '', '', false),
+          new InputField('用户名', 'name', '', '', false),
+          new InputField('专栏', 'column', '', '', false),
+          new InputField('类别', 'cat', '', '', false),
+          new InputField('标签', 'label', '', '', false),
         ],
       },
     ];
@@ -74,14 +74,14 @@ export class BlogForm extends FormStruct {
         title: '基础信息',
         icon: 'info',
         content: [
-          new InputFiled('标题', 'title', '', '', true),
-          new InputFiled('作者', 'author', '', '', true),
-          new InputFiled('专栏', 'column', '', '', true),
-          new InputFiled('类别', 'cat', '', '', true),
-          new InputFiled('标签', 'label', '', '', true),
-          new InputFiled('摘要', 'summary', '', '', true),
-          new InputFiled('封面', 'cover', '', '', true),
-          new InputFiled('内容', 'content', '', '', true),
+          new InputField('标题', 'title', '', '', true),
+          new InputField('作者', 'author', '', '', true),
+          new InputField('专栏', 'column', '', '', true),
+          new InputField('类别', 'cat', '', '', true),
+          new InputField('标签', 'label', '', '', true),
+          new InputField('摘要', 'summary', '', '', true),
+          new InputField('封面', 'cover', '', '', true),
+          new InputField('内容', 'content', '', '', true),
         ],
       },
     ];
@@ -95,8 +95,8 @@ export class CategoryForm extends FormStruct {
         title: '基础信息',
         icon: 'info',
         content: [
-          new InputFiled('类别名称', 'name', '', '', true),
-          new InputFiled('描述', 'description', '', '', false),
+          new InputField('类别名称', 'name', '', '', true),
+          new InputField('描述', 'description', '', '', false),
         ],
       },
     ];
@@ -110,7 +110,7 @@ export class CategoryFilterForm extends FormStruct {
       {
         title: '筛选条件',
         icon: 'filter',
-        content: [new InputFiled('类别名称', 'name', '', '', false)],
+        content: [new InputField('类别名称', 'name', '', '', false)],
       },
     ];
   }
@@ -123,8 +123,8 @@ export class ColumnForm extends FormStruct {
         title: '基础信息',
         icon: 'info',
         content: [
-          new InputFiled('专栏名称', 'name', '', '', true),
-          new InputFiled('描述', 'description', '', '', false),
+          new InputField('专栏名称', 'name', '', '', true),
+          new InputField('描述', 'description', '', '', false),
         ],
       },
     ];
@@ -137,7 +137,7 @@ export class ColumnFilterForm extends FormStruct {
       {
         title: '筛选条件',
         icon: 'filter',
-        content: [new InputFiled('专栏名称', 'name', '', '', false)],
+        content: [new InputField('专栏名称', 'name', '', '', false)],
       },
     ];
   }
@@ -150,8 +150,8 @@ export class TagForm extends FormStruct {
         title: '基础信息',
         icon: 'info',
         content: [
-          new InputFiled('标签名称', 'name', '', '', true),
-          new InputFiled('描述', 'description', '', '', false),
+          new InputField('标签名称', 'name', '', '', true),
+          new InputField('描述', 'description', '', '', false),
         ],
       },
     ];
@@ -164,7 +164,7 @@ export class TagFilterForm extends FormStruct {
       {
         title: '筛选条件',
         icon: 'filter',
-        content: [new InputFiled('标签名称', 'name', '', '', false)],
+        content: [new InputField('标签名称', 'name', '', '', false)],
       },
     ];
   }

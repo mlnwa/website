@@ -1,5 +1,5 @@
 type FormTypes = 'input' | 'textarea' | 'select' | 'radio';
-class FormFiled {
+class FormField {
   constructor(
     public label: string,
     public value: any,
@@ -10,7 +10,7 @@ class FormFiled {
   ) {}
 }
 
-export class InputFiled extends FormFiled {
+export class InputField extends FormField {
   constructor(
     public label: string,
     public key: string,
@@ -24,7 +24,7 @@ export class InputFiled extends FormFiled {
   }
 }
 
-export class TextareaFiled extends FormFiled {
+export class TextareaField extends FormField {
   constructor(
     public label: string,
     public key: string,
@@ -38,7 +38,7 @@ export class TextareaFiled extends FormFiled {
   }
 }
 
-export class SelectFiled extends FormFiled {
+export class SelectField extends FormField {
   constructor(
     public label: string,
     public key: string,
@@ -52,7 +52,7 @@ export class SelectFiled extends FormFiled {
     super(label, value, 'select', key, required, defaultValue);
   }
 }
-export class RadioFiled extends FormFiled {
+export class RadioField extends FormField {
   constructor(
     public label: string,
     public key: string,
@@ -67,4 +67,4 @@ export class RadioFiled extends FormFiled {
   }
 }
 
-export type FormFiledTypes = InputFiled | TextareaFiled | SelectFiled | RadioFiled;
+export type FormFieldTypes = InputField | TextareaField | SelectField | RadioField;
