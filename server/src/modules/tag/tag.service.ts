@@ -17,20 +17,15 @@ export class TagService {
   async findById() {}
 
   async create(createTagDto: CreateTagDto) {
-    const { name } = createTagDto;
-    const isFound = this.tagRepository.findOne({
-      where: { name },
-    });
-    if (isFound) {
-      return ResultModel.builderErrorMsg(`tag:${name}已存在`);
-    }
+    const tagModel = await this.findByName(createTagDto.name);
+    if (tagModel.getSuccess()) return ResultModel.builderErrorMsg(`tag:${createTagDto.name}已存在`);
     this.tagRepository.save(createTagDto);
     return ResultModel.builderSuccessMsg('新增成功');
   }
 
   async findByName(name: string) {
     const res = await this.tagRepository.findOne({ where: { name } });
-    if (!res) return ResultModel.builderSuccess<TagEntity>().setResult(res);
+    if (res !== null) return ResultModel.builderSuccess<TagEntity>().setResult(res);
     return ResultModel.builderErrorMsg('标签不存在');
   }
 
@@ -46,8 +41,8 @@ export class TagService {
 
   async update(id: number, tag: Partial<TagEntity>) {
     const queryTag = await this.findByName(tag.name);
-    if (queryTag.getResult()) return ResultModel.builderErrorMsg('标签已存在');
+    if (!queryTag.getResult()) return ResultModel.builderErrorMsg('标签不存在');
     let res = await this.tagRepository.update(id, tag);
-    return ResultModel.builderSuccessMsg('修改成功').setResult(res);
+    return ResultModel.builderSuccessMsg('修改成功');
   }
 }

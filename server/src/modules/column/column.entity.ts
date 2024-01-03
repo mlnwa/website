@@ -9,7 +9,7 @@ export class ColumnEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ type: 'varchar', default: '' })
   description: string;
 
   @CreateDateColumn({

@@ -50,8 +50,7 @@ const HttpRequest = class {
         const data = response.data as ResultModel<any>;
         if (data.success !== true && !WhiteCodeList.includes(data.code)) {
           IMessage.error(data.msg);
-        }
-        if (data.msg) {
+        } else if (data.msg) {
           IMessage.success(data.msg);
         }
         return response;

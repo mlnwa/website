@@ -37,11 +37,8 @@ export class TagController {
     return this.tagService.deleteById(id);
   }
 
-  @Put('update/:id')
-  async updateTag(@Param('id', new ParseIntPipe()) id: number, @Body() createTagDto: CreateTagDto) {
-    const tag = {
-      name: createTagDto.name,
-    };
-    return this.tagService.update(id, tag);
+  @Put(':id')
+  async updateTag(@Param('id', new ParseIntPipe()) id: number, @Body() createTagDto: Partial<CreateTagDto>) {
+    return this.tagService.update(id, createTagDto);
   }
 }

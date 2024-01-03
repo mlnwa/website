@@ -17,6 +17,9 @@ export class TagEntity {
   @Column({ length: 10 })
   name: string;
 
+  @Column({ type: 'varchar', default: '' })
+  description: string;
+
   @UpdateDateColumn({
     type: 'datetime',
   })

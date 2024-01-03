@@ -33,7 +33,7 @@ export class ColumnController {
   }
 
   @Put(':id')
-  updateColumn(@Param('id', new ParseIntPipe()) id: number, @Body() createColumnDto: CreateColumnDto) {
+  updateColumn(@Param('id', new ParseIntPipe()) id: number, @Body() createColumnDto: Partial<CreateColumnDto>) {
     return this.columnService.update(id, createColumnDto);
   }
 
