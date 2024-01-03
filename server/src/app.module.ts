@@ -14,6 +14,7 @@ import { BlogModule } from './modules/blog/blog.module';
 import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
 import { ColumnModule } from './modules/column/column.module';
+import { DBExceptionFilter } from './common/filters/db-exception.filter';
 
 @Module({
   imports: [
@@ -38,6 +39,10 @@ import { ColumnModule } from './modules/column/column.module';
     {
       provide: APP_FILTER,
       useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: DBExceptionFilter,
     },
     {
       provide: APP_GUARD,

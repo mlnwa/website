@@ -21,13 +21,13 @@ export class ResultModel<R = any> {
   private success: boolean;
   private result: R;
   private msg: string;
-  private code: number;
+  private code: string;
 
-  public getCode(): number {
+  public getCode(): string {
     return this.code;
   }
 
-  public setCode(code: number): ResultModel {
+  public setCode(code: string): ResultModel {
     this.code = code;
     return this;
   }
