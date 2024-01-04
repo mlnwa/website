@@ -1,5 +1,10 @@
 export enum BlogStatus {
-  PUBLISHED = 1,
-  DRAFT = 2,
-  ARCHIVED = 3,
+  DRAFT,
+  PUBLISHED,
+  ARCHIVED,
+}
+export enum BlogFromStatus {
+  SELF,
+  REPRODUCED,
+  TRANSLATED,
 }

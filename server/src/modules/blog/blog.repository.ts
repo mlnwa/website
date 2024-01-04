@@ -48,6 +48,8 @@ export class BlogRepository extends Repository<BlogEntity> {
         'blog.content as content',
         'blog.createAt as createAt',
         'blog.updateAt as updateAt',
+        'blog.status as status',
+        'blog.fromStatus as fromStatus',
         'user.id as userId',
         'user.name as userName',
         'category.id as categoryId',

@@ -1,3 +1,5 @@
+import { BlogFromStatus, BlogStatus } from '../blog.enum';
+
 export class BlogPageVo {
   id: number;
   title: string;
@@ -10,8 +12,10 @@ export class BlogPageVo {
   columnId: number;
   columnName: string;
   tags: string[];
+  fromStatus: BlogFromStatus;
 }
 
 export class BlogDetailVo extends BlogPageVo {
   content: string;
+  status: BlogStatus;
 }

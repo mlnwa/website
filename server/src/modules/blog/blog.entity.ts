@@ -10,7 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
-import { BlogStatus } from './blog.enum';
+import { BlogFromStatus, BlogStatus } from './blog.enum';
 import { CategoryEntity } from '../category/category.entity';
 import { TagEntity } from '../tag/tag.entity';
 import { ColumnEntity } from '../column/column.entity';
@@ -30,11 +30,17 @@ export class BlogEntity {
   publishId: number;
 
   @Column({
-    type: 'enum',
-    enum: BlogStatus,
+    type: 'tinyint',
     default: BlogStatus.DRAFT,
   })
   status: BlogStatus;
+
+  @Column({
+    type: 'tinyint',
+    default: BlogFromStatus.SELF,
+    name: 'from_status',
+  })
+  fromStatus: BlogFromStatus;
 
   @Column()
   content: string;

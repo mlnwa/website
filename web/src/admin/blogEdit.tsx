@@ -20,10 +20,11 @@ import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
 import { useLocation, useParams } from 'react-router-dom';
 import { isNaN, isNumber } from 'lodash';
-const fromWhomOptions: DropdownItemProps[] = [
-  { text: '原创', value: '原创' },
-  { text: '转载', value: '转载' },
-  { text: '翻译', value: '翻译' },
+import { BlogFromStatus } from '../api/module/blog';
+const fromStatusOptions: DropdownItemProps[] = [
+  { text: '原创', value: BlogFromStatus.SELF },
+  { text: '转载', value: BlogFromStatus.REPRODUCED },
+  { text: '翻译', value: BlogFromStatus.TRANSLATED },
 ];
 const BlogEdit = function () {
   const [categoryList, setCategoryList] = React.useState<DropdownItemProps[]>([]);
@@ -31,6 +32,7 @@ const BlogEdit = function () {
   const [tagIds, setTagIds] = React.useState<number[]>([]);
   const [title, setTitle] = React.useState<string>('');
   const [content, setContent] = React.useState<string>('');
+  const [fromStatus, setFromStatus] = React.useState<number>(BlogFromStatus.SELF);
   const { id } = useParams();
   useEffect(() => {
     init();
@@ -68,6 +70,8 @@ const BlogEdit = function () {
     }
     setContent(res.result.content);
     setTitle(res.result.title);
+    setCategoryId(res.result.categoryId);
+    setFromStatus(res.result.fromStatus);
   };
   const onSaveHandle = async () => {
     let res;
@@ -76,6 +80,7 @@ const BlogEdit = function () {
         title,
         content,
         categoryId,
+        fromStatus,
       });
     } catch (error) {}
   };
@@ -89,7 +94,15 @@ const BlogEdit = function () {
               size="large"
               labelPosition="left"
               placeholder="请输入标题"
-              label={<Dropdown options={fromWhomOptions} defaultValue="原创"></Dropdown>}
+              label={
+                <Dropdown
+                  options={fromStatusOptions}
+                  value={fromStatus}
+                  onChange={(e, data) => {
+                    setFromStatus(Number(data.value));
+                  }}
+                ></Dropdown>
+              }
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -103,7 +116,7 @@ const BlogEdit = function () {
             control={Select}
             clearable
             options={categoryList}
-            defaultValue={categoryId}
+            value={categoryId}
             onChange={(e: any, data: DropdownItemProps) => {
               setCategoryId(Number(data.value));
             }}

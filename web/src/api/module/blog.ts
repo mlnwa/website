@@ -2,9 +2,14 @@ import http from '../requrest';
 import { Pagination, PageParams } from '../type';
 const URL = '/blog';
 export enum BlogStatus {
-  PUBLISHED = 1,
-  DRAFT = 2,
-  ARCHIVED = 3,
+  DRAFT,
+  PUBLISHED,
+  ARCHIVED,
+}
+export enum BlogFromStatus {
+  SELF,
+  REPRODUCED,
+  TRANSLATED,
 }
 interface Blog {
   id: number;
@@ -14,6 +19,7 @@ interface Blog {
   createAt: string;
   updateAt: string;
   status: BlogStatus;
+  fromStatus: BlogFromStatus;
   categoryId: number;
   categoryName: string;
   tagIds: number[];
@@ -35,6 +41,7 @@ interface CreateBlogData {
   tagIds?: number[];
   columnId?: number;
   status?: BlogStatus;
+  fromStatus: BlogFromStatus;
 }
 interface UpdateBlogData extends Partial<CreateBlogData> {}
 

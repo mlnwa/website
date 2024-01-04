@@ -45,7 +45,7 @@ export class BlogController {
   @Get('/detail/:id')
   @Public()
   getBlogDetail(@Param('id', new ParseIntPipe()) id: number) {
-    return this.blogService.findById(id);
+    return this.blogService.findDetailById(id);
   }
 
   @Post()
@@ -59,6 +59,7 @@ export class BlogController {
     const categoryModel = await this.categoryService.findById(createBlogDto.categoryId);
     if (categoryModel.getSuccess() == false) return categoryModel;
     blog.category = categoryModel.getResult();
+    console.log(blog);
     return this.blogService.create(blog);
   }
 
