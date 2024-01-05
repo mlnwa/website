@@ -3,11 +3,12 @@ import { BlogEntity } from './blog.entity';
 import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { Injectable } from '@nestjs/common';
 import { BlogDetailVo, BlogPageVo } from './vo/blog-page.vo';
+import { BaseRepository } from 'src/base/base.repository';
 
 @Injectable()
-export class BlogRepository extends Repository<BlogEntity> {
+export class BlogRepository extends BaseRepository<BlogEntity> {
   constructor(dataSource: DataSource) {
-    super(BlogEntity, dataSource.createEntityManager());
+    super(dataSource, BlogEntity);
   }
   // 查询博客列表
   async findBlogList(queryPagesBlogDto: QueryPagesBlogDto) {
@@ -30,13 +31,7 @@ export class BlogRepository extends Repository<BlogEntity> {
       .leftJoin('blog.column', 'column')
       .where(others)
       .orderBy('blog.createAt', 'DESC');
-    const count = await queryBuilder.getCount();
-    const skip = pageSize * (pageIndex - 1);
-    let result: BlogPageVo[] = [];
-    if (skip < count) {
-      result = await queryBuilder.skip(skip).take(pageSize).getRawMany();
-    }
-    return { list: result, total: count };
+    return await this.loadQueryBuilderToPages<BlogPageVo>(queryBuilder, pageIndex, pageSize);
   }
 
   async findBlogDetailById(id: number) {
