@@ -15,7 +15,7 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import commonStyle from '../assets/css/common.module.scss';
-import { QueryCategoryList } from '../api';
+import { QueryCategoryList, QueryTagList } from '../api';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
 import { useLocation, useParams } from 'react-router-dom';
@@ -28,6 +28,7 @@ const fromStatusOptions: DropdownItemProps[] = [
 ];
 const BlogEdit = function () {
   const [categoryList, setCategoryList] = React.useState<DropdownItemProps[]>([]);
+  const [tagList, setTagList] = React.useState<DropdownItemProps[]>([]);
   const [categoryId, setCategoryId] = React.useState<number>();
   const [tagIds, setTagIds] = React.useState<number[]>([]);
   const [title, setTitle] = React.useState<string>('');
@@ -38,8 +39,12 @@ const BlogEdit = function () {
     init();
   }, []);
   const init = async () => {
-    await getCategorys();
+    await getDependencies();
     await getBlogDetail();
+  };
+  const getDependencies = async () => {
+    getCategorys();
+    getTags();
   };
   const getCategorys = async () => {
     let res;
@@ -58,6 +63,24 @@ const BlogEdit = function () {
       };
     });
     setCategoryList(list);
+  };
+  const getTags = async () => {
+    let res;
+    try {
+      res = await QueryTagList({
+        pageIndex: 1,
+        pageSize: 199,
+      });
+    } catch (error) {
+      return;
+    }
+    const list = res.result.list.map((item) => {
+      return {
+        value: item.id,
+        text: item.name,
+      };
+    });
+    setTagList(list);
   };
   const getBlogDetail = async () => {
     const blogId = parseInt(id);
@@ -81,6 +104,7 @@ const BlogEdit = function () {
         content,
         categoryId,
         fromStatus,
+        tagIds: JSON.stringify(tagIds),
       });
     } catch (error) {}
   };
@@ -121,17 +145,17 @@ const BlogEdit = function () {
               setCategoryId(Number(data.value));
             }}
           ></Form.Field>
-          {/* <Form.Field
+          <Form.Field
             label="标签"
             control={Select}
-            options={categoryList}
+            options={tagList}
             multiple
-            defaultValue={tagIds}
+            value={tagIds}
             onChange={(e: any, data: DropdownItemProps) => {
               const tagIds = data.value as unknown as number[];
               setTagIds(tagIds);
             }}
-          ></Form.Field> */}
+          ></Form.Field>
         </Form.Group>
       </Form>
       <IMarkdown>

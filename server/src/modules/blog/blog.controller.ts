@@ -52,15 +52,7 @@ export class BlogController {
   async createDraft(@Body() createBlogDto: CreateBlogDto, @Req() request: Request) {
     const user = request.user as { userId: string };
     const userId = parseInt(user.userId);
-    const userModel = await this.userService.findById(userId);
-    if (userModel.getSuccess() == false) return userModel;
-    const blog = createBlogDto as Partial<BlogEntity>;
-    blog.user = userModel.getResult();
-    const categoryModel = await this.categoryService.findById(createBlogDto.categoryId);
-    if (categoryModel.getSuccess() == false) return categoryModel;
-    blog.category = categoryModel.getResult();
-    console.log(blog);
-    return this.blogService.create(blog);
+    return this.blogService.create(createBlogDto, userId);
   }
 
   @Put('/update/:id')

@@ -8,12 +8,36 @@ import { QueryPagesBlogDto } from './dto/query-blog.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
 import { BlogRepository } from './blog.repository';
 import { BlogDetailVo, BlogPageVo } from './vo/blog-page.vo';
+import { UserService } from '../user/user.service';
+import { CategoryService } from '../category/category.service';
+import { TagService } from '../tag/tag.service';
+import { CreateBlogDto } from './dto/create-blog.dto';
 
 @Injectable()
 export class BlogService {
-  constructor(private readonly blogRepository: BlogRepository) {}
+  constructor(
+    private readonly blogRepository: BlogRepository,
+    private userService: UserService,
+    private categoryService: CategoryService,
+    private tagService: TagService,
+  ) {}
 
-  async create(blog: Partial<BlogEntity>): Promise<ResultModel> {
+  async create(createBlogDto: CreateBlogDto, userId: number): Promise<ResultModel> {
+    const blog = new BlogEntity();
+    const userModel = await this.userService.findById(userId);
+    if (userModel.getSuccess() == false) return userModel;
+    blog.user = userModel.getResult();
+    const categoryModel = await this.categoryService.findById(createBlogDto.categoryId);
+    if (categoryModel.getSuccess() == false) return categoryModel;
+    if (createBlogDto?.tagIds?.length > 0) {
+      const tagModel = await this.tagService.findByIds(createBlogDto.tagIds);
+      if (tagModel.getSuccess() == false) return tagModel;
+      blog.tags = tagModel.getResult();
+    }
+    blog.category = categoryModel.getResult();
+    blog.title = createBlogDto.title;
+    blog.content = createBlogDto.content;
+    blog.fromStatus = createBlogDto.fromStatus;
     await this.blogRepository.save(blog);
     return ResultModel.builderSuccessMsg('保存成功');
   }

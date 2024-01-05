@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { TagEntity } from './tag.entity';
 import { QueryPagesTagDto } from './dto/query-tag.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
@@ -30,7 +30,7 @@ export class TagService {
   }
 
   async queryPages(queryPagesTagDto: QueryPagesTagDto): Promise<PageModel<TagEntity>> {
-    const result = await SelectPage.paginate<TagEntity>(this.tagRepository, queryPagesTagDto);
+    const result = await SelectPage.paginate<TagEntity>(this.tagRepository, { ...queryPagesTagDto });
     return ResultModel.builderSuccess<PageInfo<TagEntity>>().setResult(result);
   }
   async deleteById(id: number) {
@@ -44,5 +44,10 @@ export class TagService {
     if (!queryTag.getResult()) return ResultModel.builderErrorMsg('标签不存在');
     let res = await this.tagRepository.update(id, tag);
     return ResultModel.builderSuccessMsg('修改成功');
+  }
+  async findByIds(ids: number[]): Promise<ResultModel<TagEntity[]>> {
+    const res = await this.tagRepository.findBy({ id: In(ids) });
+    if (res.length == 0) return ResultModel.builderErrorMsg('标签不存在');
+    return ResultModel.builderSuccess<TagEntity[]>().setResult(res);
   }
 }

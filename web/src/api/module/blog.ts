@@ -38,7 +38,7 @@ interface CreateBlogData {
   title: string;
   content: string;
   categoryId: number;
-  tagIds?: number[];
+  tagIds?: string;
   columnId?: number;
   status?: BlogStatus;
   fromStatus: BlogFromStatus;

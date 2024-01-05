@@ -1,5 +1,5 @@
-import { Type } from 'class-transformer';
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BlogFromStatus } from '../blog.enum';
 
 export class CreateBlogDto {
@@ -20,4 +20,7 @@ export class CreateBlogDto {
   @IsEnum(BlogFromStatus)
   @Type(() => Number)
   fromStatus: BlogFromStatus;
+
+  @IsOptional()
+  tagIds: number[];
 }
