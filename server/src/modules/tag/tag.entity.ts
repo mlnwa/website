@@ -22,11 +22,13 @@ export class TagEntity {
 
   @UpdateDateColumn({
     type: 'datetime',
+    name: 'update_at',
   })
-  updataAt: Date;
+  updateAt: Date;
 
   @CreateDateColumn({
     type: 'datetime',
+    name: 'create_at',
   })
   createAt: Date;
 

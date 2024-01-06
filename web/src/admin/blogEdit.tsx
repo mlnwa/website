@@ -95,6 +95,7 @@ const BlogEdit = function () {
     setTitle(res.result.title);
     setCategoryId(res.result.categoryId);
     setFromStatus(res.result.fromStatus);
+    setTagIds(res.result.tagIds);
   };
   const onSaveHandle = async () => {
     let res;

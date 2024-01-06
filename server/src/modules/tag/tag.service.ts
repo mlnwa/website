@@ -6,13 +6,12 @@ import { PageInfo, SelectPage } from 'src/lib/panination';
 import { PageModel, ResultModel } from 'src/common/result/ResultModel';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
+import { TagRepository } from './tag.repository';
+import { TagVo } from './vo/tag.vo';
 
 @Injectable()
 export class TagService {
-  constructor(
-    @InjectRepository(TagEntity)
-    private readonly tagRepository: Repository<TagEntity>,
-  ) {}
+  constructor(private readonly tagRepository: TagRepository) {}
 
   async findById() {}
 
@@ -29,9 +28,17 @@ export class TagService {
     return ResultModel.builderErrorMsg('标签不存在');
   }
 
-  async queryPages(queryPagesTagDto: QueryPagesTagDto): Promise<PageModel<TagEntity>> {
-    const result = await SelectPage.paginate<TagEntity>(this.tagRepository, { ...queryPagesTagDto });
-    return ResultModel.builderSuccess<PageInfo<TagEntity>>().setResult(result);
+  async queryPages(queryPagesTagDto: QueryPagesTagDto): Promise<PageModel<TagVo>> {
+    const { pageIndex, pageSize } = queryPagesTagDto;
+    const resultModel = new ResultModel<PageInfo<TagVo>>();
+    const pageInfo = new PageInfo<TagVo>({
+      ...(await this.tagRepository.findList(queryPagesTagDto)),
+      pageIndex,
+      pageSize,
+    });
+    resultModel.setSuccess(true);
+    resultModel.setResult(pageInfo);
+    return resultModel;
   }
   async deleteById(id: number) {
     const res = await this.tagRepository.delete({ id });

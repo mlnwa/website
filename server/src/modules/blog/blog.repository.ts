@@ -25,12 +25,14 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
         'category.id as categoryId',
         'category.name as categoryName',
       ])
+      .addSelect('CASE WHEN COUNT(tags.id) > 0 THEN JSON_ARRAYAGG(tags.id)ELSE JSON_ARRAY() END', 'tagIds')
       .leftJoin('blog.user', 'user')
       .leftJoin('blog.category', 'category')
       .leftJoin('blog.tags', 'tags')
       .leftJoin('blog.column', 'column')
       .where(others)
-      .orderBy('blog.createAt', 'DESC');
+      .orderBy('blog.createAt', 'DESC')
+      .groupBy('blog.id');
     return await this.loadQueryBuilderToPages<BlogPageVo>(queryBuilder, pageIndex, pageSize);
   }
 
@@ -52,9 +54,11 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
         'column.id as columnId',
         'column.name as columnName',
       ])
+      .addSelect('CASE WHEN COUNT(tags.id) > 0 THEN JSON_ARRAYAGG(tags.id)ELSE JSON_ARRAY() END', 'tagIds')
       .leftJoin('blog.user', 'user')
       .leftJoin('blog.category', 'category')
       .leftJoin('blog.column', 'column')
+      .leftJoin('blog.tags', 'tags')
       .where('blog.id = :id', { id });
     const result = await queryBuilder.getRawOne<BlogDetailVo>();
     return result;

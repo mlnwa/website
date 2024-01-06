@@ -13,6 +13,7 @@ export class BlogPageVo {
   columnName: string;
   tags: string[];
   fromStatus: BlogFromStatus;
+  tagIds: number[];
 }
 
 export class BlogDetailVo extends BlogPageVo {
