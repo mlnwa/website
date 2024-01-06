@@ -5,13 +5,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesColumnDto } from './dto/query-column.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
+import { ColumnRepository } from './column.repository';
+import { ColumnVo } from './vo/column.vo';
 
 @Injectable()
 export class ColumnService {
-  constructor(
-    @InjectRepository(ColumnEntity)
-    private readonly columnRepository: Repository<ColumnEntity>,
-  ) {}
+  constructor(private readonly columnRepository: ColumnRepository) {}
 
   async create(column: Partial<ColumnEntity>) {
     let columnModel = await this.findByName(column.name);
@@ -32,9 +31,17 @@ export class ColumnService {
     return ResultModel.builderSuccess<ColumnEntity>().setResult(res);
   }
 
-  async queryPages(condition: QueryPagesColumnDto) {
-    const res = await SelectPage.paginate<ColumnEntity>(this.columnRepository, condition);
-    return ResultModel.builderSuccess<PageInfo<ColumnEntity>>().setResult(res);
+  async queryPages(queryPagesColumnDto: QueryPagesColumnDto) {
+    const { pageIndex, pageSize } = queryPagesColumnDto;
+    const resultModel = new ResultModel<PageInfo<ColumnVo>>();
+    const pageInfo = new PageInfo<ColumnVo>({
+      ...(await this.columnRepository.findList(queryPagesColumnDto)),
+      pageIndex,
+      pageSize,
+    });
+    resultModel.setSuccess(true);
+    resultModel.setResult(pageInfo);
+    return resultModel;
   }
 
   async deleteById(id: number) {

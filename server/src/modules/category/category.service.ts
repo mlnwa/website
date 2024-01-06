@@ -6,13 +6,12 @@ import { CreateCategoryDto } from './dto/create-category.dto';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesCategoryDto } from './dto/query-category.dto';
 import { PageInfo, SelectPage } from 'src/lib/panination';
+import { CategoryRepository } from './category.repository';
+import { CategoryVo } from './vo/category.vo';
 
 @Injectable()
 export class CategoryService {
-  constructor(
-    @InjectRepository(CategoryEntity)
-    private readonly categoryRepository: Repository<CategoryEntity>,
-  ) {}
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
     const { name } = createCategoryDto;
@@ -29,8 +28,16 @@ export class CategoryService {
   }
 
   async queryPages(queryPagesCategoryDto: QueryPagesCategoryDto) {
-    const result = await SelectPage.paginate<CategoryEntity>(this.categoryRepository, queryPagesCategoryDto);
-    return ResultModel.builderSuccess<PageInfo<CategoryEntity>>().setResult(result);
+    const { pageIndex, pageSize } = queryPagesCategoryDto;
+    const resultModel = new ResultModel<PageInfo<CategoryVo>>();
+    const pageInfo = new PageInfo<CategoryVo>({
+      ...(await this.categoryRepository.findList(queryPagesCategoryDto)),
+      pageIndex,
+      pageSize,
+    });
+    resultModel.setSuccess(true);
+    resultModel.setResult(pageInfo);
+    return resultModel;
   }
 
   async findByName(name: string) {

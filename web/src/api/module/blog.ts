@@ -26,6 +26,7 @@ interface Blog {
   tagNames: string[];
   columnId: number;
   columnName: string;
+  userName: string;
   viewCount: number;
 }
 

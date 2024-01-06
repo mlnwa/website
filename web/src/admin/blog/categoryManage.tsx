@@ -26,7 +26,7 @@ const CategoryManage = function () {
     },
     {
       title: '博客数量',
-      key: 'blogNumber',
+      key: 'number',
       width: '2',
     },
     {

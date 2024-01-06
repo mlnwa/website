@@ -26,7 +26,7 @@ const BlogList = function () {
     },
     {
       title: '作者',
-      key: 'name',
+      key: 'userName',
       width: '2',
     },
     {
@@ -36,7 +36,7 @@ const BlogList = function () {
     },
     {
       title: '分类',
-      key: 'cat',
+      key: 'categoryName',
       width: '2',
     },
     {

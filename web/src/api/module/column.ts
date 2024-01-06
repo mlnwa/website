@@ -8,6 +8,7 @@ interface Column {
   number: number;
   createAt: string;
   updataAt: string;
+  description: string;
 }
 
 interface CreateColumnData {
