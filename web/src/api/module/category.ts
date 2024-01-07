@@ -3,7 +3,7 @@ import { PageParams, Pagination } from '../type';
 
 const URL = '/category';
 
-interface Category {
+export interface Category {
   id: number;
   name: string;
   description: string;

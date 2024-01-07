@@ -24,7 +24,7 @@ export class CategoryRepository extends BaseRepository<CategoryEntity> {
       .addSelect('CONVERT(COUNT(blogs.id), DOUBLE)', 'number')
       .leftJoin('category.blogs', 'blogs')
       .where(others)
-      .orderBy('category.createAt', 'DESC')
+      .orderBy('CONVERT(COUNT(blogs.id), DOUBLE)', 'DESC')
       .groupBy('category.id');
     return await this.loadQueryBuilderToPages<CategoryVo>(queryBuilder, pageIndex, pageSize);
   }

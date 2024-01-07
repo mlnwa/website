@@ -2,7 +2,7 @@ import http from '../requrest';
 import { PageParams, Pagination } from '../type';
 
 const URL = '/tag';
-interface Tag {
+export interface Tag {
   id: number;
   name: string;
   number: number;

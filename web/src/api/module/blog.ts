@@ -11,7 +11,7 @@ export enum BlogFromStatus {
   REPRODUCED,
   TRANSLATED,
 }
-interface Blog {
+export interface Blog {
   id: number;
   publishId: number;
   title: string;
@@ -27,7 +27,10 @@ interface Blog {
   columnId: number;
   columnName: string;
   userName: string;
+  userAvatarUrl: string;
   viewCount: number;
+  abstract: string;
+  imgUrl: string;
 }
 
 interface QueryBlogListParams extends PageParams {

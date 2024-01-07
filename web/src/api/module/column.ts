@@ -2,7 +2,7 @@ import http from '../requrest';
 import { PageParams, Pagination } from '../type';
 
 const URL = '/column';
-interface Column {
+export interface Column {
   id: number;
   name: string;
   number: number;
