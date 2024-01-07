@@ -6,10 +6,10 @@ export class BaseRepository<E extends ObjectLiteral> extends Repository<E> {
   }
   async loadQueryBuilderToPages<R>(queryBuilder: SelectQueryBuilder<E>, pageIndex: number, pageSize: number) {
     const total = await queryBuilder.getCount();
-    const skip = pageSize * (pageIndex - 1);
+    const offset = pageSize * (pageIndex - 1);
     let list: R[] = [];
-    if (skip < total) {
-      list = await queryBuilder.skip(skip).take(pageSize).getRawMany();
+    if (offset < total) {
+      list = await queryBuilder.offset(offset).limit(pageSize).getRawMany();
     }
     return { list, total };
   }
