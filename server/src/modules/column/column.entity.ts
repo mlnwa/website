@@ -15,11 +15,17 @@ export class ColumnEntity {
   @CreateDateColumn({
     type: 'datetime',
     name: 'create_at',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
-  @UpdateDateColumn({
+  @Column({
     name: 'update_at',
+    type: 'datetime',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 

@@ -15,12 +15,17 @@ export class CategoryEntity {
   @CreateDateColumn({
     type: 'datetime',
     name: 'create_at',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
-  @UpdateDateColumn({
+  @Column({
     type: 'datetime',
     name: 'update_at',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 

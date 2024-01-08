@@ -20,15 +20,20 @@ export class TagEntity {
   @Column({ type: 'varchar', default: '' })
   description: string;
 
-  @UpdateDateColumn({
+  @Column({
     type: 'datetime',
     name: 'update_at',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
+    onUpdate: 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 
   @CreateDateColumn({
     type: 'datetime',
     name: 'create_at',
+    precision: 0,
+    default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 

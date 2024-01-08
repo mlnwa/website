@@ -8,5 +8,6 @@ export const databaseConfig = () => ({
     database: 'blog',
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
     synchronize: true,
+    dateStrings: true,
   },
 });
