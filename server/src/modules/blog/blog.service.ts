@@ -93,4 +93,11 @@ export class BlogService {
     await this.deleteById(id);
     return ResultModel.builderSuccessMsg('发布成功');
   }
+  async addView(id: number) {
+    const blog = await this.blogRepository.findOneBy({ id });
+    if (!blog) return;
+    blog.viewCount += 1;
+    await this.blogRepository.update(id, blog);
+    return ResultModel.builderSuccess();
+  }
 }

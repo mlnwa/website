@@ -40,6 +40,11 @@ const BlogList = function () {
       width: '2',
     },
     {
+      title: '浏览量',
+      key: 'viewCount',
+      width: '2',
+    },
+    {
       title: '操作',
       width: '1',
       render: (row, index) => {

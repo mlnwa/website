@@ -82,3 +82,8 @@ export const PublishBlog = (id: number, data: UpdateBlogData) =>
     url: `${URL}/publish/${id}`,
     data,
   });
+
+export const AddBlogView = (id: number) =>
+  http.put<boolean>({
+    url: `${URL}/view/${id}`,
+  });

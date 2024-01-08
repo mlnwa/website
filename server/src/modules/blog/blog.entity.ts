@@ -76,4 +76,10 @@ export class BlogEntity {
     name: 'update_at',
   })
   updateAt: Date;
+
+  @Column({
+    name: 'view_count',
+    default: 0,
+  })
+  viewCount: number;
 }

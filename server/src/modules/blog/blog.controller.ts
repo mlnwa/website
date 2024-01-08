@@ -71,4 +71,8 @@ export class BlogController {
     const draft = createBlogDto as Partial<BlogEntity>;
     return this.blogService.publish(id, draft);
   }
+  @Put('/view/:id')
+  addView(@Param('id', new ParseIntPipe()) id: number) {
+    return this.blogService.addView(id);
+  }
 }
