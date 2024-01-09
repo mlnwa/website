@@ -14,12 +14,10 @@ import { BlogFromStatus, BlogStatus } from './blog.enum';
 import { CategoryEntity } from '../category/category.entity';
 import { TagEntity } from '../tag/tag.entity';
 import { ColumnEntity } from '../column/column.entity';
+import { BaseEntity } from 'src/base/base.entity';
 
 @Entity({ name: 'blog' })
-export class BlogEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class BlogEntity extends BaseEntity {
   @Column()
   title: string;
 
@@ -64,23 +62,6 @@ export class BlogEntity {
     inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
   })
   tags: TagEntity[];
-
-  @CreateDateColumn({
-    type: 'datetime',
-    name: 'create_at',
-    precision: 0,
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createAt: Date;
-
-  @Column({
-    type: 'datetime',
-    name: 'update_at',
-    precision: 0,
-    default: () => 'CURRENT_TIMESTAMP',
-    onUpdate: 'CURRENT_TIMESTAMP',
-  })
-  updateAt: Date;
 
   @Column({
     name: 'view_count',
