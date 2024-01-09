@@ -31,6 +31,10 @@ export interface Blog {
   viewCount: number;
   abstract: string;
   imgUrl: string;
+  enableComment: boolean;
+  enablePraise: boolean;
+  enableCopyright: boolean;
+  enableRecommend: boolean;
 }
 
 interface QueryBlogListParams extends PageParams {
@@ -46,6 +50,12 @@ interface CreateBlogData {
   columnId?: number;
   status?: BlogStatus;
   fromStatus: BlogFromStatus;
+  imgUrl: string;
+  abstract: string;
+  enableComment: boolean;
+  enablePraise: boolean;
+  enableCopyright: boolean;
+  enableRecommend: boolean;
 }
 interface UpdateBlogData extends Partial<CreateBlogData> {}
 

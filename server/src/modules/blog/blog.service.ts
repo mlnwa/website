@@ -12,6 +12,7 @@ import { UserService } from '../user/user.service';
 import { CategoryService } from '../category/category.service';
 import { TagService } from '../tag/tag.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
+import { ColumnService } from '../column/column.service';
 
 @Injectable()
 export class BlogService {
@@ -19,10 +20,12 @@ export class BlogService {
     private readonly blogRepository: BlogRepository,
     private userService: UserService,
     private categoryService: CategoryService,
+    private columnService: ColumnService,
     private tagService: TagService,
   ) {}
 
   async create(createBlogDto: CreateBlogDto, userId: number): Promise<ResultModel> {
+    const { categoryId, tagIds, columnId, ...props } = createBlogDto;
     const blog = new BlogEntity();
     const userModel = await this.userService.findById(userId);
     if (userModel.getSuccess() == false) return userModel;
@@ -35,9 +38,12 @@ export class BlogService {
       blog.tags = tagModel.getResult();
     }
     blog.category = categoryModel.getResult();
-    blog.title = createBlogDto.title;
-    blog.content = createBlogDto.content;
-    blog.fromStatus = createBlogDto.fromStatus;
+    if (createBlogDto.columnId) {
+      const columnModel = await this.columnService.findById(createBlogDto.columnId);
+      if (columnModel.getSuccess() == false) return columnModel;
+      blog.column = columnModel.getResult();
+    }
+    Object.assign(blog, props);
     await this.blogRepository.save(blog);
     return ResultModel.builderSuccessMsg('保存成功');
   }

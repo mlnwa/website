@@ -68,4 +68,38 @@ export class BlogEntity extends BaseEntity {
     default: 0,
   })
   viewCount: number;
+
+  @Column({
+    default: '',
+  })
+  abstract: string;
+
+  @Column({
+    name: 'img_url',
+    default: '',
+  })
+  imgUrl: string;
+
+  @Column({
+    name: 'enable_copyright',
+    default: true,
+  })
+  enableCopyright: boolean;
+
+  @Column({
+    name: 'enable_comment',
+    default: true,
+  })
+  enableComment: boolean;
+
+  @Column({
+    name: 'enable_praise',
+    default: false,
+  })
+  enablePraise: boolean;
+  @Column({
+    name: 'enable_recommend',
+    default: false,
+  })
+  enableRecommend: boolean;
 }

@@ -7,9 +7,10 @@ import { UserModule } from '../user/user.module';
 import { CategoryModule } from '../category/category.module';
 import { BlogRepository } from './blog.repository';
 import { TagModule } from '../tag/tag.module';
+import { ColumnModule } from '../column/column.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([BlogEntity]), UserModule, CategoryModule, TagModule],
+  imports: [TypeOrmModule.forFeature([BlogEntity]), UserModule, CategoryModule, TagModule, ColumnModule],
   controllers: [BlogController],
   providers: [BlogService, BlogRepository],
 })

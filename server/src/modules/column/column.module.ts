@@ -11,5 +11,6 @@ import { ColumnRepository } from './column.repository';
   imports: [TypeOrmModule.forFeature([ColumnEntity])],
   controllers: [ColumnController],
   providers: [ColumnService, ColumnRepository],
+  exports: [ColumnService],
 })
 export class ColumnModule {}

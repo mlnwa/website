@@ -49,6 +49,12 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
         'blog.status as status',
         'blog.fromStatus as fromStatus',
         'blog.viewCount as viewCount',
+        'blog.imgUrl as imgUrl',
+        'blog.abstract as abstract',
+        'blog.enableComment as enableComment',
+        'blog.enablePraise as enablePraise',
+        'blog.enableCopyright as enableCopyright',
+        'blog.enableRecommend as enableRecommend',
         'user.id as userId',
         'user.name as userName',
         'category.id as categoryId',
@@ -63,6 +69,10 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
       .leftJoin('blog.tags', 'tags')
       .where('blog.id = :id', { id });
     const result = await queryBuilder.getRawOne<BlogDetailVo>();
+    result.enableComment = Boolean(result.enableComment);
+    result.enablePraise = Boolean(result.enablePraise);
+    result.enableCopyright = Boolean(result.enableCopyright);
+    result.enableRecommend = Boolean(result.enableRecommend);
     return result;
   }
 }

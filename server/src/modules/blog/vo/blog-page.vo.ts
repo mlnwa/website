@@ -19,4 +19,10 @@ export class BlogPageVo {
 export class BlogDetailVo extends BlogPageVo {
   content: string;
   status: BlogStatus;
+  enableComment: boolean;
+  enableCopyright: boolean;
+  enablePraise: boolean;
+  enableRecommend: boolean;
+  abstract: string;
+  imgUrl: string;
 }
