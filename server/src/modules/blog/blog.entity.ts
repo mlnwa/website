@@ -40,7 +40,7 @@ export class BlogEntity extends BaseEntity {
   })
   fromStatus: BlogFromStatus;
 
-  @Column()
+  @Column('text')
   content: string;
 
   @ManyToOne(() => UserEntity, (user) => user.blogs)

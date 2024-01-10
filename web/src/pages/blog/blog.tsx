@@ -7,12 +7,14 @@ import { Blog } from '../../api/module/blog';
 import { Category, QueryCategoryList } from '../../api/module/category';
 import { Tag } from '../../api/module/tag';
 import { Column } from '../../api/module/column';
+import { useNavigate } from 'react-router-dom';
 const Blog = function () {
   const [blogList, setBlogList] = useState<Blog[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [columnList, setColumnList] = useState<Column[]>([]);
+  const navigate = useNavigate();
   const getBlogList = async () => {
     let res;
     try {
@@ -66,6 +68,9 @@ const Blog = function () {
     }
     setColumnList(res.result.list);
   };
+  const onClickBlogHandler = (blogId: number) => {
+    navigate(`/detail/${blogId}`);
+  };
   useEffect(() => {
     getBlogList();
     getCategoryList();
@@ -95,7 +100,13 @@ const Blog = function () {
             {/* content */}
             <Segment attached>
               {blogList.map((item) => (
-                <BlogItem value={item} key={item.id}></BlogItem>
+                <BlogItem
+                  value={item}
+                  key={item.id}
+                  onClick={() => {
+                    onClickBlogHandler(item.id);
+                  }}
+                ></BlogItem>
               ))}
             </Segment>
           </Grid.Column>

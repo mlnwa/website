@@ -5,12 +5,13 @@ import { Blog } from '../../api/module/blog';
 
 type Props = {
   value: Blog;
+  onClick?: () => void;
 };
 
 const BlogItem = function (props: Props) {
   const blog: Blog = props.value;
   return (
-    <Segment padded vertical>
+    <Segment padded vertical onClick={props.onClick}>
       <Grid reversed="mobile" stackable>
         <Grid.Column width={11}>
           <Header as="h3" content={blog.title}></Header>

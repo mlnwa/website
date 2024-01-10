@@ -33,9 +33,7 @@ const NavMenu = function () {
                 icon={item.customProp.icon}
                 content={item.customProp.label}
               ></Menu.Item>
-            ) : (
-              <></>
-            ),
+            ) : null,
           )}
           <Menu.Item position="right">
             <Input placeholder="Search..." icon="search"></Input>

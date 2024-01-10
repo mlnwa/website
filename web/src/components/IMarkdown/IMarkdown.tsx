@@ -12,12 +12,14 @@ import './markdown.css';
 import { Form, TextArea } from 'semantic-ui-react';
 type IMarkdownProps = {
   children?: React.ReactNode;
+  border?: boolean;
 };
 const them = {
   dark: vscDarkPlus,
   light: solarizedlight,
 };
-const IMarkdown = ({ children }: IMarkdownProps) => {
+const IMarkdown = ({ children, ...props }: IMarkdownProps) => {
+  const { border } = props;
   const outBodyChilds: ReactNode[] = [];
   const bodyChilds = React.Children.map(children, (child) => {
     const childType = (child as React.ReactElement).type;
@@ -29,7 +31,7 @@ const IMarkdown = ({ children }: IMarkdownProps) => {
   });
 
   return (
-    <div className={style.container}>
+    <div className={style.container} style={{ border: border ? '1px solid #ccc' : 'none' }}>
       {outBodyChilds}
       <div className={style.body}>{bodyChilds}</div>
     </div>
