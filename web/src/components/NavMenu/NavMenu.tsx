@@ -23,16 +23,20 @@ const NavMenu = function () {
               Brad
             </Header>
           </Menu.Item>
-          {navList.map((item, index) => (
-            <Menu.Item
-              key={item.path}
-              name={item.customProp.label}
-              active={index == activeIndex}
-              onClick={() => handleItemClick(item, index)}
-              icon={item.customProp.icon}
-              content={item.customProp.label}
-            ></Menu.Item>
-          ))}
+          {navList.map((item, index) =>
+            item.customProp ? (
+              <Menu.Item
+                key={item.path}
+                name={item.customProp.label}
+                active={index == activeIndex}
+                onClick={() => handleItemClick(item, index)}
+                icon={item.customProp.icon}
+                content={item.customProp.label}
+              ></Menu.Item>
+            ) : (
+              <></>
+            ),
+          )}
           <Menu.Item position="right">
             <Input placeholder="Search..." icon="search"></Input>
           </Menu.Item>

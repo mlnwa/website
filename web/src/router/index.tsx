@@ -8,6 +8,7 @@ import { SemanticICONS } from 'semantic-ui-react';
 import Login from '../pages/login/login';
 import adminRoute from './routes/admin';
 import Permission from './Permission';
+import BlogDetail from '../pages/blogDetail/blogDetail';
 type CustomProps = {
   icon: SemanticICONS;
   label: string;
@@ -47,6 +48,10 @@ export const root = {
         icon: 'lab',
         label: '实验中心',
       },
+    },
+    {
+      path: '/detail/:id',
+      element: <BlogDetail></BlogDetail>,
     },
   ],
 } as CustomRoute;
