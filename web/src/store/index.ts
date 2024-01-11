@@ -1,10 +1,12 @@
-import { configureStore, applyMiddleware } from '@reduxjs/toolkit';
-import loginSlice from './features/loginSlice';
+import { configureStore, applyMiddleware, Action, ThunkAction } from '@reduxjs/toolkit';
+import authReducer from './features/authSlice';
 
 const store = configureStore({
   reducer: {
-    login: loginSlice,
+    auth: authReducer,
   },
 });
 export type AppDispatch = typeof store.dispatch;
+export type RootState = ReturnType<typeof store.getState>;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>;
 export default store;

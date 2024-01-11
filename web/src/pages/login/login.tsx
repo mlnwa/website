@@ -1,24 +1,25 @@
 import React, { useEffect } from 'react';
 import style from './login.module.scss';
-import { loginStore } from '../../store/features/loginSlice';
+import { toLogin } from '../../store/features/authSlice';
 import { useDispatch } from 'react-redux';
 import store, { AppDispatch } from '../../store';
 import { Button, Form, Grid, Header, Image, Message, Segment } from 'semantic-ui-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks';
 const Login = function () {
   const navigate = useNavigate();
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   useEffect(() => {}, []);
   const onSubmit = async function (e: React.MouseEvent) {
     const res = await dispatch(
-      loginStore({
+      toLogin({
         username,
         password,
       }),
     );
-    const loginInfo = store.getState().login;
+    const loginInfo = store.getState().auth;
     if (loginInfo.status === 'login') {
       navigate('/admin');
     }

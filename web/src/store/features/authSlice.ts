@@ -2,18 +2,18 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { LoginParam } from '../../api/module/user';
 import { Login } from '../../api';
 
-type LoginStatus = 'login' | 'logout';
+type AuthStatus = 'login' | 'logout';
 
-export interface LoginState {
+export interface AuthState {
   accessToken: string;
   freshToken: string;
-  status: LoginStatus;
+  status: AuthStatus;
   userInfo: {
     username: string;
     password: string;
   };
 }
-const initialState: LoginState = {
+const initialState: AuthState = {
   accessToken: '',
   status: 'logout',
   userInfo: {
@@ -22,15 +22,15 @@ const initialState: LoginState = {
   },
   freshToken: '',
 };
-export const loginStore = createAsyncThunk('login', async (payload: LoginParam, { dispatch }) => {
+export const toLogin = createAsyncThunk('auth/login', async (payload: LoginParam, { dispatch }) => {
   const res = await Login(payload);
   if (res.success) {
     dispatch(afterLogin({ ...res.result, ...payload }));
   }
   return res;
 });
-export const loginSlice = createSlice({
-  name: 'login',
+export const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
     afterLogin: (state, { payload }) => {
@@ -41,8 +41,16 @@ export const loginSlice = createSlice({
       state.userInfo.password = payload.password;
       localStorage.setItem('access_token', payload.accessToken);
     },
+    logout: (state) => {
+      state.accessToken = '';
+      state.freshToken = '';
+      state.status = 'logout';
+      state.userInfo.username = '';
+      state.userInfo.password = '';
+      localStorage.removeItem('access_token');
+    },
   },
 });
-export const { afterLogin } = loginSlice.actions;
+export const { afterLogin } = authSlice.actions;
 
-export default loginSlice.reducer;
+export default authSlice.reducer;
