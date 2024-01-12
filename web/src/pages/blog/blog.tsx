@@ -4,16 +4,20 @@ import { Container, Grid, Header, Icon, Item, Label, Menu, Segment } from 'seman
 import BlogItem from '../../components/BlogItem/BlogItem';
 import { QueryColumnList, QueryTagList, QueryPublishedBlogList } from '../../api';
 import { Blog } from '../../api/module/blog';
-import { Category, QueryCategoryList } from '../../api/module/category';
+import { Category } from '../../api/module/category';
 import { Tag } from '../../api/module/tag';
 import { Column } from '../../api/module/column';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks';
+import { fetchCategorys, fetchColumns, fetchTags } from '../../store/features/blogMetaSlice';
+import store from '../../store';
 const Blog = function () {
   const [blogList, setBlogList] = useState<Blog[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [categoryList, setCategoryList] = useState<Category[]>([]);
   const [tagList, setTagList] = useState<Tag[]>([]);
   const [columnList, setColumnList] = useState<Column[]>([]);
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const getBlogList = async () => {
     let res;
@@ -30,43 +34,16 @@ const Blog = function () {
     setTotal(res.result.total);
   };
   const getCategoryList = async () => {
-    let res;
-    try {
-      res = await QueryCategoryList({
-        pageIndex: 1,
-        pageSize: 5,
-      });
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-    setCategoryList(res.result.list);
+    await dispatch(fetchCategorys());
+    setCategoryList(store.getState().blogMeta.categorys.slice(0, 5));
   };
   const getTagList = async () => {
-    let res;
-    try {
-      res = await QueryTagList({
-        pageIndex: 1,
-        pageSize: 10,
-      });
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-    setTagList(res.result.list);
+    await dispatch(fetchTags());
+    setTagList(store.getState().blogMeta.tags.slice(0, 10));
   };
   const getColumnList = async () => {
-    let res;
-    try {
-      res = await QueryColumnList({
-        pageIndex: 1,
-        pageSize: 5,
-      });
-    } catch (error) {
-      console.log(error);
-      return;
-    }
-    setColumnList(res.result.list);
+    await dispatch(fetchColumns());
+    setColumnList(store.getState().blogMeta.columns.slice(0, 5));
   };
   const onClickBlogHandler = (blogId: number) => {
     navigate(`/detail/${blogId}`);

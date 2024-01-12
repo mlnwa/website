@@ -18,12 +18,14 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import commonStyle from '../assets/css/common.module.scss';
-import { QueryCategoryList, QueryColumnList, QueryTagList } from '../api';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
 import { useLocation, useParams } from 'react-router-dom';
 import { isNaN, isNumber } from 'lodash';
 import { BlogFromStatus } from '../api/module/blog';
+import { useAppDispatch } from '../hooks';
+import { fetchCategorys, fetchColumns, fetchTags } from '../store/features/blogMetaSlice';
+import store from '../store';
 const fromStatusOptions: DropdownItemProps[] = [
   { text: '原创', value: BlogFromStatus.SELF },
   { text: '转载', value: BlogFromStatus.REPRODUCED },
@@ -45,6 +47,7 @@ const BlogEdit = function () {
   const [enableRecommend, setEnableRecommend] = React.useState<boolean>(false);
   const [imgUrl, setImgUrl] = React.useState<string>('');
   const [abstract, setAbstract] = React.useState<string>('');
+  const dispatch = useAppDispatch();
   const { id } = useParams();
   useEffect(() => {
     init();
@@ -59,43 +62,16 @@ const BlogEdit = function () {
     getColumns();
   };
   const getCategorys = async () => {
-    let res;
-    try {
-      res = await QueryCategoryList({
-        pageIndex: 1,
-        pageSize: 199,
-      });
-      const list = res.result.list.map((item) => ({ value: item.id, text: item.name }));
-      setCategoryList(list);
-    } catch (error) {
-      return;
-    }
+    await dispatch(fetchCategorys());
+    setCategoryList(store.getState().blogMeta.categorys.map((item) => ({ value: item.id, text: item.name })));
   };
   const getTags = async () => {
-    let res;
-    try {
-      res = await QueryTagList({
-        pageIndex: 1,
-        pageSize: 199,
-      });
-      const list = res.result.list.map((item) => ({ value: item.id, text: item.name }));
-      setTagList(list);
-    } catch (error) {
-      return;
-    }
+    await dispatch(fetchTags());
+    setTagList(store.getState().blogMeta.tags.map((item) => ({ value: item.id, text: item.name })));
   };
   const getColumns = async () => {
-    let res;
-    try {
-      res = await QueryColumnList({
-        pageIndex: 1,
-        pageSize: 199,
-      });
-      const list = res.result.list.map((item) => ({ value: item.id, text: item.name }));
-      setColumnList(list);
-    } catch (error) {
-      return;
-    }
+    await dispatch(fetchColumns());
+    setColumnList(store.getState().blogMeta.columns.map((item) => ({ value: item.id, text: item.name })));
   };
   const getBlogDetail = async () => {
     const blogId = parseInt(id);

@@ -6,6 +6,8 @@ import IDrawer from '../../components/IDrawer';
 import { ColumnForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
 import { CreateColumn, DeleteColumn, UpdateColumn, QueryColumnList } from '../../api';
+import { useAppDispatch } from '../../hooks';
+import { setFreshColumns } from '../../store/features/blogMetaSlice';
 
 const ColumnManage = function () {
   const [open, setOpen] = React.useState(false);
@@ -15,6 +17,7 @@ const ColumnManage = function () {
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentId, setCurrentId] = useState(0);
+  const dispatch = useAppDispatch();
   const columns: ColumnType[] = [
     {
       title: '专栏名称',
@@ -87,6 +90,7 @@ const ColumnManage = function () {
     const total = res.result.total;
     setList(list);
     setTotal(total);
+    dispatch(setFreshColumns(true));
   };
   useEffect(() => {
     search();

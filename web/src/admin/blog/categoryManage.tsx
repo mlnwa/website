@@ -9,6 +9,8 @@ import { cloneDeep } from 'lodash';
 import dayjs from 'dayjs';
 import { IMessage } from '../../components/IMessage';
 import { CreateCategory, DeleteCategory, UpdateCategory, QueryCategoryList } from '../../api';
+import { useAppDispatch } from '../../hooks';
+import { setFreshCategorys } from '../../store/features/blogMetaSlice';
 
 const CategoryManage = function () {
   const [open, setOpen] = React.useState(false);
@@ -18,6 +20,7 @@ const CategoryManage = function () {
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentId, setCurrentId] = useState(0);
+  const dispatch = useAppDispatch();
   const columns: ColumnType[] = [
     {
       title: '类别名称',
@@ -90,6 +93,7 @@ const CategoryManage = function () {
     const total = res.result.total;
     setList(list);
     setTotal(total);
+    dispatch(setFreshCategorys(true));
   };
   useEffect(() => {
     search();

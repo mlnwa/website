@@ -6,6 +6,8 @@ import IDrawer from '../../components/IDrawer';
 import { TagForm } from '../../class/FormStructs';
 import { Constants } from '../../assets/ts/Constants';
 import { CreateTag, DeleteTag, UpdateTag, QueryTagList } from '../../api';
+import { useAppDispatch } from '../../hooks';
+import { setFreshTags } from '../../store/features/blogMetaSlice';
 
 const TagManage = function () {
   const [open, setOpen] = React.useState(false);
@@ -15,6 +17,7 @@ const TagManage = function () {
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [currentId, setCurrentId] = useState(0);
+  const dispatch = useAppDispatch();
   const columns: ColumnType[] = [
     {
       title: '标签名称',
@@ -87,6 +90,7 @@ const TagManage = function () {
     const total = res.result.total;
     setList(list);
     setTotal(total);
+    dispatch(setFreshTags(true));
   };
   useEffect(() => {
     search();
