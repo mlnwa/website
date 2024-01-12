@@ -192,7 +192,7 @@ const BlogEdit = function () {
           ></Form.Field>
         </Form.Group>
       </Form>
-      <IMarkdown border>
+      <IMarkdown border scroll>
         <IMarkdown.Editer value={content} onChange={(value) => setContent(value)}></IMarkdown.Editer>
         <IMarkdown.Preview value={content} darkMode></IMarkdown.Preview>
       </IMarkdown>

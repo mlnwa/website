@@ -39,3 +39,10 @@ table td {
     border: 1px solid #dee2e6;
     word-wrap: break-word;
 }
+
+.i-markdown_scroll {
+    overflow:auto;
+}
+.i-markdown_border {
+   border: 1px solid #ccc
+}

@@ -1,4 +1,4 @@
-import React, { ReactNode, useRef } from 'react';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus, solarizedlight, darcula, dark } from 'react-syntax-highlighter/dist/esm/styles/prism';
@@ -10,13 +10,20 @@ import remarkMath from 'remark-math';
 import 'katex/dist/katex.min.css';
 import './markdown.css';
 import { Form, TextArea } from 'semantic-ui-react';
+import { useCssClassManager } from '../base/hooks';
 type IMarkdownProps = {
   children?: React.ReactNode;
   border?: boolean;
+  scroll?: boolean;
 };
 const them = {
   dark: vscDarkPlus,
   light: solarizedlight,
+};
+const classMap = {
+  base: '',
+  border: 'i-markdown_border',
+  scroll: 'i-markdown_scroll',
 };
 const IMarkdown = ({ children, ...props }: IMarkdownProps) => {
   const { border } = props;
@@ -29,9 +36,13 @@ const IMarkdown = ({ children, ...props }: IMarkdownProps) => {
     outBodyChilds.push(child);
     return null;
   });
-
+  const { classList, addClassName } = useCssClassManager(classMap);
+  useEffect(() => {
+    if (props.border) addClassName('border');
+    if (props.scroll) addClassName('scroll');
+  }, []);
   return (
-    <div className={style.container} style={{ border: border ? '1px solid #ccc' : 'none' }}>
+    <div className={`${style.container} ${classList}`}>
       {outBodyChilds}
       <div className={style.body}>{bodyChilds}</div>
     </div>

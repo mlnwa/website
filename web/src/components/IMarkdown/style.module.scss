@@ -8,7 +8,8 @@
 .body {
     display: flex;
     flex: 1;
-    gap: 10px;
+    gap: 4px;
+    overflow: auto;
 }
 .edit {
     flex: 1;
