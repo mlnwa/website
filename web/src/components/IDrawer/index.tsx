@@ -3,6 +3,7 @@ import React from 'react';
 import { Panel } from '../../class/FormStructs';
 import { Divider, Form, Grid, Header, Icon, Input, Segment } from 'semantic-ui-react';
 import style from './style.module.scss';
+import { FormFieldEnum } from '../../class/FormStructs/formField';
 type IDrawerProps = {
   children?: React.ReactNode | React.ReactNode[];
 } & DrawerProps;
@@ -45,17 +46,17 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
       </Divider>
       <Grid>
         {data.content.map((item, index) => {
-          if (item.type === 'input') {
+          if (item.getType() === FormFieldEnum.INPUT) {
             return (
               <Form.Input
                 fluid
                 className={style.input_item}
-                label={item.label}
-                disabled={item.disabled}
-                key={item.key}
-                placeholder={item.placeholder}
+                label={item.getLabel()}
+                disabled={item.getDisabled()}
+                key={item.getKey()}
+                placeholder={item.getPlaceholder()}
                 size="small"
-                value={item.value}
+                value={item.getValue()}
                 onChange={(e) => {
                   onChange(index, e.target.value);
                 }}
