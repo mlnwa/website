@@ -3,7 +3,7 @@ import React from 'react';
 import { Panel } from '../../class/FormStructs';
 import { Divider, Form, Grid, Header, Icon, Input, Segment } from 'semantic-ui-react';
 import style from './style.module.scss';
-import { FormFieldEnum } from '../../class/FormStructs/formField';
+import { FormField, FormFieldEnum } from '../../class/FormStructs/formField';
 type IDrawerProps = {
   children?: React.ReactNode | React.ReactNode[];
 } & DrawerProps;
@@ -46,22 +46,50 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
       </Divider>
       <Grid>
         {data.content.map((item, index) => {
-          if (item.getType() === FormFieldEnum.INPUT) {
-            return (
-              <Form.Input
-                fluid
-                className={style.input_item}
-                label={item.getLabel()}
-                disabled={item.getDisabled()}
-                key={item.getKey()}
-                placeholder={item.getPlaceholder()}
-                size="small"
-                value={item.getValue()}
-                onChange={(e) => {
-                  onChange(index, e.target.value);
-                }}
-              ></Form.Input>
-            );
+          switch (item.getType()) {
+            case FormFieldEnum.INPUT:
+              return (
+                <Form.Input
+                  fluid
+                  className={style.input_item}
+                  label={item.getLabel()}
+                  disabled={item.getDisabled()}
+                  key={item.getKey()}
+                  placeholder={item.getPlaceholder()}
+                  size="small"
+                  value={item.getValue()}
+                  onChange={(e, val) => {
+                    onChange(index, val.value);
+                  }}
+                ></Form.Input>
+              );
+            case FormFieldEnum.SELECT:
+              return (
+                <Form.Select
+                  label={item.getLabel()}
+                  options={item.getOptions()}
+                  value={item.getValue()}
+                  onChange={(e, val) => {
+                    onChange(index, val.value);
+                  }}
+                ></Form.Select>
+              );
+            case FormFieldEnum.RADIO:
+              const radioItem = item as FormField<boolean>;
+              return (
+                <Form.Radio
+                  checked={radioItem.getValue()}
+                  label={radioItem.getLabel()}
+                  key={radioItem.getKey()}
+                  disabled={radioItem.getDisabled()}
+                  onChange={(e, val) => {
+                    onChange(index, val.value);
+                  }}
+                ></Form.Radio>
+              );
+            case FormFieldEnum.TEXTAREA:
+            default:
+              return null;
           }
         })}
       </Grid>

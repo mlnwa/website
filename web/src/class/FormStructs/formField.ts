@@ -4,16 +4,17 @@ export enum FormFieldEnum {
   SELECT = 'select',
   RADIO = 'radio',
 }
-export class FormField {
+export class FormField<T> {
   private label: string;
   private key: string;
   private type: FormFieldEnum;
   private required: boolean;
   private disabled: boolean;
-  private defaultValue: any;
+  private defaultValue: unknown;
   private placeholder: string;
-  private value: any;
-  constructor(builder: FormFieldBuilder) {
+  private value: T;
+  private options: unknown[];
+  constructor(builder: FormFieldBuilder<T>) {
     this.label = builder.label;
     this.key = builder.key;
     this.type = builder.type;
@@ -21,6 +22,7 @@ export class FormField {
     this.disabled = builder.disabled;
     this.defaultValue = builder.defaultValue;
     this.value = builder.value;
+    this.options = builder.options;
   }
   getType() {
     return this.type;
@@ -43,35 +45,38 @@ export class FormField {
   getDefaultValue() {
     return this.defaultValue;
   }
+  getOptions() {
+    return this.options;
+  }
   getValue() {
     return this.value;
   }
   setValue(value: any) {
     this.value = value;
   }
-  static builderInput(label: string, key: string) {
-    return new FormFieldBuilder(FormFieldEnum.INPUT, label, key);
+  static builderInput<T>(label: string, key: string) {
+    return new FormFieldBuilder<T>(FormFieldEnum.INPUT, label, key);
   }
-  static builderTextarea(label: string, key: string) {
-    return new FormFieldBuilder(FormFieldEnum.TEXTAREA, label, key);
+  static builderTextarea<T>(label: string, key: string) {
+    return new FormFieldBuilder<T>(FormFieldEnum.TEXTAREA, label, key);
   }
-  static buildSelect(label: string, key: string, options: any[]) {
-    return new FormFieldBuilder(FormFieldEnum.SELECT, label, key).withOptions(options);
+  static buildSelect<T>(label: string, key: string, options: any[]) {
+    return new FormFieldBuilder<T>(FormFieldEnum.SELECT, label, key).withOptions(options);
   }
-  static buildRadio(label: string, key: string) {
-    return new FormFieldBuilder(FormFieldEnum.RADIO, label, key);
+  static buildRadio<T>(label: string, key: string) {
+    return new FormFieldBuilder<T>(FormFieldEnum.RADIO, label, key);
   }
 }
-class FormFieldBuilder {
+class FormFieldBuilder<T> {
   public label: string;
   public type: FormFieldEnum;
   public key: string;
   public placeholder?: string;
-  public options?: any[];
-  public value?: any;
+  public options?: unknown[];
+  public value?: T;
   public required?: boolean;
   public disabled?: boolean;
-  public defaultValue?: any;
+  public defaultValue?: unknown;
 
   constructor(type: FormFieldEnum, label: string, key: string) {
     this.label = label;
@@ -79,25 +84,32 @@ class FormFieldBuilder {
     this.key = key;
   }
 
-  public withOptions(options: any[]): FormFieldBuilder {
+  public withOptions(options: unknown[]): FormFieldBuilder<T> {
     if (this.type !== FormFieldEnum.SELECT) throw new Error('Only select field can have options');
     this.options = options;
     return this;
   }
-  public withRequired(required: boolean): FormFieldBuilder {
+
+  public withRequired(required: boolean): FormFieldBuilder<T> {
     this.required = required;
     return this;
   }
 
-  public withDefaultValue(defaultValue: any): FormFieldBuilder {
+  public withDefaultValue(defaultValue: unknown): FormFieldBuilder<T> {
     this.defaultValue = defaultValue;
     return this;
   }
-  public withPlaceholder(placeholder: string): FormFieldBuilder {
+
+  public withPlaceholder(placeholder: string): FormFieldBuilder<T> {
     this.placeholder = placeholder;
     return this;
   }
-  public build(): FormField {
+  public withDisabled(disabled: boolean): FormFieldBuilder<T> {
+    this.disabled = disabled;
+    return this;
+  }
+
+  public build(): FormField<T> {
     return new FormField(this);
   }
 }
