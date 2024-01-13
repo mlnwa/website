@@ -118,29 +118,36 @@ const BlogEdit = function () {
   };
   const onPublishHandle = async () => {};
   return (
-    <Container>
-      <Form>
+    <Container style={{ gap: '10px' }}>
+      <Input
+        size="large"
+        labelPosition="left"
+        placeholder="请输入标题"
+        label={
+          <Dropdown
+            options={fromStatusOptions}
+            value={fromStatus}
+            onChange={(e, data) => {
+              setFromStatus(Number(data.value));
+            }}
+          ></Dropdown>
+        }
+        action={
+          <>
+            <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
+            <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
+            <Button content="其他"></Button>
+          </>
+        }
+        value={title}
+        onChange={(e) => {
+          setTitle(e.target.value);
+        }}
+      ></Input>
+      {/* <Form>
         <Form.Group widths={1} className={commonStyle.m_margin_lr_none}>
-          <Form.Field>
-            <Input
-              size="large"
-              labelPosition="left"
-              placeholder="请输入标题"
-              label={
-                <Dropdown
-                  options={fromStatusOptions}
-                  value={fromStatus}
-                  onChange={(e, data) => {
-                    setFromStatus(Number(data.value));
-                  }}
-                ></Dropdown>
-              }
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            ></Input>
-          </Form.Field>
+          <Form.Field></Form.Field>
+          <Form.Field></Form.Field>
         </Form.Group>
         <Form.Group widths={5} className={commonStyle.m_margin_lr_none}>
           <Form.Field
@@ -191,53 +198,50 @@ const BlogEdit = function () {
             }}
           ></Form.Field>
         </Form.Group>
-      </Form>
+      </Form> */}
       <IMarkdown border scroll>
         <IMarkdown.Editer value={content} onChange={(value) => setContent(value)}></IMarkdown.Editer>
         <IMarkdown.Preview value={content} darkMode></IMarkdown.Preview>
       </IMarkdown>
-      <Form.Group></Form.Group>
 
-      <Segment textAlign="right" basic size="mini">
+      {/* <Segment textAlign="right" basic size="mini" >
         <Form>
-          <Form.Group className={commonStyle.m_margin_lr_none}>
-            <Form.Field
-              control={Checkbox}
-              label="推荐"
-              checked={enableRecommend}
-              onChange={(e: any, data: CheckboxProps) => {
-                setEnableRecommend(data.checked);
-              }}
-            ></Form.Field>
-            <Form.Field
-              control={Checkbox}
-              label="转载声明"
-              checked={enableCopyright}
-              onChange={(e: any, data: CheckboxProps) => {
-                setEnableCopyright(data.checked);
-              }}
-            ></Form.Field>
-            <Form.Field
-              control={Checkbox}
-              label="赞赏"
-              checked={enablePraise}
-              onChange={(e: any, data: CheckboxProps) => {
-                setEnablePraise(data.checked);
-              }}
-            ></Form.Field>
-            <Form.Field
-              control={Checkbox}
-              label="评论"
-              checked={enableComment}
-              onChange={(e: any, data: CheckboxProps) => {
-                setEnableComment(data.checked);
-              }}
-            ></Form.Field>
-          </Form.Group>
-        </Form>
-        <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
-        <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
-      </Segment>
+            <Form.Group className={commonStyle.m_margin_lr_none}>
+              <Form.Field
+                control={Checkbox}
+                label="推荐"
+                checked={enableRecommend}
+                onChange={(e: any, data: CheckboxProps) => {
+                  setEnableRecommend(data.checked);
+                }}
+              ></Form.Field>
+              <Form.Field
+                control={Checkbox}
+                label="转载声明"
+                checked={enableCopyright}
+                onChange={(e: any, data: CheckboxProps) => {
+                  setEnableCopyright(data.checked);
+                }}
+              ></Form.Field>
+              <Form.Field
+                control={Checkbox}
+                label="赞赏"
+                checked={enablePraise}
+                onChange={(e: any, data: CheckboxProps) => {
+                  setEnablePraise(data.checked);
+                }}
+              ></Form.Field>
+              <Form.Field
+                control={Checkbox}
+                label="评论"
+                checked={enableComment}
+                onChange={(e: any, data: CheckboxProps) => {
+                  setEnableComment(data.checked);
+                }}
+              ></Form.Field>
+            </Form.Group>
+          </Form>
+      </Segment> */}
     </Container>
   );
 };
