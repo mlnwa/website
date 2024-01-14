@@ -20,7 +20,7 @@ type IDrawerFooterProps = {
 const IDrawer = ({ children, ...drawerProps }: IDrawerProps) => {
   let footerComponent = null;
   const newChildren = React.Children.map(children, (child) => {
-    if ((child as React.ReactElement).type === IDrawer.Footer) {
+    if ((child as React.ReactElement)?.type === IDrawer.Footer) {
       footerComponent = child;
       return null;
     }
@@ -38,13 +38,13 @@ IDrawer.Header = ({ title }: IDrawerHeaderProps) => {
 IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
   return (
     <div>
-      <Divider horizontal>
+      <Divider horizontal section>
         <Header as="h5">
           <Icon name={data.icon}></Icon>
           {data.title}
         </Header>
       </Divider>
-      <Grid>
+      <Grid as={Form}>
         {data.content.map((item, index) => {
           switch (item.getType()) {
             case FormFieldEnum.INPUT:
@@ -67,6 +67,8 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
               return (
                 <Form.Select
                   label={item.getLabel()}
+                  multiple={item.getMultiple()}
+                  key={item.getKey()}
                   options={item.getOptions()}
                   value={item.getValue()}
                   onChange={(e, val) => {
@@ -77,7 +79,7 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
             case FormFieldEnum.RADIO:
               const radioItem = item as FormField<boolean>;
               return (
-                <Form.Radio
+                <Form.Checkbox
                   checked={radioItem.getValue()}
                   label={radioItem.getLabel()}
                   key={radioItem.getKey()}
@@ -85,7 +87,7 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
                   onChange={(e, val) => {
                     onChange(index, val.value);
                   }}
-                ></Form.Radio>
+                ></Form.Checkbox>
               );
             case FormFieldEnum.TEXTAREA:
             default:

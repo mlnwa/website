@@ -1,65 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  CheckboxProps,
-  Container,
-  Dropdown,
-  DropdownItemProps,
-  Form,
-  Grid,
-  Input,
-  InputOnChangeData,
-  Label,
-  Menu,
-  Segment,
-  Select,
-  Table,
-  TextArea,
-} from 'semantic-ui-react';
-import commonStyle from '../assets/css/common.module.scss';
+import React from 'react';
+import { Button, Container, Dropdown, DropdownItemProps, Input } from 'semantic-ui-react';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
-import { useLocation, useParams } from 'react-router-dom';
-import { isNaN, isNumber } from 'lodash';
-import { BlogFromStatus } from '../api/module/blog';
+import { useParams } from 'react-router-dom';
+import { isNaN, isUndefined } from 'lodash';
+import { Blog, BlogFromStatus } from '../api/module/blog';
 import { useAppDispatch } from '../hooks';
 import { fetchCategorys, fetchColumns, fetchTags } from '../store/features/blogMetaSlice';
 import store from '../store';
+import { BlogForm } from '../class/FormStructs';
+import IDrawer from '../components/IDrawer';
 const fromStatusOptions: DropdownItemProps[] = [
   { text: '原创', value: BlogFromStatus.SELF },
   { text: '转载', value: BlogFromStatus.REPRODUCED },
   { text: '翻译', value: BlogFromStatus.TRANSLATED },
 ];
 const BlogEdit = function () {
-  const [categoryList, setCategoryList] = React.useState<DropdownItemProps[]>([]);
-  const [columnList, setColumnList] = React.useState<DropdownItemProps[]>([]);
-  const [tagList, setTagList] = React.useState<DropdownItemProps[]>([]);
-  const [categoryId, setCategoryId] = React.useState<number>();
-  const [tagIds, setTagIds] = React.useState<number[]>([]);
-  const [columnId, setColumnId] = React.useState<number>();
+  const [categoryList, setCategoryList] = React.useState<DropdownItemProps[]>();
+  const [columnList, setColumnList] = React.useState<DropdownItemProps[]>();
+  const [tagList, setTagList] = React.useState<DropdownItemProps[]>();
+  const [blogForm, setBlogForm] = React.useState<BlogForm>();
+  const [blog, setBlog] = React.useState<Blog>();
   const [title, setTitle] = React.useState<string>('');
   const [content, setContent] = React.useState<string>('');
   const [fromStatus, setFromStatus] = React.useState<number>(BlogFromStatus.SELF);
-  const [enableComment, setEnableComment] = React.useState<boolean>(true);
-  const [enablePraise, setEnablePraise] = React.useState<boolean>(false);
-  const [enableCopyright, setEnableCopyright] = React.useState<boolean>(true);
-  const [enableRecommend, setEnableRecommend] = React.useState<boolean>(false);
-  const [imgUrl, setImgUrl] = React.useState<string>('');
-  const [abstract, setAbstract] = React.useState<string>('');
+  const [open, setOpen] = React.useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { id } = useParams();
-  useEffect(() => {
+  React.useEffect(() => {
     init();
   }, []);
+  React.useEffect(() => {
+    if (blogForm) return;
+    if (isUndefined(categoryList) || isUndefined(tagList) || isUndefined(columnList)) return;
+    setBlogForm(new BlogForm({ categoryList, columnList, tagList }));
+  }, [categoryList, tagList, columnList]);
+  React.useEffect(() => {
+    if (isUndefined(blogForm) || isUndefined(blog)) return;
+    setTitle(blog.title);
+    setContent(blog.content);
+    setFromStatus(blog.fromStatus);
+    blogForm.insertFormData(blog);
+  }, [blog]);
   const init = async () => {
-    await getDependencies();
-    await getBlogDetail();
-  };
-  const getDependencies = async () => {
-    getCategorys();
-    getTags();
-    getColumns();
+    await Promise.all([getCategorys(), getTags(), getColumns()]);
+    getBlogDetail();
   };
   const getCategorys = async () => {
     await dispatch(fetchCategorys());
@@ -79,44 +64,31 @@ const BlogEdit = function () {
     let res;
     try {
       res = await QueryBlogDetail(blogId);
-      setContent(res.result.content);
-      setTitle(res.result.title);
-      setCategoryId(res.result.categoryId);
-      setFromStatus(res.result.fromStatus);
-      setTagIds(res.result.tagIds);
-      setColumnId(res.result.columnId);
-      setEnableComment(res.result.enableComment);
-      setEnableCopyright(res.result.enableCopyright);
-      setEnablePraise(res.result.enablePraise);
-      setEnableRecommend(res.result.enableRecommend);
-      setAbstract(res.result.abstract);
-      setImgUrl(res.result.imgUrl);
+      setBlog(res.result);
     } catch (error) {
       return;
     }
   };
   const onSaveHandle = async () => {
     let res;
+    const formObj = blogForm.generateFormData<Blog>();
     try {
       res = await CreateBlog({
+        ...formObj,
         title,
         content,
-        categoryId,
         fromStatus,
-        tagIds: JSON.stringify(tagIds),
-        columnId: columnId == 0 ? undefined : columnId,
-        imgUrl,
-        abstract,
-        enableComment,
-        enablePraise,
-        enableCopyright,
-        enableRecommend,
       });
     } catch (error) {
       console.log(error);
     }
   };
   const onPublishHandle = async () => {};
+  const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
+    setBlogForm((prevState: BlogForm) => {
+      return prevState.updateContent(index, contentIndex, value);
+    });
+  };
   return (
     <Container style={{ gap: '10px' }}>
       <Input
@@ -136,7 +108,7 @@ const BlogEdit = function () {
           <>
             <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
             <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
-            <Button content="其他"></Button>
+            <Button content="其他" onClick={() => setOpen(true)}></Button>
           </>
         }
         value={title}
@@ -144,104 +116,29 @@ const BlogEdit = function () {
           setTitle(e.target.value);
         }}
       ></Input>
-      {/* <Form>
-        <Form.Group widths={1} className={commonStyle.m_margin_lr_none}>
-          <Form.Field></Form.Field>
-          <Form.Field></Form.Field>
-        </Form.Group>
-        <Form.Group widths={5} className={commonStyle.m_margin_lr_none}>
-          <Form.Field
-            label="分类"
-            control={Select}
-            clearable
-            options={categoryList}
-            value={categoryId}
-            onChange={(e: any, data: DropdownItemProps) => {
-              setCategoryId(Number(data.value));
-            }}
-          ></Form.Field>
-          <Form.Field
-            label="分类"
-            control={Select}
-            clearable
-            options={columnList}
-            value={columnId}
-            onChange={(e: any, data: DropdownItemProps) => {
-              setColumnId(Number(data.value));
-            }}
-          ></Form.Field>
-          <Form.Field
-            label="标签"
-            control={Select}
-            options={tagList}
-            multiple
-            value={tagIds}
-            onChange={(e: any, data: DropdownItemProps) => {
-              const tagIds = data.value as unknown as number[];
-              setTagIds(tagIds);
-            }}
-          ></Form.Field>
-          <Form.Field
-            control={Input}
-            label="首图"
-            value={imgUrl}
-            onChange={(e: any, data: InputOnChangeData) => {
-              setImgUrl(data.value);
-            }}
-          ></Form.Field>
-          <Form.Field
-            control={Input}
-            label="摘要"
-            value={abstract}
-            onChange={(e: any, data: InputOnChangeData) => {
-              setAbstract(data.value);
-            }}
-          ></Form.Field>
-        </Form.Group>
-      </Form> */}
       <IMarkdown border scroll>
         <IMarkdown.Editer value={content} onChange={(value) => setContent(value)}></IMarkdown.Editer>
         <IMarkdown.Preview value={content} darkMode></IMarkdown.Preview>
       </IMarkdown>
-
-      {/* <Segment textAlign="right" basic size="mini" >
-        <Form>
-            <Form.Group className={commonStyle.m_margin_lr_none}>
-              <Form.Field
-                control={Checkbox}
-                label="推荐"
-                checked={enableRecommend}
-                onChange={(e: any, data: CheckboxProps) => {
-                  setEnableRecommend(data.checked);
-                }}
-              ></Form.Field>
-              <Form.Field
-                control={Checkbox}
-                label="转载声明"
-                checked={enableCopyright}
-                onChange={(e: any, data: CheckboxProps) => {
-                  setEnableCopyright(data.checked);
-                }}
-              ></Form.Field>
-              <Form.Field
-                control={Checkbox}
-                label="赞赏"
-                checked={enablePraise}
-                onChange={(e: any, data: CheckboxProps) => {
-                  setEnablePraise(data.checked);
-                }}
-              ></Form.Field>
-              <Form.Field
-                control={Checkbox}
-                label="评论"
-                checked={enableComment}
-                onChange={(e: any, data: CheckboxProps) => {
-                  setEnableComment(data.checked);
-                }}
-              ></Form.Field>
-            </Form.Group>
-          </Form>
-      </Segment> */}
+      <IDrawer
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}
+      >
+        {blogForm?.panelList?.map((item, index) => {
+          return (
+            <IDrawer.Panel
+              key={index}
+              data={item}
+              onChange={(contentIndex, value) => {
+                onFormChangeHandle(index, contentIndex, value);
+              }}
+            ></IDrawer.Panel>
+          );
+        })}
+        <IDrawer.Footer>{<Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>}</IDrawer.Footer>
+      </IDrawer>
     </Container>
   );
 };

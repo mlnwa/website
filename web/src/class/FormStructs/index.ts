@@ -1,4 +1,4 @@
-import { SemanticICONS } from 'semantic-ui-react';
+import { DropdownItemProps, SemanticICONS } from 'semantic-ui-react';
 import { FormField } from './formField';
 
 export interface Panel {
@@ -15,14 +15,14 @@ export const FormStruct = class {
   private changedKeysSet = new Set<string>();
   private isEdit = false;
   constructor() {}
-  public generateFormData() {
+  public generateFormData<T>(): T {
     return this.panelList.reduce((acc, panel) => {
       panel.content.forEach((content) => {
         if (!this.changedKeysSet.has(content.getKey()) && this.isEdit) return;
         Reflect.set(acc, content.getKey(), content.getValue());
       });
       return acc;
-    }, {});
+    }, {}) as T;
   }
   public updateContent(panelIndex: number, contentIndex: number, value: any) {
     this.panelList[panelIndex].content[contentIndex].setValue(value);
@@ -71,16 +71,16 @@ export class BlogFilterForm extends FormStruct {
   }
 }
 export class BlogForm extends FormStruct {
-  constructor() {
+  constructor({ categoryList, tagList, columnList }: Record<string, DropdownItemProps[]>) {
     super();
     this.panelList = [
       {
         title: '基础信息',
         icon: 'info',
         content: [
-          FormField.builderInput<string>('专栏', 'columnId').build(),
-          FormField.builderInput<string>('类别', 'categoryId').build(),
-          FormField.builderInput<string>('标签', 'tagIds').build(),
+          FormField.builderSelect<number>('专栏', 'columnId', columnList).build(),
+          FormField.builderSelect<number>('类别', 'categoryId', categoryList).build(),
+          FormField.builderSelect<number[]>('标签', 'tagIds', tagList).withMultiple(true).build(),
           FormField.builderInput<string>('摘要', 'abstract').build(),
           FormField.builderInput<string>('封面', 'imgUrl').build(),
         ],
@@ -89,10 +89,10 @@ export class BlogForm extends FormStruct {
         title: '博客属性',
         icon: 'radio',
         content: [
-          FormField.buildRadio<boolean>('开启评论', 'enableComment').build(),
-          FormField.buildRadio<boolean>('开启赞赏', 'enablePraise').build(),
-          FormField.buildRadio<boolean>('开启版权声明', 'enableCopyright').build(),
-          FormField.buildRadio<boolean>('开启推荐', 'enableRecommend').build(),
+          FormField.builderRadio<boolean>('开启评论', 'enableComment').build(),
+          FormField.builderRadio<boolean>('开启赞赏', 'enablePraise').build(),
+          FormField.builderRadio<boolean>('开启版权声明', 'enableCopyright').build(),
+          FormField.builderRadio<boolean>('开启推荐', 'enableRecommend').build(),
         ],
       },
     ];

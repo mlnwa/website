@@ -9,6 +9,7 @@ export class FormField<T> {
   private key: string;
   private type: FormFieldEnum;
   private required: boolean;
+  private multiple: boolean;
   private disabled: boolean;
   private defaultValue: unknown;
   private placeholder: string;
@@ -23,6 +24,7 @@ export class FormField<T> {
     this.defaultValue = builder.defaultValue;
     this.value = builder.value;
     this.options = builder.options;
+    this.multiple = builder.multiple;
   }
   getType() {
     return this.type;
@@ -32,6 +34,9 @@ export class FormField<T> {
   }
   getRequired() {
     return this.required;
+  }
+  getMultiple() {
+    return this.multiple;
   }
   getKey() {
     return this.key;
@@ -60,10 +65,10 @@ export class FormField<T> {
   static builderTextarea<T>(label: string, key: string) {
     return new FormFieldBuilder<T>(FormFieldEnum.TEXTAREA, label, key);
   }
-  static buildSelect<T>(label: string, key: string, options: any[]) {
+  static builderSelect<T>(label: string, key: string, options: any[]) {
     return new FormFieldBuilder<T>(FormFieldEnum.SELECT, label, key).withOptions(options);
   }
-  static buildRadio<T>(label: string, key: string) {
+  static builderRadio<T>(label: string, key: string) {
     return new FormFieldBuilder<T>(FormFieldEnum.RADIO, label, key);
   }
 }
@@ -75,6 +80,7 @@ class FormFieldBuilder<T> {
   public options?: unknown[];
   public value?: T;
   public required?: boolean;
+  public multiple?: boolean;
   public disabled?: boolean;
   public defaultValue?: unknown;
 
@@ -87,6 +93,12 @@ class FormFieldBuilder<T> {
   public withOptions(options: unknown[]): FormFieldBuilder<T> {
     if (this.type !== FormFieldEnum.SELECT) throw new Error('Only select field can have options');
     this.options = options;
+    return this;
+  }
+
+  public withMultiple(multiple: boolean) {
+    if (this.type !== FormFieldEnum.SELECT) throw new Error('Only select field can have multiple');
+    this.multiple = multiple;
     return this;
   }
 
