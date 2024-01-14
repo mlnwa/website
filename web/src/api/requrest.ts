@@ -69,6 +69,7 @@ const HttpRequest = class {
   }
   private request<T>(data: Partial<AxiosRequestConfig>, method: Method) {
     const token = localStorage.getItem('access_token') || '';
+    data = this.formatData(data);
     return new Promise<ResultModel<T>>((resolve, reject) => {
       this.instance
         .request<ResultModel<T>>({
@@ -86,6 +87,14 @@ const HttpRequest = class {
           reject(err);
         });
     });
+  }
+  private formatData(data: Partial<AxiosRequestConfig>) {
+    if (data.data) {
+      for (let i in data.data) {
+        if (typeof data.data[i] == 'object') data.data[i] = JSON.stringify(data.data[i]);
+      }
+    }
+    return data;
   }
   post<T>(data?: Partial<AxiosRequestConfig>) {
     return this.request<T>(data, 'POST');
