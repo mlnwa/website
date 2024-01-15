@@ -1,36 +1,24 @@
-import { Transform, Type, plainToClass, plainToInstance } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsEnum,
-  IsJSON,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-  isNumber,
-} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsArray, IsBoolean, IsEnum, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BlogFromStatus } from '../blog.enum';
-import { BlogEntity } from '../blog.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { TypeUtil } from 'src/utils';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
-export class CreateBlogDto {
-  @IsNotEmpty()
+export class UpdateBlogDto {
+  @IsOptional()
   @IsString()
   title: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
   content: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsNumber()
   @Type(() => Number)
   categoryId: number;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsEnum(BlogFromStatus)
   @Type(() => Number)
   fromStatus: BlogFromStatus;
@@ -56,24 +44,30 @@ export class CreateBlogDto {
   @IsOptional()
   columnId: number;
 
+  @IsOptional()
   @IsString()
   abstract: string;
 
+  @IsOptional()
   @IsString()
   imgUrl: string;
 
+  @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
   enableRecommend: boolean;
 
+  @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
   enableComment: boolean;
 
+  @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
   enablePraise: boolean;
 
+  @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
   enableCopyright: boolean;

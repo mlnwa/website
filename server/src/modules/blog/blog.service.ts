@@ -13,6 +13,8 @@ import { CategoryService } from '../category/category.service';
 import { TagService } from '../tag/tag.service';
 import { CreateBlogDto } from './dto/create-blog.dto';
 import { ColumnService } from '../column/column.service';
+import { UpdateBlogDto } from './dto/update-blog.dto';
+import { TypeUtil } from 'src/utils';
 
 @Injectable()
 export class BlogService {
@@ -32,7 +34,7 @@ export class BlogService {
     blog.user = userModel.getResult();
     const categoryModel = await this.categoryService.findById(createBlogDto.categoryId);
     if (categoryModel.getSuccess() == false) return categoryModel;
-    if (createBlogDto?.tagIds?.length > 0) {
+    if (createBlogDto.tagIds?.length > 0) {
       const tagModel = await this.tagService.findByIds(createBlogDto.tagIds);
       if (tagModel.getSuccess() == false) return tagModel;
       blog.tags = tagModel.getResult();
@@ -79,19 +81,47 @@ export class BlogService {
     return ResultModel.builderSuccessMsg('删除成功');
   }
 
-  async update(draft: Partial<BlogEntity>) {
-    const queryBlog = await this.findById(draft.id);
-    if (queryBlog == null) {
-      return ResultModel.builderErrorMsg('博客不存在');
+  async update(id: number, updateBlogDto: UpdateBlogDto) {
+    const blogModel = await this.findById(id);
+    if (blogModel.getSuccess() == false) return blogModel;
+    const blog = blogModel.getResult() as BlogEntity;
+    const { categoryId, tagIds, columnId, ...props } = updateBlogDto;
+    if (TypeUtil.isNumber(categoryId)) {
+      if (categoryId == 0) {
+        blog.category = null;
+      } else {
+        let categoryModel = await this.categoryService.findById(categoryId);
+        if (categoryModel.getSuccess() == false) return categoryModel;
+        blog.category = categoryModel.getResult();
+      }
     }
-    await this.blogRepository.update({ id: draft.id }, draft);
+    if (TypeUtil.isArray(tagIds)) {
+      if (tagIds.length == 0) {
+        blog.tags = [];
+      } else {
+        let tagModels = await this.tagService.findByIds(tagIds);
+        if (tagModels.getSuccess() == false) return tagModels;
+        blog.tags = tagModels.getResult();
+      }
+    }
+    if (TypeUtil.isNumber(columnId)) {
+      if (columnId == 0) {
+        blog.column = null;
+      } else {
+        let columnModel = await this.columnService.findById(columnId);
+        if (columnModel.getSuccess() == false) return columnModel;
+        blog.column = columnModel.getResult();
+      }
+    }
+    Object.assign(blog, props);
+    await this.blogRepository.save(blog);
     return ResultModel.builderSuccessMsg('更新成功');
   }
 
   async publish(id: number, draft: Partial<BlogEntity>) {
-    const publishedBlog = this.findById(draft.publishId);
+    const publishedBlogModel = await this.findById(draft.publishId);
     draft.status = BlogStatus.PUBLISHED;
-    if (!publishedBlog) {
+    if (publishedBlogModel.getSuccess() == false) {
       await this.blogRepository.update(id, draft);
       return ResultModel.builderSuccessMsg('发布成功');
     }

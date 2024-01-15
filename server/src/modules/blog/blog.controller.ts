@@ -17,29 +17,23 @@ import { BlogEntity } from './blog.entity';
 import { Request } from 'express';
 import { BlogService } from './blog.service';
 import { Public } from 'src/common/decorators/public.decorator';
-import { BlogStatus } from './blog.enum';
-import { UserService } from '../user/user.service';
 import { QueryPagesBlogDto, QueryPagesPublishedBlogDto } from './dto/query-blog.dto';
-import { CategoryService } from '../category/category.service';
+import { UpdateBlogDto } from './dto/update-blog.dto';
 
 @Controller('blog')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class BlogController {
-  constructor(
-    private readonly blogService: BlogService,
-    private readonly userService: UserService,
-    private readonly categoryService: CategoryService,
-  ) {}
+  constructor(private readonly blogService: BlogService) {}
 
   @Get('/list/published')
   @Public()
-  getPublishedBlogList(@Query() queryPagesBlogDto: QueryPagesBlogDto) {
-    return this.blogService.findPages(queryPagesBlogDto);
+  getPublishedBlogList(@Query() queryPagesPublishedBlogDto: QueryPagesPublishedBlogDto) {
+    return this.blogService.findPages(queryPagesPublishedBlogDto);
   }
 
   @Get('/list')
-  getBlogList(@Query() queryPagesPublishedBlogDto: QueryPagesPublishedBlogDto) {
-    return this.blogService.findPages(queryPagesPublishedBlogDto);
+  getBlogList(@Query() queryPagesBlogDto: QueryPagesBlogDto) {
+    return this.blogService.findPages(queryPagesBlogDto);
   }
 
   @Get('/detail/:id')
@@ -56,9 +50,8 @@ export class BlogController {
   }
 
   @Put('/update/:id')
-  updateDraft(@Body() createBlogDto: CreateBlogDto) {
-    const draft = createBlogDto as Partial<BlogEntity>;
-    return this.blogService.update(draft);
+  updateDraft(@Param('id', new ParseIntPipe()) id: number, @Body() updateBlogDto: UpdateBlogDto) {
+    return this.blogService.update(id, updateBlogDto);
   }
 
   @Delete(':id')

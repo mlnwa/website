@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsIn, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from 'src/common/dtos';
 import { BlogStatus } from '../blog.enum';
 
@@ -14,4 +14,8 @@ export class QueryPagesBlogDto extends PaginationDto {
   status?: BlogStatus;
 }
 
-export class QueryPagesPublishedBlogDto extends PaginationDto {}
+export class QueryPagesPublishedBlogDto extends PaginationDto {
+  @IsIn([BlogStatus.PUBLISHED])
+  @Type(() => Number)
+  status = BlogStatus.PUBLISHED;
+}
