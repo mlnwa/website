@@ -25,7 +25,7 @@ export class ColumnService {
     return ResultModel.builderSuccess<ColumnEntity>().setResult(res);
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<ResultModel<ColumnEntity>> {
     let res = await this.columnRepository.findOne({ where: { id } });
     if (res == null) return ResultModel.builderErrorMsg('专栏不存在');
     return ResultModel.builderSuccess<ColumnEntity>().setResult(res);

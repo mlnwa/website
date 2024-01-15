@@ -52,15 +52,15 @@ export class CategoryService {
     return ResultModel.builderSuccessMsg('删除成功');
   }
   async findById(id: number) {
-    const result = await this.categoryRepository.findOne({ where: { id } });
+    const result = await this.categoryRepository.findOneBy({ id });
     if (result == null) {
       return ResultModel.builderErrorMsg('分类不存在');
     }
     return ResultModel.builderSuccess<CategoryEntity>().setResult(result);
   }
   async update(id: number, category: Partial<CategoryEntity>) {
-    const queryCategory = await this.findById(id);
-    if (queryCategory == null) return ResultModel.builderErrorMsg('分类不存在');
+    const categoryModel = await this.findById(id);
+    if (categoryModel.getSuccess() == false) categoryModel;
     await this.categoryRepository.update(id, category);
     return ResultModel.builderSuccessMsg('更新成功');
   }
