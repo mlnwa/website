@@ -80,7 +80,7 @@ export class BlogForm extends FormStruct {
         content: [
           FormField.builderSelect<number>('专栏', 'columnId', columnList).build(),
           FormField.builderSelect<number>('类别', 'categoryId', categoryList).build(),
-          FormField.builderSelect<number[]>('标签', 'tagIds', tagList).withMultiple(true).build(),
+          FormField.builderSelect<number[]>('标签', 'tagIds', tagList).withMultiple(true).withDefaultValue([]).build(),
           FormField.builderInput<string>('摘要', 'abstract').build(),
           FormField.builderInput<string>('封面', 'imgUrl').build(),
         ],
@@ -89,13 +89,14 @@ export class BlogForm extends FormStruct {
         title: '博客属性',
         icon: 'radio',
         content: [
-          FormField.builderRadio<boolean>('开启评论', 'enableComment').build(),
+          FormField.builderRadio<boolean>('开启评论', 'enableComment').withDefaultValue(true).build(),
           FormField.builderRadio<boolean>('开启赞赏', 'enablePraise').build(),
-          FormField.builderRadio<boolean>('开启版权声明', 'enableCopyright').build(),
+          FormField.builderRadio<boolean>('开启版权声明', 'enableCopyright').withDefaultValue(true).build(),
           FormField.builderRadio<boolean>('开启推荐', 'enableRecommend').build(),
         ],
       },
     ];
+    this.resetFormData();
   }
 }
 export class CategoryForm extends FormStruct {

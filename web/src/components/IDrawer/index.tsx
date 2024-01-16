@@ -85,7 +85,7 @@ IDrawer.Panel = ({ data, onChange }: IDrawerPanelProps) => {
                   key={radioItem.getKey()}
                   disabled={radioItem.getDisabled()}
                   onChange={(e, val) => {
-                    onChange(index, val.value);
+                    onChange(index, val.checked);
                   }}
                 ></Form.Checkbox>
               );

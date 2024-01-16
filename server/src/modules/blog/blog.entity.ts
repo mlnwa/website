@@ -97,6 +97,7 @@ export class BlogEntity extends BaseEntity {
     default: false,
   })
   enablePraise: boolean;
+
   @Column({
     name: 'enable_recommend',
     default: false,

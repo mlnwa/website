@@ -60,7 +60,7 @@ export class FormField<T> {
     this.value = value;
   }
   static builderInput<T>(label: string, key: string) {
-    return new FormFieldBuilder<T>(FormFieldEnum.INPUT, label, key);
+    return new FormFieldBuilder<T>(FormFieldEnum.INPUT, label, key).withDefaultValue('');
   }
   static builderTextarea<T>(label: string, key: string) {
     return new FormFieldBuilder<T>(FormFieldEnum.TEXTAREA, label, key);
@@ -69,7 +69,7 @@ export class FormField<T> {
     return new FormFieldBuilder<T>(FormFieldEnum.SELECT, label, key).withOptions(options);
   }
   static builderRadio<T>(label: string, key: string) {
-    return new FormFieldBuilder<T>(FormFieldEnum.RADIO, label, key);
+    return new FormFieldBuilder<T>(FormFieldEnum.RADIO, label, key).withDefaultValue(false);
   }
 }
 class FormFieldBuilder<T> {

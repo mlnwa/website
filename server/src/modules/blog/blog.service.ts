@@ -46,8 +46,8 @@ export class BlogService {
       blog.column = columnModel.getResult();
     }
     Object.assign(blog, props);
-    await this.blogRepository.save(blog);
-    return ResultModel.builderSuccessMsg('保存成功');
+    let res = await this.blogRepository.save(blog);
+    return ResultModel.builderSuccessMsg<number>('保存成功').setResult(res.id);
   }
 
   async findPages(queryPagesBlogDto: QueryPagesBlogDto) {

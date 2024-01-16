@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Container, Dropdown, DropdownItemProps, Input } from 'semantic-ui-react';
 import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { isNaN, isUndefined } from 'lodash';
-import { Blog, BlogFromStatus } from '../api/module/blog';
+import { Blog, BlogFromStatus, UpdateBlog } from '../api/module/blog';
 import { useAppDispatch } from '../hooks';
 import { fetchCategorys, fetchColumns, fetchTags } from '../store/features/blogMetaSlice';
 import store from '../store';
@@ -25,11 +25,14 @@ const BlogEdit = function () {
   const [content, setContent] = React.useState<string>('');
   const [fromStatus, setFromStatus] = React.useState<number>(BlogFromStatus.SELF);
   const [open, setOpen] = React.useState<boolean>(false);
+  const [isEdit, setIsEdit] = React.useState<boolean>(false);
+  const [isFresh, setIsFresh] = React.useState<boolean>(false);
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { id } = useParams();
   React.useEffect(() => {
     init();
-  }, []);
+  }, [isFresh]);
   React.useEffect(() => {
     if (blogForm) return;
     if (isUndefined(categoryList) || isUndefined(tagList) || isUndefined(columnList)) return;
@@ -68,12 +71,29 @@ const BlogEdit = function () {
     } catch (error) {
       return;
     }
+    setIsEdit(true);
   };
   const onSaveHandle = async () => {
     let res;
     const formObj = blogForm.generateFormData<Blog>();
     try {
       res = await CreateBlog({
+        ...formObj,
+        title,
+        content,
+        fromStatus,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    navigate(`/admin/edit/${res.result}`);
+    setIsFresh(true);
+  };
+  const onUpdateHandle = async () => {
+    let res;
+    const formObj = blogForm.generateFormData<Blog>();
+    try {
+      res = await UpdateBlog(blog.id, {
         ...formObj,
         title,
         content,
@@ -106,7 +126,12 @@ const BlogEdit = function () {
         }
         action={
           <>
-            <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
+            {!isEdit && (
+              <Button icon="save" positive content="保存" size="tiny" onClick={() => onSaveHandle()}></Button>
+            )}
+            {isEdit && (
+              <Button icon="save" positive content="更新" size="tiny" onClick={() => onUpdateHandle()}></Button>
+            )}
             <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
             <Button content="其他" onClick={() => setOpen(true)}></Button>
           </>
@@ -137,7 +162,7 @@ const BlogEdit = function () {
             ></IDrawer.Panel>
           );
         })}
-        <IDrawer.Footer>{<Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>}</IDrawer.Footer>
+        {/* <IDrawer.Footer>{<Button icon="save" positive content="保存" onClick={onSaveHandle}></Button>}</IDrawer.Footer> */}
       </IDrawer>
     </Container>
   );

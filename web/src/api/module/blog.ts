@@ -71,7 +71,7 @@ export const QueryPublishedBlogList = (params: QueryPublishedBlogList) =>
 export const QueryBlogDetail = (id: number) => http.get<Blog>({ url: `${URL}/detail/${id}` });
 
 export const CreateBlog = (data: CreateBlogData) =>
-  http.post<boolean>({
+  http.post<number>({
     url: `${URL}`,
     data,
   });
@@ -83,7 +83,7 @@ export const DeleteBlog = (id: number) =>
 
 export const UpdateBlog = (id: number, data: UpdateBlogData) =>
   http.put<boolean>({
-    url: `${URL}/${id}`,
+    url: `${URL}/update/${id}`,
     data,
   });
 
