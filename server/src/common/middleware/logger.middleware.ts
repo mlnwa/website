@@ -7,7 +7,7 @@ export class LoggerMiddleware implements NestMiddleware {
     const { method, originalUrl, body } = req;
     const logger = new Logger('Request');
     let message = `${method} ${originalUrl}`;
-    if (method == 'POST') {
+    if (method == 'POST' || method == 'PUT') {
       message += ` body: ${JSON.stringify(body)}`;
     }
     logger.log(message);

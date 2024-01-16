@@ -54,21 +54,21 @@ export class UpdateBlogDto {
 
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableRecommend: boolean;
 
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableComment: boolean;
 
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enablePraise: boolean;
 
   @IsOptional()
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableCopyright: boolean;
 }

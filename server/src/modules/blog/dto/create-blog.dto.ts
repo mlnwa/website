@@ -63,18 +63,18 @@ export class CreateBlogDto {
   imgUrl: string;
 
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableRecommend: boolean;
 
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableComment: boolean;
 
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enablePraise: boolean;
 
   @IsBoolean()
-  @Type(() => Boolean)
+  @Transform(({ value }) => value === 'true', { toClassOnly: true })
   enableCopyright: boolean;
 }
