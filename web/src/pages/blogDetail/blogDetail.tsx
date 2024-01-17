@@ -3,8 +3,9 @@ import style from '../../assets/css/common.module.scss';
 import { useParams } from 'react-router-dom';
 import { QueryBlogDetail } from '../../api';
 import { Container, Header, Icon, Item, List, Segment, Image, Label } from 'semantic-ui-react';
-import { AddBlogView, Blog } from '../../api/module/blog';
+import { AddBlogView, Blog, BlogFromStatus } from '../../api/module/blog';
 import IMarkdown from '../../components/IMarkdown/IMarkdown';
+import { DateUtil } from '../../utils';
 
 const BlogDetail = function () {
   const { id } = useParams();
@@ -32,13 +33,14 @@ const BlogDetail = function () {
             <Item className="middle aligned">
               <Image avatar src={blog.userAvatarUrl}></Image>
               <Item.Content>
-                <Header as="a" content="brad"></Header>
+                <Header as="a" content={blog.userName}></Header>
               </Item.Content>
             </Item>
             <Item className="middle aligned">
               <Icon name="calendar"></Icon>
               {blog.createAt}
             </Item>
+            <Item className="middle aligned">更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}</Item>
             <Item className="middle aligned">
               <Icon name="eye"></Icon>
               {blog.viewCount}
@@ -50,7 +52,9 @@ const BlogDetail = function () {
         </Segment>
         <Segment attached padded>
           <Segment textAlign="right" basic>
-            <Label content="原创" color="orange" basic></Label>
+            {blog.fromStatus == BlogFromStatus.SELF && <Label content="原创" color="orange" basic></Label>}
+            {blog.fromStatus == BlogFromStatus.REPRODUCED && <Label content="转载" color="blue" basic></Label>}
+            {blog.fromStatus == BlogFromStatus.TRANSLATED && <Label content="翻译" color="green" basic></Label>}
           </Segment>
           <Header as="h2" content={blog.title} textAlign="center"></Header>
           <IMarkdown>
