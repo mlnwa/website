@@ -24,7 +24,7 @@ const Permission = ({ children, authorize }: any) => {
       if (_logcation.pathname == '/' || _logcation.pathname == '/login') {
         navigate('/');
       } else {
-        navigate(_logcation.pathname);
+        navigate(_logcation.pathname, { replace: true });
       }
     }
   }, [token, _logcation.pathname]);

@@ -77,3 +77,4 @@ function permissionRoutes(routerList: CustomRoute[]) {
 }
 let routes = permissionRoutes(routerList);
 export const router = createHashRouter(routes);
+// export const router = createBrowserRouter(routes);
