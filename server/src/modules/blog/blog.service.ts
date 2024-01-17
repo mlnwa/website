@@ -63,7 +63,7 @@ export class BlogService {
     return resultModel;
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<ResultModel<BlogEntity>> {
     const res = await this.blogRepository.findOneBy({ id });
     if (!res) return ResultModel.builderErrorMsg('博客不存在');
     return ResultModel.builderSuccess<BlogEntity>().setResult(res);
@@ -84,7 +84,13 @@ export class BlogService {
   async update(id: number, updateBlogDto: UpdateBlogDto) {
     const blogModel = await this.findById(id);
     if (blogModel.getSuccess() == false) return blogModel;
-    const blog = blogModel.getResult() as BlogEntity;
+    const supBlogModel = await this.supBlogWithMeta(blogModel.getResult(), updateBlogDto);
+    if (supBlogModel.getSuccess() == false) return supBlogModel;
+    await this.blogRepository.save(supBlogModel.getResult());
+    return ResultModel.builderSuccessMsg('更新成功');
+  }
+
+  async supBlogWithMeta(blog: BlogEntity, updateBlogDto: UpdateBlogDto) {
     const { categoryId, tagIds, columnId, ...props } = updateBlogDto;
     if (TypeUtil.isNumber(categoryId)) {
       if (categoryId == 0) {
@@ -114,19 +120,28 @@ export class BlogService {
       }
     }
     Object.assign(blog, props);
-    await this.blogRepository.save(blog);
-    return ResultModel.builderSuccessMsg('更新成功');
+    return ResultModel.builderSuccess<BlogEntity>().setResult(blog);
   }
 
-  async publish(id: number, draft: Partial<BlogEntity>) {
+  async publish(draftId: number, updateBlogDto: UpdateBlogDto) {
+    const draftModel = await this.findById(draftId);
+    if (draftModel.getSuccess() == false) return draftModel;
+    const draft = draftModel.getResult();
     const publishedBlogModel = await this.findById(draft.publishId);
-    draft.status = BlogStatus.PUBLISHED;
+    // update
     if (publishedBlogModel.getSuccess() == false) {
-      await this.blogRepository.update(id, draft);
+      const supBlogModel = await this.supBlogWithMeta(draft, updateBlogDto);
+      if (supBlogModel.getSuccess() == false) return supBlogModel;
+      const supBlog = supBlogModel.getResult();
+      supBlog.status = BlogStatus.PUBLISHED;
+      await this.blogRepository.save(supBlog);
       return ResultModel.builderSuccessMsg('发布成功');
     }
-    await this.blogRepository.update(draft.publishId, draft);
-    await this.deleteById(id);
+    // update delete
+    const supBlogModel = await this.supBlogWithMeta(publishedBlogModel.getResult(), updateBlogDto);
+    if (supBlogModel.getSuccess() == false) return supBlogModel;
+    await this.blogRepository.save(supBlogModel.getResult());
+    await this.deleteById(draftId);
     return ResultModel.builderSuccessMsg('发布成功');
   }
   async addView(id: number) {

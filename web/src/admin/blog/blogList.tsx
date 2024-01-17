@@ -9,6 +9,7 @@ import { cloneDeep } from 'lodash';
 import { Constants } from '../../assets/ts/Constants';
 import { DeleteBlog, QueryBlogList } from '../../api';
 import { useNavigate } from 'react-router-dom';
+import { BlogStatus } from '../../api/module/blog';
 
 const BlogList = function () {
   const [open, setOpen] = React.useState(false);
@@ -32,12 +33,26 @@ const BlogList = function () {
     {
       title: '创建时间',
       key: 'createAt',
-      width: '3',
+      width: '2',
     },
     {
       title: '分类',
       key: 'categoryName',
-      width: '2',
+      width: 1,
+    },
+    {
+      title: '状态',
+      key: 'status',
+      width: 1,
+      render: (row, index) => {
+        return (
+          <>
+            {row.status == BlogStatus.DRAFT && <Label color="orange" content="草稿"></Label>}
+            {row.status == BlogStatus.PUBLISHED && <Label color="green" content="已发布"></Label>}
+            {row.status == BlogStatus.ARCHIVED && <Label color="blue" content="归档"></Label>}
+          </>
+        );
+      },
     },
     {
       title: '浏览量',
@@ -46,7 +61,7 @@ const BlogList = function () {
     },
     {
       title: '操作',
-      width: '1',
+      width: '4',
       render: (row, index) => {
         return (
           <Menu secondary>

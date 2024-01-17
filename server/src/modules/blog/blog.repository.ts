@@ -21,6 +21,7 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
         'blog.createAt as createAt',
         'blog.updateAt as updateAt',
         'blog.viewCount as viewCount',
+        'blog.status as status',
         'user.id as userId',
         'user.name as userName',
         'category.id as categoryId',

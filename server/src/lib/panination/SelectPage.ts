@@ -18,6 +18,10 @@ type PaginateRes<E> = {
   count: number;
 };
 
+/**
+ * @deprecated
+ * @todo
+ */
 export class SelectPage {
   constructor() {}
   static async paginate<E>(entity: Repository<E>, condition: Condition<E>): Promise<PageInfo<E>>;

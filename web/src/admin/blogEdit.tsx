@@ -4,7 +4,7 @@ import IMarkdown from '../components/IMarkdown/IMarkdown';
 import { CreateBlog, QueryBlogDetail } from '../api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { isNaN, isUndefined } from 'lodash';
-import { Blog, BlogFromStatus, UpdateBlog } from '../api/module/blog';
+import { Blog, BlogFromStatus, BlogStatus, PublishBlog, UpdateBlog } from '../api/module/blog';
 import { useAppDispatch } from '../hooks';
 import { fetchCategorys, fetchColumns, fetchTags } from '../store/features/blogMetaSlice';
 import store from '../store';
@@ -103,7 +103,20 @@ const BlogEdit = function () {
       console.log(error);
     }
   };
-  const onPublishHandle = async () => {};
+  const onPublishHandle = async () => {
+    const formObj = blogForm.generateFormData<Blog>();
+    let res;
+    try {
+      res = await PublishBlog(blog.id, {
+        ...formObj,
+        title,
+        content,
+        fromStatus,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const onFormChangeHandle = function (index: number, contentIndex: number, value: any) {
     setBlogForm((prevState: BlogForm) => {
       return prevState.updateContent(index, contentIndex, value);
@@ -132,7 +145,9 @@ const BlogEdit = function () {
             {isEdit && (
               <Button icon="save" positive content="更新" size="tiny" onClick={() => onUpdateHandle()}></Button>
             )}
-            <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
+            {isEdit && blog.status === BlogStatus.DRAFT && (
+              <Button icon="send" primary content="发布" size="tiny" onClick={() => onPublishHandle()}></Button>
+            )}
             <Button content="其他" onClick={() => setOpen(true)}></Button>
           </>
         }

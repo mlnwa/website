@@ -60,9 +60,8 @@ export class BlogController {
   }
 
   @Put('/publish/:id')
-  publishBlog(@Param('id', new ParseIntPipe()) id: number, @Body() createBlogDto: CreateBlogDto) {
-    const draft = createBlogDto as Partial<BlogEntity>;
-    return this.blogService.publish(id, draft);
+  publishBlog(@Param('id', new ParseIntPipe()) id: number, @Body() updateBlogDto: UpdateBlogDto) {
+    return this.blogService.publish(id, updateBlogDto);
   }
   @Put('/view/:id')
   addView(@Param('id', new ParseIntPipe()) id: number) {
