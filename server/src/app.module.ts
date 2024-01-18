@@ -20,7 +20,9 @@ import { DBExceptionFilter } from './common/filters/db-exception.filter';
   imports: [
     ConfigModule.forRoot({
       load: [databaseConfig],
+      envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
+      cache: true,
     }),
     TypeOrmModule.forRootAsync({
       useFactory: (config: ConfigService) => config.get('database'),
