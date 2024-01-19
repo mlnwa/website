@@ -1,1 +1,1 @@
-export { JwtConstants } from './JwtConstants';
+export { DecoratorConstants } from './decoratorConstants';

@@ -15,11 +15,13 @@ import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
 import { ColumnModule } from './modules/column/column.module';
 import { DBExceptionFilter } from './common/filters/db-exception.filter';
+import { authConfig } from './config/auth.config';
+import { appConfig } from './config/app.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig],
+      load: [databaseConfig, authConfig, appConfig],
       envFilePath: ['.env.development', '.env.production'],
       isGlobal: true,
       cache: true,
