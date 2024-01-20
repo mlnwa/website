@@ -17,12 +17,12 @@ import { ColumnModule } from './modules/column/column.module';
 import { DBExceptionFilter } from './common/filters/db-exception.filter';
 import { authConfig } from './config/auth.config';
 import { appConfig } from './config/app.config';
-
+const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [databaseConfig, authConfig, appConfig],
-      envFilePath: ['.env.development', '.env.production'],
+      envFilePath: [envFilePath],
       isGlobal: true,
       cache: true,
     }),
