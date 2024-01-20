@@ -72,11 +72,11 @@ module.exports = {
     ],
   },
   // 二级缓存 require 缓存失效
-  cache: {
-    type: "filesystem",
-    buildDependencies: {
-      config: [__filename],
-    },
-    name: "developent-cache",
-  },
+  // cache: {
+  //   type: "filesystem",
+  //   buildDependencies: {
+  //     config: [__filename],
+  //   },
+  //   name: "developent-cache",
+  // },
 };

@@ -3,6 +3,7 @@ NOTE/
 node_modules/
 migrations/
 documentation/
+dist/
 
 #file
 Constants.ts

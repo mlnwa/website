@@ -7,14 +7,14 @@ const { DefinePlugin } = require("webpack")
  */
 
 const prodConfig = {
-    mode:"production",
-    plugins:[
+    mode: "production",
+    plugins: [
         new DefinePlugin({
-            "process.env":{
-                NODE_ENV:'production'
+            "process.env": {
+                NODE_ENV: JSON.stringify("production")
             }
         })
     ]
 }
 
-module.exports = webpackMerge(baseConfig,prodConfig)
+module.exports = webpackMerge.merge(baseConfig, prodConfig)
