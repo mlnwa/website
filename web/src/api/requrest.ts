@@ -1,6 +1,7 @@
 import { message } from 'antd';
 import axios, { AxiosHeaders, AxiosInstance, AxiosRequestConfig, CreateAxiosDefaults, Method } from 'axios';
 import { IMessage } from '../components/IMessage';
+import { Constants } from '../assets/ts/Constants';
 const WhiteCodeList: (string | number)[] = [1101];
 type ResultModel<T> = {
   success: boolean;
@@ -17,7 +18,7 @@ const HttpRequest = class {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      baseURL: '/api',
+      baseURL: Constants.IS_PRODUCTION ? process.env.API_URL : '/api',
     };
     if (config) {
       config = {

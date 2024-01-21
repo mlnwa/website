@@ -10,3 +10,4 @@ Constants.ts
 NOTE.md
 datasource.ts
 .env.production
+prod.env.js

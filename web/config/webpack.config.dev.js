@@ -3,7 +3,7 @@ const webpackMerge = require("webpack-merge");
 const baseConfig = require("./webpack.config.base");
 const path = require("path");
 const { DefinePlugin } = require("webpack");
-
+const devEnv = require("./dev.env");
 /**
  * @type {import('webpack').WebpackOptionsNormalized;}
  */
@@ -14,7 +14,7 @@ const devConfig = {
     host: "localhost",
     proxy: {
       "/api": {
-        target: "http://localhost:3000",
+        target: JSON.parse(devEnv.API_URL),
         secure: false,
         changeOrigin: true,
         pathRewrite: {
@@ -42,9 +42,7 @@ const devConfig = {
   },
   plugins: [
     new DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('development')
-      }
+      'process.env': devEnv
     })
   ]
 };
