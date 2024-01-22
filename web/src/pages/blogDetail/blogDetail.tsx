@@ -14,8 +14,6 @@ const BlogDetail = function () {
     let res;
     try {
       res = await QueryBlogDetail(parseInt(id));
-      res.result.imgUrl = 'https://picsum.photos/id/10/800/450';
-      res.result.userAvatarUrl = 'https://picsum.photos/id/10/800/450';
       setBlog(res.result);
       AddBlogView(res.result.id);
     } catch (error) {
@@ -31,19 +29,22 @@ const BlogDetail = function () {
         <Segment attached="top">
           <List size="mini" horizontal link>
             <Item className="middle aligned">
-              <Image avatar src={blog.userAvatarUrl}></Image>
+              {blog.userAvatarUrl && <Image avatar src={blog.userAvatarUrl}></Image>}
               <Item.Content>
                 <Header as="a" content={blog.userName}></Header>
               </Item.Content>
             </Item>
             <Item className="middle aligned">
-              <Icon name="calendar"></Icon>
-              {blog.createAt}
+              <Icon name="send"></Icon>
+              发布于{DateUtil.day(blog.createAt).format('YYYY-MM-DD HH:mm')}
             </Item>
-            <Item className="middle aligned">更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}</Item>
+            <Item className="middle aligned">
+              <Icon name="sync"></Icon>
+              更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}
+            </Item>
             <Item className="middle aligned">
               <Icon name="eye"></Icon>
-              {blog.viewCount}
+              访问量{blog.viewCount}
             </Item>
           </List>
         </Segment>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Grid, GridColumn, Header, Icon, Image, Item, List, Message, Segment } from 'semantic-ui-react';
+import { Button, Grid, GridColumn, Header, Icon, Image, Item, Label, List, Message, Segment } from 'semantic-ui-react';
 import style from '../../assets/css/common.module.scss';
 import { Blog } from '../../api/module/blog';
 import { DateUtil } from '../../utils';
@@ -21,14 +21,14 @@ const BlogItem = function (props: Props) {
             <Grid.Column width={13}>
               <List size="mini" horizontal link>
                 <Item className="middle aligned">
-                  <Image avatar src={blog.userAvatarUrl}></Image>
+                  {blog.userAvatarUrl && <Image avatar src={blog.userAvatarUrl}></Image>}
                   <Item.Content>
                     <Header as="a" content={blog.userName}></Header>
                   </Item.Content>
                 </Item>
                 <Item className="middle aligned">
                   <Icon name="calendar"></Icon>
-                  {blog.createAt}
+                  {DateUtil.day(blog.createAt).format('YYYY-MM-DD')}
                 </Item>
                 <Item className="middle aligned">更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}</Item>
                 <Item className="middle aligned">
@@ -37,13 +37,13 @@ const BlogItem = function (props: Props) {
                 </Item>
               </List>
             </Grid.Column>
-            <Grid.Column width={3}></Grid.Column>
+            <Grid.Column width={3}>
+              <Label content={blog.categoryName} basic color="teal" size="mini"></Label>
+            </Grid.Column>
           </Grid>
         </Grid.Column>
         <Grid.Column width={5}>
-          <a href="">
-            <Image rounded src={blog.imgUrl}></Image>
-          </a>
+          <Image rounded src={blog.imgUrl}></Image>
         </Grid.Column>
       </Grid>
     </Segment>

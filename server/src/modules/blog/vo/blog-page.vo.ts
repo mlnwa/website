@@ -14,6 +14,8 @@ export class BlogPageVo {
   tags: string[];
   fromStatus: BlogFromStatus;
   tagIds: number[];
+  imgUrl: string;
+  abstract: string;
 }
 
 export class BlogDetailVo extends BlogPageVo {
@@ -23,6 +25,4 @@ export class BlogDetailVo extends BlogPageVo {
   enableCopyright: boolean;
   enablePraise: boolean;
   enableRecommend: boolean;
-  abstract: string;
-  imgUrl: string;
 }
