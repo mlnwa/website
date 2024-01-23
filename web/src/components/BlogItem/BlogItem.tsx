@@ -27,13 +27,16 @@ const BlogItem = function (props: Props) {
                   </Item.Content>
                 </Item>
                 <Item className="middle aligned">
-                  <Icon name="calendar"></Icon>
-                  {DateUtil.day(blog.createAt).format('YYYY-MM-DD')}
+                  <Icon name="send"></Icon>
+                  发布于{DateUtil.day(blog.createAt).format('YYYY-MM-DD')}
                 </Item>
-                <Item className="middle aligned">更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}</Item>
+                <Item className="middle aligned">
+                  <Icon name="sync"></Icon>
+                  更新于{DateUtil.day(blog.updateAt).convertToTimeAgo()}
+                </Item>
                 <Item className="middle aligned">
                   <Icon name="eye"></Icon>
-                  {blog.viewCount}
+                  浏览量{blog.viewCount}
                 </Item>
               </List>
             </Grid.Column>

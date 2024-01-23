@@ -13,7 +13,6 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { CreateBlogDto } from './dto/create-blog.dto';
-import { BlogEntity } from './blog.entity';
 import { Request } from 'express';
 import { BlogService } from './blog.service';
 import { Public } from 'src/common/decorators/public.decorator';
@@ -63,6 +62,8 @@ export class BlogController {
   publishBlog(@Param('id', new ParseIntPipe()) id: number, @Body() updateBlogDto: UpdateBlogDto) {
     return this.blogService.publish(id, updateBlogDto);
   }
+
+  @Public()
   @Put('/view/:id')
   addView(@Param('id', new ParseIntPipe()) id: number) {
     return this.blogService.addView(id);

@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks';
 import { fetchCategorys, fetchColumns, fetchTags } from '../../store/features/blogMetaSlice';
 import store from '../../store';
+import { IMessage } from '../../components/IMessage';
 const Blog = function () {
   const [blogList, setBlogList] = useState<Blog[]>([]);
   const [total, setTotal] = useState<number>(0);
@@ -97,7 +98,7 @@ const Blog = function () {
                     分类
                   </Grid.Column>
                   <Grid.Column textAlign="right">
-                    <a href="">
+                    <a href="#">
                       more
                       <Icon name="angle double right"></Icon>
                     </a>
@@ -124,7 +125,7 @@ const Blog = function () {
                     标签
                   </Grid.Column>
                   <Grid.Column textAlign="right">
-                    <a href="">
+                    <a href="#">
                       more
                       <Icon name="angle double right"></Icon>
                     </a>
@@ -149,7 +150,7 @@ const Blog = function () {
                     专栏
                   </Grid.Column>
                   <Grid.Column textAlign="right">
-                    <a href="">
+                    <a href="#">
                       more
                       <Icon name="angle double right"></Icon>
                     </a>

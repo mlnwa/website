@@ -75,4 +75,5 @@
     top: 0;
     width: 100vw;
     pointer-events: none;
+    z-index: 100000;
 }
