@@ -9,6 +9,7 @@ import Login from '../pages/login/login';
 import adminRoute from './routes/admin';
 import Permission from './Permission';
 import BlogDetail from '../pages/blogDetail/blogDetail';
+import { About } from '../pages/about/About';
 type CustomProps = {
   icon: SemanticICONS;
   label: string;
@@ -47,6 +48,14 @@ export const root = {
       customProp: {
         icon: 'lab',
         label: '实验中心',
+      },
+    },
+    {
+      path: '/about',
+      element: <About></About>,
+      customProp: {
+        icon: 'info',
+        label: '关于我',
       },
     },
     {
