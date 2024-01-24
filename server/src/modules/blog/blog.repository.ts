@@ -66,6 +66,7 @@ export class BlogRepository extends BaseRepository<BlogEntity> {
         'column.name as columnName',
       ])
       .addSelect('CASE WHEN COUNT(tags.id) > 0 THEN JSON_ARRAYAGG(tags.id)ELSE JSON_ARRAY() END', 'tagIds')
+      .addSelect('CASE WHEN COUNT(tags.id) > 0 THEN JSON_ARRAYAGG(tags.name)ELSE JSON_ARRAY() END', 'tagNames')
       .leftJoin('blog.user', 'user')
       .leftJoin('blog.category', 'category')
       .leftJoin('blog.column', 'column')
