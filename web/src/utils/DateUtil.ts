@@ -1,7 +1,29 @@
+import { TypeUtil } from './TypeUtil';
+
 type UnitType = 'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks' | 'months' | 'years';
 type MatchValue = {
   getData: (thisArg: Date) => number;
   setData: (thisArg: Date, value: number) => number;
+};
+const REGEX_PARSE = /^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[Tt\s]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?[.:]?(\d+)?$/;
+const parseDate = (date: any): Date => {
+  if (TypeUtil.isUndefined(date)) return new Date();
+  if (TypeUtil.isDate(date)) return date;
+  if (date instanceof DateUtil) return date.date;
+  if (TypeUtil.isString(date)) {
+    const dateMatchArr: Array<string | undefined> = date.match(REGEX_PARSE);
+    if (!TypeUtil.isNull(dateMatchArr)) {
+      const year = Number(dateMatchArr[1]);
+      const month = (Number(dateMatchArr[2] || 1) || 1) - 1;
+      const day = Number(dateMatchArr[3] || 1);
+      const hours = Number(dateMatchArr[4] ?? 0);
+      const minutes = Number(dateMatchArr[5] ?? 0);
+      const seconds = Number(dateMatchArr[6] ?? 0);
+      const milliseconds = Number((dateMatchArr[7] || '0').substring(0, 3));
+      return new Date(year, month, day, hours, minutes, seconds, milliseconds);
+    }
+  }
+  return new Date(date);
 };
 export const DateUtil = class {
   date: Date;
@@ -40,7 +62,7 @@ export const DateUtil = class {
     },
   };
   constructor(date: any) {
-    this.date = new Date(date);
+    this.date = parseDate(date);
   }
   format(formatString = 'YYYY-MM-DD HH:mm:ss') {
     const year = this.date.getFullYear();
@@ -59,6 +81,9 @@ export const DateUtil = class {
       .replace('ss', String(seconds).padStart(2, '0'));
 
     return formattedString;
+  }
+  getTime() {
+    return this.date.getTime();
   }
   add(value: number, unit?: UnitType) {
     unit = unit ?? 'days';
@@ -105,6 +130,6 @@ export const DateUtil = class {
     return yearsAgo + '年前';
   }
   static day(value?: any) {
-    return new DateUtil(value ?? Date.now());
+    return new DateUtil(value);
   }
 };
