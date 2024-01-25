@@ -16,6 +16,7 @@ import {
   Grid,
   Comment,
   Form,
+  Dimmer,
 } from 'semantic-ui-react';
 import { AddBlogView, Blog, BlogFromStatus } from '../../api/module/blog';
 import IMarkdown from '../../components/IMarkdown/IMarkdown';
@@ -40,6 +41,7 @@ const BlogDetail = function () {
   return (
     <div className={`${style.m_container_small} ${style.padding_tb_big}`}>
       <Container>
+        {/* 简要信息 */}
         <Segment attached="top">
           <List size="mini" horizontal link>
             <Item className="middle aligned">
@@ -62,9 +64,15 @@ const BlogDetail = function () {
             </Item>
           </List>
         </Segment>
-        <Segment attached>
-          <Image rounded fluid src={blog.imgUrl}></Image>
-        </Segment>
+
+        {/* 首图 */}
+        {blog.imgUrl && (
+          <Segment attached>
+            <Image rounded fluid src={blog.imgUrl}></Image>
+          </Segment>
+        )}
+
+        {/* 博客内容 */}
         <Segment attached padded>
           <Segment textAlign="right" basic>
             {blog.fromStatus == BlogFromStatus.SELF && <Label content="原创" color="orange" basic></Label>}
@@ -76,17 +84,25 @@ const BlogDetail = function () {
             <IMarkdown.Preview value={blog.content} darkMode></IMarkdown.Preview>
           </IMarkdown>
         </Segment>
+
+        {/* 标签 */}
         <Segment attached>
           {blog.tagNames &&
             blog.tagNames.map((tagName) => {
               return <Label content={tagName} key={tagName} basic pointing="left" color="teal"></Label>;
             })}
         </Segment>
-        <Segment textAlign="center" attached>
-          <Button circular basic color="orange" size="tiny">
-            赞赏
-          </Button>
-        </Segment>
+
+        {/* 赞赏 */}
+        {blog.enablePraise && (
+          <Segment textAlign="center" attached>
+            <Button circular basic color="orange" size="tiny">
+              赞赏
+            </Button>
+          </Segment>
+        )}
+
+        {/* 博客信息 */}
         <Message positive attached>
           <Grid>
             <Grid.Column width={11}>
@@ -94,10 +110,12 @@ const BlogDetail = function () {
                 <List.Item icon="user" content={`作者：${blog.userName}`}></List.Item>
                 <List.Item icon="send" content={`发布时间：${blog.createAt}`}></List.Item>
                 <List.Item icon="sync" content={`最近更新：${blog.updateAt}`}></List.Item>
-                <List.Item
-                  icon="copyright"
-                  content="版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）"
-                ></List.Item>
+                {blog.enableCopyright && (
+                  <List.Item
+                    icon="copyright"
+                    content="版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）"
+                  ></List.Item>
+                )}
                 <List.Item icon="linkify" content={`转载链接：`}></List.Item>
               </List>
             </Grid.Column>
@@ -111,76 +129,85 @@ const BlogDetail = function () {
             </Grid.Column>
           </Grid>
         </Message>
-        <Segment attached="bottom">
-          <Segment color="teal">
-            <Comment.Group threaded>
-              <Header as="h4" dividing>
-                评论
-              </Header>
-              <Comment>
-                <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
-                <Comment.Content>
-                  <Comment.Author as="a">Matt</Comment.Author>
-                  <Comment.Metadata>
-                    <div>Today at 5:42PM</div>
-                  </Comment.Metadata>
-                  <Comment.Text>How artistic!</Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
-                </Comment.Content>
-              </Comment>
-              <Comment>
-                <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
-                <Comment.Content>
-                  <Comment.Author as="a">Elliot Fu</Comment.Author>
-                  <Comment.Metadata>
-                    <div>Yesterday at 12:30AM</div>
-                  </Comment.Metadata>
-                  <Comment.Text>
-                    <p>This has been very useful for my research. Thanks as well!</p>
-                  </Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
-                </Comment.Content>
-                <Comment.Group>
-                  <Comment>
-                    <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/jenny.jpg" />
-                    <Comment.Content>
-                      <Comment.Author as="a">Jenny Hess</Comment.Author>
-                      <Comment.Metadata>
-                        <div>Just now</div>
-                      </Comment.Metadata>
-                      <Comment.Text>Elliot you are always so right :)</Comment.Text>
-                      <Comment.Actions>
-                        <Comment.Action>Reply</Comment.Action>
-                      </Comment.Actions>
-                    </Comment.Content>
-                  </Comment>
-                </Comment.Group>
-              </Comment>
 
-              <Comment>
-                <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/joe.jpg" />
-                <Comment.Content>
-                  <Comment.Author as="a">Joe Henderson</Comment.Author>
-                  <Comment.Metadata>
-                    <div>5 days ago</div>
-                  </Comment.Metadata>
-                  <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
-                  <Comment.Actions>
-                    <Comment.Action>Reply</Comment.Action>
-                  </Comment.Actions>
-                </Comment.Content>
-              </Comment>
-            </Comment.Group>
+        {/* 评论区 */}
+        {blog.enableComment && (
+          <Segment attached="bottom">
+            <Segment color="teal">
+              <Comment.Group threaded>
+                <Header as="h4" dividing>
+                  评论
+                </Header>
+                <Comment>
+                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/matt.jpg" />
+                  <Comment.Content>
+                    <Comment.Author as="a">Matt</Comment.Author>
+                    <Comment.Metadata>
+                      <div>Today at 5:42PM</div>
+                    </Comment.Metadata>
+                    <Comment.Text>How artistic!</Comment.Text>
+                    <Comment.Actions>
+                      <Comment.Action>Reply</Comment.Action>
+                    </Comment.Actions>
+                  </Comment.Content>
+                </Comment>
+                <Comment>
+                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/elliot.jpg" />
+                  <Comment.Content>
+                    <Comment.Author as="a">Elliot Fu</Comment.Author>
+                    <Comment.Metadata>
+                      <div>Yesterday at 12:30AM</div>
+                    </Comment.Metadata>
+                    <Comment.Text>
+                      <p>This has been very useful for my research. Thanks as well!</p>
+                    </Comment.Text>
+                    <Comment.Actions>
+                      <Comment.Action>Reply</Comment.Action>
+                    </Comment.Actions>
+                  </Comment.Content>
+                  <Comment.Group>
+                    <Comment>
+                      <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/jenny.jpg" />
+                      <Comment.Content>
+                        <Comment.Author as="a">Jenny Hess</Comment.Author>
+                        <Comment.Metadata>
+                          <div>Just now</div>
+                        </Comment.Metadata>
+                        <Comment.Text>Elliot you are always so right :)</Comment.Text>
+                        <Comment.Actions>
+                          <Comment.Action>Reply</Comment.Action>
+                        </Comment.Actions>
+                      </Comment.Content>
+                    </Comment>
+                  </Comment.Group>
+                </Comment>
+
+                <Comment>
+                  <Comment.Avatar src="https://react.semantic-ui.com/images/avatar/small/joe.jpg" />
+                  <Comment.Content>
+                    <Comment.Author as="a">Joe Henderson</Comment.Author>
+                    <Comment.Metadata>
+                      <div>5 days ago</div>
+                    </Comment.Metadata>
+                    <Comment.Text>Dude, this is awesome. Thanks so much</Comment.Text>
+                    <Comment.Actions>
+                      <Comment.Action>Reply</Comment.Action>
+                    </Comment.Actions>
+                  </Comment.Content>
+                </Comment>
+              </Comment.Group>
+            </Segment>
+            <Form reply>
+              <Form.TextArea placeholder="输入评论内容..." />
+              <Button content="Add Reply" labelPosition="left" icon="edit" primary />
+            </Form>
           </Segment>
-          <Form reply>
-            <Form.TextArea placeholder="输入评论内容..." />
-            <Button content="Add Reply" labelPosition="left" icon="edit" primary />
-          </Form>
-        </Segment>
+        )}
+        {!blog.enableComment && (
+          <Segment attached="bottom" textAlign="center" disabled>
+            评论区已关闭
+          </Segment>
+        )}
       </Container>
     </div>
   );
