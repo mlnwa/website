@@ -6,7 +6,7 @@ import { HttpExceptionFilter } from './common/filters';
 import { LoggerMiddleware } from './common/middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService, ConfigModule } from '@nestjs/config';
-import { databaseConfig } from './config';
+import { databaseConfig, authConfig, appConfig, redisConfig } from './config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModuel } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
@@ -15,13 +15,12 @@ import { CategoryModule } from './modules/category/category.module';
 import { TagModule } from './modules/tag/tag.module';
 import { ColumnModule } from './modules/column/column.module';
 import { DBExceptionFilter } from './common/filters/db-exception.filter';
-import { authConfig } from './config/auth.config';
-import { appConfig } from './config/app.config';
+import { RedisModule } from './modules/redis/redis.module';
 const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig, authConfig, appConfig],
+      load: [databaseConfig, authConfig, appConfig, redisConfig],
       envFilePath: [envFilePath],
       isGlobal: true,
       cache: true,
@@ -36,6 +35,7 @@ const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : 
     CategoryModule,
     TagModule,
     ColumnModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [
