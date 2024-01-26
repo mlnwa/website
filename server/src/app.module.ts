@@ -6,7 +6,7 @@ import { HttpExceptionFilter } from './common/filters';
 import { LoggerMiddleware } from './common/middleware';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService, ConfigModule } from '@nestjs/config';
-import { databaseConfig, authConfig, appConfig, redisConfig } from './config';
+import { databaseConfig, authConfig, appConfig, redisConfig, emailConfig } from './config';
 import { UserModule } from './modules/user/user.module';
 import { AuthModuel } from './modules/auth/auth.module';
 import { JwtAuthGuard } from './common/guards';
@@ -16,11 +16,12 @@ import { TagModule } from './modules/tag/tag.module';
 import { ColumnModule } from './modules/column/column.module';
 import { DBExceptionFilter } from './common/filters/db-exception.filter';
 import { RedisModule } from './modules/redis/redis.module';
+import { EMailModule } from './modules/email/email.module';
 const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [databaseConfig, authConfig, appConfig, redisConfig],
+      load: [databaseConfig, authConfig, appConfig, redisConfig, emailConfig],
       envFilePath: [envFilePath],
       isGlobal: true,
       cache: true,
@@ -36,6 +37,7 @@ const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : 
     TagModule,
     ColumnModule,
     RedisModule,
+    EMailModule,
   ],
   controllers: [AppController],
   providers: [

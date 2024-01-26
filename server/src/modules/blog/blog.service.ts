@@ -20,10 +20,10 @@ import { TypeUtil } from 'src/utils';
 export class BlogService {
   constructor(
     private readonly blogRepository: BlogRepository,
-    private userService: UserService,
-    private categoryService: CategoryService,
-    private columnService: ColumnService,
-    private tagService: TagService,
+    private readonly userService: UserService,
+    private readonly categoryService: CategoryService,
+    private readonly columnService: ColumnService,
+    private readonly tagService: TagService,
   ) {}
 
   async create(createBlogDto: CreateBlogDto, userId: number): Promise<ResultModel> {
