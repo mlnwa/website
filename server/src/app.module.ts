@@ -17,6 +17,7 @@ import { ColumnModule } from './modules/column/column.module';
 import { DBExceptionFilter } from './common/filters/db-exception.filter';
 import { RedisModule } from './modules/redis/redis.module';
 import { EMailModule } from './modules/email/email.module';
+import { SocketModule } from './socket/socket.module';
 const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.development';
 @Module({
   imports: [
@@ -38,6 +39,7 @@ const envFilePath = process.env.NODE_ENV === 'production' ? '.env.production' : 
     ColumnModule,
     RedisModule,
     EMailModule,
+    SocketModule,
   ],
   controllers: [AppController],
   providers: [
