@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PaginationDto } from 'src/common/dtos';
 import { PageInfo, SelectPage } from 'src/lib/panination';
 import { IdUtil } from 'src/utils';
+import * as bcrypt from 'bcrypt';
 
 export class UserService {
   constructor(
@@ -38,15 +39,33 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto): Promise<ResultModel> {
-    const { name } = createUserDto;
-    const isFound = await this.userRepository.findOne({ where: { name } });
-    if (isFound) {
-      return ResultModel.builderErrorMsg('用户已存在');
+    const { password, emailCode, ...userProps } = createUserDto;
+    const validateModel = await this.validateCreateMeta(createUserDto);
+    if (validateModel.getSuccess() === false) return validateModel;
+    const user = new UserEntity();
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(createUserDto.password, salt);
+    user.uid = IdUtil.uuid('Axx_1xxx');
+    Object.assign(user, userProps);
+    await this.userRepository.save(user);
+    return ResultModel.builderSuccess();
+  }
+
+  async validateCreateMeta(createUserDto: CreateUserDto) {
+    const { name, email } = createUserDto;
+    let isFound = null;
+    if (name) {
+      isFound = await this.userRepository.findOne({ where: { name } });
     }
-    await this.userRepository.save({
-      ...createUserDto,
-      uid: IdUtil.uuid('Axx_1xxx'),
-    });
+    if (isFound) {
+      return ResultModel.builderErrorMsg('用户名重复');
+    }
+    if (email) {
+      isFound = await this.userRepository.findOne({ where: { email } });
+    }
+    if (isFound) {
+      return ResultModel.builderErrorMsg(`邮箱${email}已被绑定`);
+    }
     return ResultModel.builderSuccess();
   }
 

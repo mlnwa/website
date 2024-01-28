@@ -21,16 +21,16 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationDto } from 'src/common/dtos';
 import * as bcrypt from 'bcrypt';
 
-@Controller('users')
+@Controller('user')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class UserController {
   constructor(private userService: UserService) {}
   @Public()
   @Post()
-  async createUser(@Body() user: CreateUserDto) {
+  async createUser(@Body() createUserDto: CreateUserDto) {
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-    return this.userService.create(user);
+    createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
+    return this.userService.create(createUserDto);
   }
 
   @Public()

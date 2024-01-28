@@ -20,8 +20,8 @@ export class UserEntity extends BaseEntity {
   @Column({ length: 20, default: '' })
   email: string;
 
-  @Column({ default: 0 })
-  phone: number;
+  @Column({ default: '' })
+  phone: string;
 
   @OneToMany(() => BlogEntity, (blog) => blog.user)
   blogs: BlogEntity[];
