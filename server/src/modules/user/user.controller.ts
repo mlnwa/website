@@ -19,6 +19,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationDto } from 'src/common/dtos';
+import * as bcrypt from 'bcrypt';
 
 @Controller('users')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -27,6 +28,8 @@ export class UserController {
   @Public()
   @Post()
   async createUser(@Body() user: CreateUserDto) {
+    const salt = await bcrypt.genSalt(10);
+    user.password = await bcrypt.hash(user.password, salt);
     return this.userService.create(user);
   }
 

@@ -3,6 +3,7 @@ import { UserService } from '../user/user.service';
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { UserEntity } from '../user/user.entity';
 import { ResultModel } from 'src/common/result/ResultModel';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,8 @@ export class AuthService {
     const userResultModel = await this.userService.findByName(userName);
     if (!userResultModel.getSuccess()) return userResultModel;
     const user: UserEntity = userResultModel.getResult();
-    if (user.password == password) {
+    const isMatch = bcrypt.compareSync(password, user.password);
+    if (isMatch) {
       const { password, ...result } = user;
       return ResultModel.builderSuccess().setResult(result);
     }
