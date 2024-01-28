@@ -24,4 +24,16 @@ export class RedisService {
       await this.client.expire(key, ttl);
     }
   }
+  async has(key: string): Promise<boolean> {
+    return (await this.client.exists(key)) > 0;
+  }
+  async del(key: string): Promise<void> {
+    await this.client.del(key);
+  }
+  async keys(pattern: string): Promise<string[]> {
+    return await this.client.keys(pattern);
+  }
+  async flushall(): Promise<void> {
+    await this.client.flushall();
+  }
 }

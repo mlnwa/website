@@ -12,6 +12,7 @@ export class CreateUserDto {
   @IsEmail({}, { message: '邮箱格式错误' })
   email: string;
 
+  @IsNotEmpty()
   @IsString()
   emailCode: string;
 }

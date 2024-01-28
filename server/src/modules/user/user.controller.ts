@@ -20,17 +20,25 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationDto } from 'src/common/dtos';
 import * as bcrypt from 'bcrypt';
+import { RedisService } from '../redis/redis.service';
+import { ResultModel } from 'src/common/result/ResultModel';
 
 @Controller('user')
 @UsePipes(new ValidationPipe({ whitelist: true }))
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private redisService: RedisService) {}
   @Public()
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const salt = await bcrypt.genSalt(10);
-    createUserDto.password = await bcrypt.hash(createUserDto.password, salt);
-    return this.userService.create(createUserDto);
+    const { emailCode } = createUserDto;
+    const cacheCode = await this.redisService.get(createUserDto.email);
+    if (emailCode !== cacheCode) {
+      return ResultModel.builderErrorMsg('验证码错误');
+    }
+    const createModel = await this.userService.create(createUserDto);
+    if (!createModel.getSuccess()) return createModel;
+    this.redisService.del(createUserDto.email);
+    return createModel;
   }
 
   @Public()
