@@ -30,6 +30,16 @@ export class UserService {
     return ResultModel.builderSuccess<UserEntity>().setResult(result);
   }
 
+  async findByEmail(email: string): Promise<ResultModel<UserEntity>> {
+    const result = await this.userRepository.findOne({
+      where: { email },
+    });
+    if (result == null) {
+      return ResultModel.builderErrorMsg('用户不存在');
+    }
+    return ResultModel.builderSuccess<UserEntity>().setResult(result);
+  }
+
   async findById(id: number): Promise<ResultModel<UserEntity>> {
     const result = await this.userRepository.findOne({ where: { id } });
     if (result == null) {

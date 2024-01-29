@@ -29,6 +29,19 @@ export class AuthService {
     return ResultModel.builderErrorMsg('密码错误');
   }
 
+  async validateUserByEmail(email: string, emailCode: string): Promise<ResultModel> {
+    const userResultModel = await this.userService.findByEmail(email);
+    if (!userResultModel.getSuccess()) return userResultModel;
+    const user: UserEntity = userResultModel.getResult();
+    const cacheCode = await this.redisService.get(email);
+    if (cacheCode == emailCode) {
+      const { password, ...result } = user;
+      this.redisService.del(email);
+      return ResultModel.builderSuccess().setResult(result);
+    }
+    return ResultModel.builderErrorMsg('验证码错误');
+  }
+
   async login(user: any): Promise<ResultModel> {
     const payload = { username: user.name, sub: user.id };
     const token = this.jwtService.sign(payload);
@@ -46,14 +59,15 @@ export class AuthService {
       return ResultModel.builderErrorMsg('发送过于频繁，请稍后再试');
     }
     const code = IdUtil.uuidOfNumber(4);
+    const aliveMins = 2;
     return this.emailService
       .sendEmail({
         to: email,
         subject: '邮箱验证码',
-        html: `<p>您的验证码是：${code}</p>`,
+        html: `<p>您的验证码是：${code}</p><p>有效时间${aliveMins}分钟</p>`,
       })
       .then(() => {
-        this.redisService.set(email, code, 60);
+        this.redisService.set(email, code, 60 * aliveMins);
         return ResultModel.builderSuccessMsg('验证码发送成功');
       })
       .catch(() => {

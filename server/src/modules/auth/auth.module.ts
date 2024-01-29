@@ -9,6 +9,7 @@ import { UserModule } from '../user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RedisService } from '../redis/redis.service';
 import { EMailService } from '../email/email.service';
+import { LocalEmailStategy } from './localEmail.strategy';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { EMailService } from '../email/email.service';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStategy, JwtStrategy, RedisService, EMailService],
+  providers: [AuthService, LocalStategy, LocalEmailStategy, JwtStrategy, RedisService, EMailService],
   exports: [AuthService],
 })
 export class AuthModuel {}
