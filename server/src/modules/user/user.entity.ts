@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
-import dayjs from 'dayjs';
 import { BaseEntity } from 'src/base/base.entity';
 
 @Entity({ name: 'user' })

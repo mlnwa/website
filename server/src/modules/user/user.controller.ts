@@ -1,13 +1,9 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
   Post,
-  Req,
   Query,
-  UseGuards,
-  Headers,
   UsePipes,
   ValidationPipe,
   Put,
@@ -19,9 +15,9 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
 import { PaginationDto } from 'src/common/dtos';
-import * as bcrypt from 'bcrypt';
 import { RedisService } from '../redis/redis.service';
 import { ResultModel } from 'src/common/result/ResultModel';
+import { QueryPagesUserDto } from './dto/query-user.dot';
 
 @Controller('user')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -29,22 +25,21 @@ export class UserController {
   constructor(private userService: UserService, private redisService: RedisService) {}
   @Public()
   @Post()
-  async createUser(@Body() createUserDto: CreateUserDto) {
-    const { emailCode } = createUserDto;
-    const cacheCode = await this.redisService.get(createUserDto.email);
+  async register(@Body() createUserDto: CreateUserDto) {
+    const { emailCode, ...userProps } = createUserDto;
+    const cacheCode = await this.redisService.get(userProps.email);
     if (emailCode !== cacheCode) {
       return ResultModel.builderErrorMsg('验证码错误');
     }
-    const createModel = await this.userService.create(createUserDto);
+    const createModel = await this.userService.create(userProps);
     if (!createModel.getSuccess()) return createModel;
-    this.redisService.del(createUserDto.email);
+    this.redisService.del(userProps.email);
     return createModel;
   }
 
-  @Public()
-  @Get()
-  async getUserList(@Query() paginationDto: PaginationDto) {
-    return this.userService.queryPages(paginationDto);
+  @Get('list')
+  async getUserList(@Query() queryPagesUserDto: QueryPagesUserDto) {
+    return this.userService.queryPages(queryPagesUserDto);
   }
 
   @Put()
