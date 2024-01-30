@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
 import { BaseEntity } from 'src/base/base.entity';
+import { RoleEntity } from '../role/role.entity';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -24,4 +25,12 @@ export class UserEntity extends BaseEntity {
 
   @OneToMany(() => BlogEntity, (blog) => blog.user)
   blogs: BlogEntity[];
+
+  @ManyToMany(() => RoleEntity, (role) => role.users)
+  @JoinTable({
+    name: 'user_roles',
+    joinColumn: { name: 'user_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
+  })
+  role: RoleEntity[];
 }
