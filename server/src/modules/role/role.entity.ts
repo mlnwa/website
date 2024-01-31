@@ -1,6 +1,7 @@
 import { BaseEntity } from 'src/base/base.entity';
 import { Column, Entity, ManyToMany } from 'typeorm';
 import { UserEntity } from '../user/user.entity';
+import { PermissionEntity } from '../permission/permission.entity';
 
 @Entity('role')
 export class RoleEntity extends BaseEntity {
@@ -12,4 +13,7 @@ export class RoleEntity extends BaseEntity {
 
   @ManyToMany(() => UserEntity, (user) => user.role)
   users: UserEntity[];
+
+  @ManyToMany(() => PermissionEntity, (permission) => permission.roles)
+  permissions: PermissionEntity[];
 }
