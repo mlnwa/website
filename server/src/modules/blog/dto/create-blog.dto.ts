@@ -1,20 +1,7 @@
-import { Transform, Type, plainToClass, plainToInstance } from 'class-transformer';
-import {
-  IsArray,
-  IsBoolean,
-  IsEnum,
-  IsJSON,
-  IsNotEmpty,
-  IsNumber,
-  IsOptional,
-  IsString,
-  ValidateNested,
-  isNumber,
-} from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsBoolean, IsEnum, IsJSON, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BlogFromStatus } from '../blog.enum';
-import { BlogEntity } from '../blog.entity';
-import { HttpException, HttpStatus } from '@nestjs/common';
-import { TypeUtil } from 'src/utils';
+import { TransformJsonNumberArr } from 'src/common/decorators';
 
 export class CreateBlogDto {
   @IsNotEmpty()
@@ -37,20 +24,7 @@ export class CreateBlogDto {
 
   @IsJSON()
   @IsOptional()
-  @Transform(
-    ({ value }) => {
-      const parsedArray = JSON.parse(value);
-      if (Array.isArray(parsedArray)) {
-        if (!parsedArray.every(TypeUtil.isNumber)) {
-          throw new HttpException({ message: 'Invalid input, expected a JSON number array' }, HttpStatus.BAD_REQUEST);
-        }
-        return parsedArray;
-      } else {
-        throw new HttpException({ message: 'Invalid input, expected a JSON number array' }, HttpStatus.BAD_REQUEST);
-      }
-    },
-    { toPlainOnly: true },
-  )
+  @TransformJsonNumberArr()
   tagIds: number[];
 
   @IsOptional()
