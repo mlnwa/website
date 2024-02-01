@@ -10,7 +10,7 @@ export class PermissionRepository extends BaseRepository<PermissionEntity> {
   constructor(dataSource: DataSource) {
     super(dataSource, PermissionEntity);
   }
-  findList(queryPagesPermissionDto: QueryPagesPermissionDto) {
+  async findList(queryPagesPermissionDto: QueryPagesPermissionDto) {
     const { pageIndex, pageSize, ...others } = queryPagesPermissionDto;
     ['name', 'description'].forEach((item) => {
       if (!Reflect.has(others, item)) return;
@@ -21,12 +21,18 @@ export class PermissionRepository extends BaseRepository<PermissionEntity> {
       .select([
         'permission.id as id',
         'permission.name as name',
+        'permission.description as description',
+        'permission.enable as enable',
         'permission.createAt as createAt',
         'permission.updateAt as updateAt',
       ])
       .where(others)
       .orderBy('permission.createAt', 'DESC');
 
-    return this.loadQueryBuilderToPages<PermissionVo>(queryBuilder, pageIndex, pageSize);
+    const { list, total } = await this.loadQueryBuilderToPages<PermissionVo>(queryBuilder, pageIndex, pageSize);
+    list.forEach((item) => {
+      item.enable = Boolean(item.enable);
+    });
+    return { list, total };
   }
 }

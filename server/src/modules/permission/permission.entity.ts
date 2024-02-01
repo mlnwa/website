@@ -10,6 +10,9 @@ export class PermissionEntity extends BaseEntity {
   @Column({ type: 'varchar', default: '' })
   description: string;
 
+  @Column({ type: 'boolean', default: true })
+  enable: boolean;
+
   @ManyToMany(() => RoleEntity, (role) => role.permissions)
   @JoinTable({
     name: 'role_permission',
