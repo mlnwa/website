@@ -3,9 +3,8 @@ import { UserEntity } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PageModel, ResultModel } from 'src/common/result/ResultModel';
 import { PaginationDto } from 'src/common/dtos';
-import { PageInfo, SelectPage } from 'src/lib/panination';
+import { PageInfo } from 'src/lib/panination';
 import { IdUtil } from 'src/utils';
-import * as bcrypt from 'bcrypt';
 import { UserRepository } from './user.repository';
 import { QueryPagesUserDto } from './dto/query-user.dot';
 import { UserVo } from './vo/user.vo';
@@ -44,14 +43,11 @@ export class UserService {
   }
 
   async create(partialUserData: Partial<UserEntity>): Promise<ResultModel> {
-    const { password, ...userProps } = partialUserData;
     const validateModel = await this.validateCreateMeta(partialUserData);
     if (validateModel.getSuccess() === false) return validateModel;
     const user = new UserEntity();
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(partialUserData.password, salt);
     user.uid = IdUtil.uuid('Axx_1xxx');
-    Object.assign(user, userProps);
+    Object.assign(user, partialUserData);
     await this.userRepository.save(user);
     return ResultModel.builderSuccess();
   }

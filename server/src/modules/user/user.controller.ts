@@ -14,7 +14,6 @@ import {
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Public } from 'src/common/decorators/public.decorator';
-import { PaginationDto } from 'src/common/dtos';
 import { RedisService } from '../redis/redis.service';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesUserDto } from './dto/query-user.dot';

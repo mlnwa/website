@@ -1,7 +1,8 @@
-import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { BeforeInsert, Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { BlogEntity } from '../blog/blog.entity';
 import { BaseEntity } from 'src/base/base.entity';
 import { RoleEntity } from '../role/role.entity';
+import * as bcrypt from 'bcrypt';
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntity {
@@ -33,4 +34,10 @@ export class UserEntity extends BaseEntity {
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
   role: RoleEntity[];
+
+  @BeforeInsert()
+  async encryptPassword() {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
 }
