@@ -10,6 +10,7 @@ import { PermissionMeta } from './permission.meta';
   imports: [TypeOrmModule.forFeature([PermissionEntity])],
   controllers: [PermissionController],
   providers: [PermissionRepository, PermissionService],
+  exports: [PermissionService],
 })
 export class PermissionModule implements OnModuleInit {
   constructor(private readonly permissionService: PermissionService) {}

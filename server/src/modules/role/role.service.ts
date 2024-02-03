@@ -7,14 +7,20 @@ import { RoleVo } from './vo/role.vo';
 import { PageInfo } from 'src/lib/panination';
 import { RoleEntity } from './role.entity';
 import { In } from 'typeorm';
+import { TypeUtil } from 'src/utils';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class RoleService {
-  constructor(private readonly roleRepository: RoleRepository) {}
+  constructor(private readonly roleRepository: RoleRepository, private readonly permissionService: PermissionService) {}
 
   async create(createRoleDto: CreateRoleDto) {
-    const roleModel = await this.findByName(createRoleDto.name);
-    if (roleModel.getSuccess()) return ResultModel.builderErrorMsg('角色已存在');
+    const { permissionIds, ...partialRole } = createRoleDto;
+    const validateModel = await this.validateCreateMeta(partialRole);
+    if (!validateModel.getSuccess()) return validateModel;
+    const role = new RoleEntity();
+    const supRoleModel = await this.supRoleWithMeta(role, createRoleDto);
+    if (!supRoleModel.getSuccess()) return supRoleModel;
     await this.roleRepository.save(createRoleDto);
     return ResultModel.builderSuccessMsg('创建成功');
   }
@@ -50,7 +56,12 @@ export class RoleService {
   async update(id: number, updateRoleDto: Partial<CreateRoleDto>) {
     const roleModel = await this.findById(id);
     if (!roleModel.getSuccess()) return roleModel;
-    await this.roleRepository.update(id, updateRoleDto);
+    const { permissionIds, ...partialRole } = updateRoleDto;
+    const validateModel = await this.validateCreateMeta(partialRole);
+    if (!validateModel.getSuccess()) return validateModel;
+    const supRoleModel = await this.supRoleWithMeta(roleModel.getResult(), updateRoleDto);
+    if (!supRoleModel.getSuccess()) return supRoleModel;
+    await this.roleRepository.save(supRoleModel.getResult());
     return ResultModel.builderSuccessMsg('更新成功');
   }
 
@@ -58,5 +69,33 @@ export class RoleService {
     const res = await this.roleRepository.findBy({ id: In(ids) });
     if (res.length == 0) return ResultModel.builderErrorMsg('角色不存在');
     return ResultModel.builderSuccess<RoleEntity[]>().setResult(res);
+  }
+
+  private async supRoleWithMeta(role: RoleEntity, updateRoleDto: Partial<CreateRoleDto>) {
+    const { permissionIds, ...partialRole } = updateRoleDto;
+    if (TypeUtil.isArray(permissionIds)) {
+      if (permissionIds.length === 0) {
+        role.permissions = [];
+      } else {
+        const permissionsModel = await this.permissionService.findByIds(permissionIds);
+        if (!permissionsModel.getSuccess()) return permissionsModel;
+        role.permissions = permissionsModel.getResult();
+      }
+    }
+    Object.assign(role, partialRole);
+    return ResultModel.builderSuccess().setResult(role);
+  }
+
+  private async validateCreateMeta(partialRole: Partial<RoleEntity>) {
+    const { name } = partialRole;
+    let isFound = null;
+    if (name) {
+      isFound = await this.roleRepository.findOneBy({ name });
+    }
+    if (isFound) {
+      return ResultModel.builderErrorMsg('角色名称已存在');
+    }
+
+    return ResultModel.builderSuccess();
   }
 }

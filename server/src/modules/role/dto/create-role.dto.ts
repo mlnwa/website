@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsJSON, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { TransformJsonNumberArr } from 'src/common/decorators';
 
 export class CreateRoleDto {
   @IsNotEmpty()
@@ -8,4 +9,9 @@ export class CreateRoleDto {
   @IsOptional()
   @IsString()
   description: string;
+
+  @IsJSON()
+  @IsOptional()
+  @TransformJsonNumberArr()
+  permissionIds: number[];
 }

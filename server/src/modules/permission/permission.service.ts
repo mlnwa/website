@@ -7,6 +7,7 @@ import { PageInfo } from 'src/lib/panination';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { PermissionMeta } from './permission.meta';
 import { TypeUtil } from 'src/utils';
+import { In } from 'typeorm';
 
 @Injectable()
 export class PermissionService {
@@ -101,5 +102,11 @@ export class PermissionService {
     if (TypeUtil.isUndefined(permissionMeta)) return ResultModel.builderSuccessMsg('该权限不存在');
     await this.permissionRepository.save(Object.assign(permissionModel.getResult(), permissionMeta));
     return ResultModel.builderSuccessMsg('重置成功');
+  }
+
+  async findByIds(ids: number[]): Promise<ResultModel<PermissionEntity[]>> {
+    const res = await this.permissionRepository.findBy({ id: In(ids) });
+    if (res.length === 0) return ResultModel.builderSuccessMsg('没有找到相关权限');
+    return ResultModel.builderSuccess<PermissionEntity[]>().setResult(res);
   }
 }
