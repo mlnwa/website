@@ -17,6 +17,7 @@ import { Public } from 'src/common/decorators/public.decorator';
 import { RedisService } from '../redis/redis.service';
 import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesUserDto } from './dto/query-user.dot';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 @UsePipes(new ValidationPipe({ whitelist: true }))
@@ -41,8 +42,21 @@ export class UserController {
     return this.userService.queryPages(queryPagesUserDto);
   }
 
-  @Put()
-  updateUser() {}
+  @Put(':id')
+  async updateUser(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+    const { emailCode, ...userProps } = updateUserDto;
+    if (userProps.email) {
+      if (!emailCode) return ResultModel.builderErrorMsg('请输入验证码');
+      const cacheCode = await this.redisService.get(userProps.email);
+      if (emailCode !== cacheCode) {
+        return ResultModel.builderErrorMsg('验证码错误');
+      }
+    }
+    const updateModel = await this.userService.update(id, userProps);
+    if (!updateModel.getSuccess()) return updateModel;
+    userProps.email && this.redisService.del(userProps.email);
+    return updateModel;
+  }
 
   @Delete(':id')
   deleteUser(@Param('id', new ParseIntPipe()) id: number) {

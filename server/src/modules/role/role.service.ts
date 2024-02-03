@@ -5,6 +5,8 @@ import { ResultModel } from 'src/common/result/ResultModel';
 import { QueryPagesRoleDto } from './dto/query-role.dto';
 import { RoleVo } from './vo/role.vo';
 import { PageInfo } from 'src/lib/panination';
+import { RoleEntity } from './role.entity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class RoleService {
@@ -50,5 +52,11 @@ export class RoleService {
     if (!roleModel.getSuccess()) return roleModel;
     await this.roleRepository.update(id, updateRoleDto);
     return ResultModel.builderSuccessMsg('更新成功');
+  }
+
+  async findByIds(ids: number[]): Promise<ResultModel<RoleEntity[]>> {
+    const res = await this.roleRepository.findBy({ id: In(ids) });
+    if (res.length == 0) return ResultModel.builderErrorMsg('角色不存在');
+    return ResultModel.builderSuccess<RoleEntity[]>().setResult(res);
   }
 }

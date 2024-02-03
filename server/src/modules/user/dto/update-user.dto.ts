@@ -1,4 +1,4 @@
-import { IsJSON, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsJSON, IsOptional, IsString } from 'class-validator';
 import { TransformJsonNumberArr } from 'src/common/decorators';
 
 export class UpdateUserDto {
@@ -10,4 +10,13 @@ export class UpdateUserDto {
   @IsJSON()
   @TransformJsonNumberArr()
   roleIds?: number[];
+
+  @IsOptional()
+  @IsString()
+  @IsEmail()
+  email: string;
+
+  @IsOptional()
+  @IsString()
+  emailCode: string;
 }

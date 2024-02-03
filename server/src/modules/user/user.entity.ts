@@ -33,7 +33,7 @@ export class UserEntity extends BaseEntity {
     joinColumn: { name: 'user_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'role_id', referencedColumnName: 'id' },
   })
-  role: RoleEntity[];
+  roles: RoleEntity[];
 
   @BeforeInsert()
   async encryptPassword() {

@@ -1,18 +1,17 @@
-import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { PageModel, ResultModel } from 'src/common/result/ResultModel';
-import { PaginationDto } from 'src/common/dtos';
 import { PageInfo } from 'src/lib/panination';
-import { IdUtil } from 'src/utils';
+import { IdUtil, TypeUtil } from 'src/utils';
 import { UserRepository } from './user.repository';
 import { QueryPagesUserDto } from './dto/query-user.dot';
 import { UserVo } from './vo/user.vo';
 import { Injectable } from '@nestjs/common';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { RoleService } from '../role/role.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository, private readonly roleService: RoleService) {}
 
   async findByName(name: string): Promise<ResultModel<UserEntity>> {
     const result = await this.userRepository.findOne({
@@ -86,5 +85,32 @@ export class UserService {
       return ResultModel.builderErrorMsg('用户不存在');
     }
     return ResultModel.builderSuccessMsg('删除成功');
+  }
+
+  async update(id: number, updateUserDto: Omit<UpdateUserDto, 'emailCode'>) {
+    const userModel = await this.findById(id);
+    if (!userModel.getSuccess()) return ResultModel.builderErrorMsg('用户不存在');
+    const { roleIds, ...partialUser } = updateUserDto;
+    const validateModel = await this.validateCreateMeta(partialUser);
+    if (!validateModel.getSuccess()) return validateModel;
+    const supUserModel = await this.supUserWithMeta(userModel.getResult(), updateUserDto);
+    if (!supUserModel.getSuccess()) return supUserModel;
+    await this.userRepository.save(userModel.getResult());
+    return ResultModel.builderSuccessMsg('更新成功');
+  }
+
+  private async supUserWithMeta(user: UserEntity, updateUserDto: Omit<UpdateUserDto, 'emailCode'>) {
+    const { roleIds, ...partialUser } = updateUserDto;
+    if (TypeUtil.isArray(roleIds)) {
+      if (roleIds.length === 0) {
+        user.roles = [];
+      } else {
+        let rolesModel = await this.roleService.findByIds(roleIds);
+        if (!rolesModel.getSuccess()) return rolesModel;
+        user.roles = rolesModel.getResult();
+      }
+    }
+    Object.assign(user, partialUser);
+    return ResultModel.builderSuccess().setResult(user);
   }
 }
