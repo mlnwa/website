@@ -11,7 +11,7 @@ export class RoleEntity extends BaseEntity {
   @Column({ type: 'varchar', default: '' })
   description: string;
 
-  @ManyToMany(() => UserEntity, (user) => user.role)
+  @ManyToMany(() => UserEntity, (user) => user.roles)
   users: UserEntity[];
 
   @ManyToMany(() => PermissionEntity, (permission) => permission.roles)
