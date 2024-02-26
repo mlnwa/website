@@ -6,6 +6,9 @@ import CategoryManage from '../../admin/blog/categoryManage';
 import BlogEdit from '../../admin/blogEdit';
 import TagManage from '../../admin/blog/tagManage';
 import ColumnManage from '../../admin/blog/columnManage';
+import UserManage from '../../admin/user/userManage';
+import RoleManage from '../../admin/user/roleManage';
+import PermissionManage from '../../admin/user/permissionManage';
 
 const adminRoute = {
   path: '/admin',
@@ -92,15 +95,34 @@ const adminRoute = {
       authorize: true,
       customProp: {
         icon: 'user',
-        label: '用户管理',
+        label: '用户中心',
       },
       children: [
         {
-          path: '/admin/users/list',
-          element: <div>用户列表</div>,
+          path: '/admin/users/userManage',
+          element: <UserManage></UserManage>,
+          authorize: true,
           customProp: {
             icon: 'user',
-            label: '用户列表',
+            label: '用户管理',
+          },
+        },
+        {
+          path: '/admin/users/roleManage',
+          element: <RoleManage></RoleManage>,
+          authorize: true,
+          customProp: {
+            icon: 'user',
+            label: '角色管理',
+          },
+        },
+        {
+          path: '/admin/users/permissionManage',
+          element: <PermissionManage></PermissionManage>,
+          authorize: true,
+          customProp: {
+            icon: 'user',
+            label: '权限管理',
           },
         },
       ],
