@@ -181,3 +181,16 @@ export class TagFilterForm extends FormStruct {
     ];
   }
 }
+
+export class UserForm extends FormStruct {
+  constructor() {
+    super();
+    this.panelList = [
+      {
+        title: '基础信息',
+        icon: 'info',
+        content: [],
+      },
+    ];
+  }
+}
