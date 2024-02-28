@@ -1,4 +1,4 @@
-export { Login } from './module/user';
+export { Login } from './module/auth';
 export {
   QueryBlogDetail,
   QueryBlogList,

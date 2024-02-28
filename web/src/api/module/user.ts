@@ -1,10 +1,6 @@
 import http from '../requrest';
 import { PageParams, Pagination } from '../type';
 
-export interface LoginParam {
-  username: string;
-  password: string;
-}
 export interface User {
   id: number;
   uid: string;
@@ -14,18 +10,9 @@ export interface User {
   createAt: string;
   updateAt: string;
 }
-type LoginResult = {
-  accessToken: string;
-  freshToken: string;
-};
-const URL = '/auth';
-interface QueryUserListParam extends PageParams {}
+
 interface UpdateUserData extends Partial<User> {}
-export const Login = (data: LoginParam) =>
-  http.post<LoginResult>({
-    url: `${URL}/login`,
-    data,
-  });
+interface QueryUserListParam extends PageParams {}
 
 export const QueryUserList = (params: QueryUserListParam) =>
   http.get<Pagination<User>>({
