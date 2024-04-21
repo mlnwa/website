@@ -50,10 +50,6 @@ export class AuthService {
     });
   }
 
-  async refreshAccessToken(refreshToken: string) {
-    const payload = this.jwtService.verify(refreshToken);
-  }
-
   async sendEmailCode(email: string) {
     if (await this.redisService.has(email)) {
       return ResultModel.builderErrorMsg('发送过于频繁，请稍后再试');

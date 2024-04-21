@@ -20,11 +20,6 @@ export class AuthController {
     return this.authService.login(request.user);
   }
 
-  @Post('refresh')
-  async refreshAccessToken(@Body() body: { refreshToken: string }) {
-    return this.authService.refreshAccessToken(body.refreshToken);
-  }
-
   @Public()
   @Post('verify/email')
   async sendEmail(@Body() body: { email: string }) {
